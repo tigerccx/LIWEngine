@@ -1,0 +1,165 @@
+#include "Keyboard_GLFW.h"
+
+const std::map<int, LIW::KeyboardKeys> LIW::App::Keyboard_GLFW::keycodeMap_GLFW_Keycode = {
+		{GLFW_KEY_UNKNOWN		, KEYBOARD_UNKNOWN		},
+								  
+		{GLFW_KEY_SPACE			, KEYBOARD_SPACE		},
+		{GLFW_KEY_APOSTROPHE	, KEYBOARD_APOSTROPHE	},
+		{GLFW_KEY_COMMA			, KEYBOARD_COMMA		},
+		{GLFW_KEY_MINUS			, KEYBOARD_MINUS		},
+		{GLFW_KEY_PERIOD		, KEYBOARD_PERIOD		},
+		{GLFW_KEY_SLASH			, KEYBOARD_SLASH		},
+		{GLFW_KEY_0				, KEYBOARD_0			},
+		{GLFW_KEY_1				, KEYBOARD_1			},
+		{GLFW_KEY_2				, KEYBOARD_2			},
+		{GLFW_KEY_3				, KEYBOARD_3			},
+		{GLFW_KEY_4				, KEYBOARD_4			},
+		{GLFW_KEY_5				, KEYBOARD_5			},
+		{GLFW_KEY_6				, KEYBOARD_6			},
+		{GLFW_KEY_7				, KEYBOARD_7			},
+		{GLFW_KEY_8				, KEYBOARD_8			},
+		{GLFW_KEY_9				, KEYBOARD_9			},
+		{GLFW_KEY_SEMICOLON		, KEYBOARD_SEMICOLON	},
+		{GLFW_KEY_EQUAL			, KEYBOARD_PLUS			},
+		{GLFW_KEY_A				, KEYBOARD_A			},
+		{GLFW_KEY_B				, KEYBOARD_B			},
+		{GLFW_KEY_C				, KEYBOARD_C			},
+		{GLFW_KEY_D				, KEYBOARD_D			},
+		{GLFW_KEY_E				, KEYBOARD_E			},
+		{GLFW_KEY_F				, KEYBOARD_F			},
+		{GLFW_KEY_G				, KEYBOARD_G			},
+		{GLFW_KEY_H				, KEYBOARD_H			},
+		{GLFW_KEY_I				, KEYBOARD_I			},
+		{GLFW_KEY_J				, KEYBOARD_J			},
+		{GLFW_KEY_K				, KEYBOARD_K			},
+		{GLFW_KEY_L				, KEYBOARD_L			},
+		{GLFW_KEY_M				, KEYBOARD_M			},
+		{GLFW_KEY_N				, KEYBOARD_N			},
+		{GLFW_KEY_O				, KEYBOARD_O			},
+		{GLFW_KEY_P				, KEYBOARD_P			},
+		{GLFW_KEY_Q				, KEYBOARD_Q			},
+		{GLFW_KEY_R				, KEYBOARD_R			},
+		{GLFW_KEY_S				, KEYBOARD_S			},
+		{GLFW_KEY_T				, KEYBOARD_T			},
+		{GLFW_KEY_U				, KEYBOARD_U			},
+		{GLFW_KEY_V				, KEYBOARD_V			},
+		{GLFW_KEY_W				, KEYBOARD_W			},
+		{GLFW_KEY_X				, KEYBOARD_X			},
+		{GLFW_KEY_Y				, KEYBOARD_Y			},
+		{GLFW_KEY_Z				, KEYBOARD_Z			},
+		{GLFW_KEY_LEFT_BRACKET	, KEYBOARD_LBRACKET		},
+		{GLFW_KEY_BACKSLASH		, KEYBOARD_BACKSLASH	},
+		{GLFW_KEY_RIGHT_BRACKET	, KEYBOARD_RBRACKET		},
+		{GLFW_KEY_GRAVE_ACCENT	, KEYBOARD_GRAVE_ACCENT	},
+		{GLFW_KEY_WORLD_1		, KEYBOARD_UNKNOWN		},
+		{GLFW_KEY_WORLD_2		, KEYBOARD_UNKNOWN		},
+								  
+		{GLFW_KEY_ESCAPE		, KEYBOARD_ESCAPE		},
+		{GLFW_KEY_ENTER			, KEYBOARD_RETURN		},
+		{GLFW_KEY_TAB			, KEYBOARD_TAB			},
+		{GLFW_KEY_BACKSPACE		, KEYBOARD_BACK			},
+		{GLFW_KEY_INSERT		, KEYBOARD_INSERT		},
+		{GLFW_KEY_DELETE		, KEYBOARD_DELETE		},
+		{GLFW_KEY_RIGHT			, KEYBOARD_RIGHT		},
+		{GLFW_KEY_LEFT			, KEYBOARD_LEFT			},
+		{GLFW_KEY_DOWN			, KEYBOARD_DOWN			},
+		{GLFW_KEY_UP			, KEYBOARD_UP			},
+		{GLFW_KEY_PAGE_UP		, KEYBOARD_PRIOR		},
+		{GLFW_KEY_PAGE_DOWN		, KEYBOARD_NEXT			},
+		{GLFW_KEY_HOME			, KEYBOARD_HOME			},
+		{GLFW_KEY_END			, KEYBOARD_END			},
+		{GLFW_KEY_CAPS_LOCK		, KEYBOARD_CAPITAL		},
+		{GLFW_KEY_SCROLL_LOCK	, KEYBOARD_SCROLL		},
+		{GLFW_KEY_NUM_LOCK		, KEYBOARD_NUMLOCK		},
+		{GLFW_KEY_PRINT_SCREEN	, KEYBOARD_SNAPSHOT		},
+		{GLFW_KEY_PAUSE			, KEYBOARD_PAUSE		},
+		{GLFW_KEY_F1			, KEYBOARD_F1			},
+		{GLFW_KEY_F2			, KEYBOARD_F2			},
+		{GLFW_KEY_F3			, KEYBOARD_F3			},
+		{GLFW_KEY_F4			, KEYBOARD_F4			},
+		{GLFW_KEY_F5			, KEYBOARD_F5			},
+		{GLFW_KEY_F6			, KEYBOARD_F6			},
+		{GLFW_KEY_F7			, KEYBOARD_F7			},
+		{GLFW_KEY_F8			, KEYBOARD_F8			},
+		{GLFW_KEY_F9			, KEYBOARD_F9			},
+		{GLFW_KEY_F10			, KEYBOARD_F10			},
+		{GLFW_KEY_F11			, KEYBOARD_F11			},
+		{GLFW_KEY_F12			, KEYBOARD_F12			},
+		{GLFW_KEY_F13			, KEYBOARD_F13			},
+		{GLFW_KEY_F14			, KEYBOARD_F14			},
+		{GLFW_KEY_F15			, KEYBOARD_F15			},
+		{GLFW_KEY_F16			, KEYBOARD_F16			},
+		{GLFW_KEY_F17			, KEYBOARD_F17			},
+		{GLFW_KEY_F18			, KEYBOARD_F18			},
+		{GLFW_KEY_F19			, KEYBOARD_F19			},
+		{GLFW_KEY_F20			, KEYBOARD_F20			},
+		{GLFW_KEY_F21			, KEYBOARD_F21			},
+		{GLFW_KEY_F22			, KEYBOARD_F22			},
+		{GLFW_KEY_F23			, KEYBOARD_F23			},
+		{GLFW_KEY_F24			, KEYBOARD_F24			},
+		{GLFW_KEY_F25			, KEYBOARD_UNKNOWN		},
+		{GLFW_KEY_KP_0			, KEYBOARD_NUMPAD0		},
+		{GLFW_KEY_KP_1			, KEYBOARD_NUMPAD1		},
+		{GLFW_KEY_KP_2			, KEYBOARD_NUMPAD2		},
+		{GLFW_KEY_KP_3			, KEYBOARD_NUMPAD3		},
+		{GLFW_KEY_KP_4			, KEYBOARD_NUMPAD4		},
+		{GLFW_KEY_KP_5			, KEYBOARD_NUMPAD5		},
+		{GLFW_KEY_KP_6			, KEYBOARD_NUMPAD6		},
+		{GLFW_KEY_KP_7			, KEYBOARD_NUMPAD7		},
+		{GLFW_KEY_KP_8			, KEYBOARD_NUMPAD8		},
+		{GLFW_KEY_KP_9			, KEYBOARD_NUMPAD9		},
+		{GLFW_KEY_KP_DECIMAL	, KEYBOARD_DECIMAL		},
+		{GLFW_KEY_KP_DIVIDE		, KEYBOARD_DIVIDE		},
+		{GLFW_KEY_KP_MULTIPLY	, KEYBOARD_MULTIPLY		},
+		{GLFW_KEY_KP_SUBTRACT	, KEYBOARD_SUBTRACT		},
+		{GLFW_KEY_KP_ADD		, KEYBOARD_ADD			},
+		{GLFW_KEY_KP_ENTER		, KEYBOARD_SEPARATOR	},
+		{GLFW_KEY_KP_EQUAL		, KEYBOARD_UNKNOWN		},
+		{GLFW_KEY_LEFT_SHIFT	, KEYBOARD_LSHIFT		},
+		{GLFW_KEY_LEFT_CONTROL	, KEYBOARD_LCONTROL		},
+		{GLFW_KEY_LEFT_ALT		, KEYBOARD_LMENU		},
+		{GLFW_KEY_LEFT_SUPER	, KEYBOARD_UNKNOWN		},
+		{GLFW_KEY_RIGHT_SHIFT	, KEYBOARD_RSHIFT		},
+		{GLFW_KEY_RIGHT_CONTROL	, KEYBOARD_RCONTROL		},
+		{GLFW_KEY_RIGHT_ALT		, KEYBOARD_RMENU		},
+		{GLFW_KEY_RIGHT_SUPER	, KEYBOARD_UNKNOWN		},
+		{GLFW_KEY_MENU			, KEYBOARD_MENU			},
+								  
+		{GLFW_KEY_LAST			, KEYBOARD_MAX			}
+};
+
+const std::map<int, LIW::App::KeyboardActions> LIW::App::Keyboard_GLFW::keyactMap_GLFW_KeyAction = {
+	{GLFW_REPEAT	, KEYBOARD_ACTION_UNKNOWN	}, //Not support repeat
+	{GLFW_PRESS		, KEYBOARD_ACTION_PRESS		},
+	{GLFW_RELEASE	, KEYBOARD_ACTION_RELEASE	}
+};
+
+std::map<GLFWwindow*, LIW::App::Keyboard*> LIW::App::Keyboard_GLFW::keyboards = std::map<GLFWwindow*, Keyboard*>();
+
+LIW::App::KeyboardActions LIW::App::Keyboard_GLFW::ToKeyAction(int keyActGLFW)
+{
+	return keyactMap_GLFW_KeyAction.at(keyActGLFW);
+}
+
+LIW::App::Keyboard_GLFW::Keyboard_GLFW(GLFWwindow* window):
+	Keyboard()
+{
+	//Set callback
+	glfwSetKeyCallback(window, KeyCallback);
+	keyboards[window] = this;
+
+	Wake();
+}
+
+LIW::KeyboardKeys LIW::App::Keyboard_GLFW::ToKeyCode(int keyGLFW)
+{
+	return Keyboard_GLFW::keycodeMap_GLFW_Keycode.at(keyGLFW);
+}
+
+void LIW::App::Keyboard_GLFW::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	//Here we assume callback will always receive a GLFWwindow handle already registered.
+	KeyboardKeys keycode = Keyboard_GLFW::ToKeyCode(key);
+	KeyboardActions keyact = Keyboard_GLFW::ToKeyAction(action);
+	((Keyboard_GLFW*)keyboards[window])->OnUpdateKey(keycode, keyact);
+}
