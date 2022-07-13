@@ -16,7 +16,7 @@ namespace LIW {
 	class LIWReflectMember {
 	public:
 		LIWReflectMember() = default;
-		LIWReflectMember(const std::string& name, const std::string type, int offset) :
+		LIWReflectMember(const std::string& name, const std::string type, size_t offset) :
 			m_name(name), m_type(type), m_offset(offset) {}
 		LIWReflectMember(const LIWReflectMember& other) = default;
 		LIWReflectMember(LIWReflectMember&& other) = default;
@@ -29,7 +29,7 @@ namespace LIW {
 
 		std::string m_name;
 		std::string m_type;
-		int m_offset;
+		size_t m_offset{ 0 };
 	};
 
 	typedef std::set<LIWReflectMember> LIWReflectAttrBook;

@@ -4,7 +4,7 @@
 #include "LIWType.h"
 
 namespace LIW{
-	typedef long LIWID;
+	typedef uintptr_t LIWID;
 
 	class LIWObject {
 	public:

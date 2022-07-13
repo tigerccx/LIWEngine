@@ -4,7 +4,7 @@
 #include "Maths/Vector3.h"
 #include "Maths/Vector4.h"
 
-#include "LIWComponent.h"
+#include "Framework/LIWComponent.h"
 
 using namespace LIW;
 class TestComponent0 :

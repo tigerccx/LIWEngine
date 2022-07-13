@@ -20,7 +20,7 @@ _-_-_-_-_-_-_-""  ""
 */
 #include "Framework/LIWStandardSystem.h"
 
-#include "Common.h"
+#include "common.h"
 
 #include <string>
 #include <fstream>
@@ -33,14 +33,14 @@ _-_-_-_-_-_-_-""  ""
 
 #include <SOIL/SOIL.h>
 
-#include "Vector4.h"
-#include "Vector3.h"
-#include "Vector2.h"
-#include "Quaternion.h"
-#include "Matrix4.h"
-#include "Window.h"
+#include "Maths/Vector4.h"
+#include "Maths/Vector3.h"
+#include "Maths/Vector2.h"
+#include "Maths/Quaternion.h"
+#include "Maths/Matrix4.h"
+#include "Application/Window.h"
 
-#include "Macros.h"
+#include "Core/Macros.h"
 
 using namespace std;
 

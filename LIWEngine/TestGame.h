@@ -4,8 +4,8 @@
 
 #include "TestRenderer.h"
 
-#include "LIWEntityManager.h"
-#include "LIWComponentManager.h"
+#include "Framework/LIWEntityManager.h"
+#include "Framework/LIWComponentManager.h"
 #include "TestComponent0.h"
 
 using namespace LIW;
@@ -14,8 +14,7 @@ class TestGame :
     public LIWGame
 {
 public:
-    TestGame(App::Environment* environment):
-        LIWGame(environment)
+    TestGame()
     {
 
     }

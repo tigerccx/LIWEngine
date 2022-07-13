@@ -51,3 +51,29 @@ void TestRenderer::RenderScene()
 
 	glEnd();
 }
+
+#include "LIWCore.h"
+
+void FT_TestRenderUpdate(LIW_FIBER_RUNNER_PARAM)
+{
+	using namespace LIW;
+
+	TestRenderData* ptrData = (TestRenderData*)liw_maddr_frame((liw_hdl_type)param);
+	LIWFrameData* ptrFrameData = (LIWFrameData*)liw_maddr_frame(ptrData->m_hdlFrameData);
+	ptrData->m_renderer->Update(ptrFrameData->m_timeDelta);
+
+	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender , param });
+}
+
+void FT_TestRenderRender(LIW_FIBER_RUNNER_PARAM)
+{
+	using namespace LIW;
+
+	TestRenderData* ptrData = (TestRenderData*)liw_maddr_frame((liw_hdl_type)param);
+	LIWFrameData* ptrFrameData = (LIWFrameData*)liw_maddr_frame(ptrData->m_hdlFrameData);
+	ptrData->m_renderer->RenderScene();
+
+	liw_delete_frame<TestRenderData>((liw_hdl_type)param);
+
+	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIWCore::LIW_FT_FrameEnd , param });
+}

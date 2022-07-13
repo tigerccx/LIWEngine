@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "OGLRenderer.h"
+#include "Renderers/OGLRenderer.h"
 
 LIW::App::Window::Window(const std::string& name, int width, int height, bool fullScreen)
 {
@@ -41,6 +41,10 @@ LIW::App::Window::~Window()
 	if (mouse) {
 		delete mouse;
 		mouse = nullptr;
+	}
+	if (textOutput) {
+		delete textOutput;
+		textOutput = nullptr;
 	}
 	if (windowHandle) {
 		glfwDestroyWindow(windowHandle);

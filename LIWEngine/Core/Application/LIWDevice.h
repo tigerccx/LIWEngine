@@ -13,7 +13,7 @@ namespace LIW{
 			virtual void Sleep() { isAwake = false; }
 			virtual void Wake() { isAwake = true; }
 
-			bool			isAwake;		//Is the device awake...
+			bool isAwake{ false };		//Is the device awake...
 		};
 	}
 }

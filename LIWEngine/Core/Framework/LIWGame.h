@@ -4,11 +4,13 @@
 
 #include "LIWObject.h"
 
-#include "..\Environment.h"
+#include "Application/Environment.h"
 #include "LIWSystem.h"
 #include "LIWStandardSystem.h"
-#include "LIWGameTimer.h"
-#include "LIWDebug.h"
+#include "Time/LIWGameTimer.h"
+#include "Debug/LIWDebug.h"
+
+#include "TestRenderer.h"
 
 
 namespace LIW {
@@ -21,20 +23,23 @@ namespace LIW {
         public LIWObject
     {
     public:
-        LIWGame(App::Environment* environment) :
-            m_currentEnvironment(environment) {
-            m_debug = new LIWDebug(environment->m_window->GetTextOutput());
-            m_timer = new LIWGameTimer();
-        }
+        LIWGame(){}
         virtual ~LIWGame() {
             delete m_timer;
             delete m_debug;
         }
+
+        void InitGame(App::Environment* environment) {
+            m_currentEnvironment = environment;
+            m_debug = new LIWDebug(environment->m_window->GetTextOutput());
+            m_timer = new LIWGameTimer();
+        }
+
     public:
         static LIWGame* instance;
 
-        LIWGameTimer* m_timer;
-        LIWDebug* m_debug;
+        LIWGameTimer* m_timer{ nullptr };
+        LIWDebug* m_debug{ nullptr };
 
         int m_idealHZ = 120;
         float m_idealDT = 1.0f / m_idealHZ;
@@ -59,15 +64,27 @@ namespace LIW {
         */
         virtual int CleanUp();
 
-    protected:
+    //protected:
+    public:
         std::vector<LIWStandardSystem*> m_standardSystems;
 
-        App::Environment* m_currentEnvironment;
+        App::Environment* m_currentEnvironment{ nullptr };
 
         int m_realHZ = m_idealHZ;
         float m_realDT = m_idealDT;
         float m_dtFixedAccum = 0.0f;
+
+        TestRenderer* m_renderer{ nullptr };
     };
 }
 
 
+#include "Memory/LIWMemory.h"
+#include "Fiber/LIWFiber.h"
+
+struct GameData {
+    liw_hdl_type m_hdlFrameData;
+    LIW::LIWGame* m_game;
+};
+
+void FT_GameUpdate(LIW_FIBER_RUNNER_PARAM);

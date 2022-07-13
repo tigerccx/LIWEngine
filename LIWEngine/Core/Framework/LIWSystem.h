@@ -1,5 +1,5 @@
 #pragma once
-#include "LIWObject.h"
+#include "Core/LIWObject.h"
 
 namespace LIW {
 	class LIWSystem :

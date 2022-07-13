@@ -6,11 +6,11 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include "../Maths/Vector2.h"
-#include "../Maths/Vector3.h"
-#include "../Maths/Vector4.h"
+#include "Maths/Vector2.h"
+#include "Maths/Vector3.h"
+#include "Maths/Vector4.h"
 
-#include "LIWEntity.h"
+#include "Framework/LIWEntity.h"
 
 namespace LIW {
 	namespace Editor {
@@ -20,8 +20,8 @@ namespace LIW {
 		public:
 			ImGuiExtendedType() {};
 			ImGuiExtendedType(ImGuiDataType_ t, int l) :type(t), length(l) { }
-			ImGuiDataType_ type;
-			int length;
+			ImGuiDataType_ type{ ImGuiDataType_COUNT };
+			int length{ 0 };
 		};
 
 		//static std::map<std::string, ImGuiExtendedType> typeNameToImGui;

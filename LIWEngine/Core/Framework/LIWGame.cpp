@@ -89,3 +89,38 @@ int LIW::LIWGame::CleanUp()
 	m_standardSystems.clear();
 	return 0;
 }
+
+
+
+#include "LIWCore.h"
+#include "LIWStandardSystem.h"
+
+void FT_GameUpdate(LIW_FIBER_RUNNER_PARAM)
+{
+	using namespace LIW;
+
+	GameData* ptrData = (GameData*)liw_maddr_frame((liw_hdl_type)param);
+	LIWFrameData* ptrFrameData = (LIWFrameData*)liw_maddr_frame(ptrData->m_hdlFrameData);
+	LIWGame* const ptrGame = ptrData->m_game;
+	liw_delete_frame<GameData>((liw_hdl_type)param);
+
+	auto& systems = ptrGame->m_standardSystems;
+	const int systemCount = (int)systems.size();
+
+	LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_UPDATE, systemCount);
+
+	for (int i = 0; i < systems.size(); i++) {
+		liw_hdl_type handleStsData = liw_new_frame<StandardSystemData>(StandardSystemData{ ptrData->m_hdlFrameData, systems[i] });
+		LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_SystemUpdate, (void*)handleStsData});
+	}
+	LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_UPDATE, thisFiber);
+
+
+	LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_RENDERUPDATE, systemCount);
+	for (int i = 0; i < systems.size(); i++) {
+		liw_hdl_type handleStsData = liw_new_frame<StandardSystemData>(StandardSystemData{ ptrData->m_hdlFrameData, systems[i] });
+		LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_SystemRenderUpdate, (void*)handleStsData });
+	}
+	LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_RENDERUPDATE, thisFiber);
+
+}

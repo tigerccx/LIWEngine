@@ -25,92 +25,98 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{64c7f34b-16b0-4e91-8b98-4ea2d4cfd239}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Renderer">
-      <UniqueIdentifier>{1732d455-ff80-41f1-8ae6-077fd80143c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utility">
-      <UniqueIdentifier>{ecc609fd-cc24-41b3-a1cb-221e61e2355a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utility\Maths">
-      <UniqueIdentifier>{e7a8b268-5cae-4f16-9107-312cf499d2b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework">
-      <UniqueIdentifier>{a993d0d7-02a2-4a0c-8738-4bd20a5456b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\LIWEntity">
-      <UniqueIdentifier>{91c120a5-5144-4ee9-a823-46458a733363}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\LIWComponent">
-      <UniqueIdentifier>{c64fb3d9-bfe9-4de2-b821-4890283d02e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\Common">
-      <UniqueIdentifier>{dd453b00-0047-45d6-b0a4-2d0def22187e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\LIWGame">
-      <UniqueIdentifier>{5d6612be-b05b-4967-9b7f-ec8294755d07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\LIWObject">
-      <UniqueIdentifier>{bc92c48d-2db2-47aa-b177-cc73d31bb1ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\Common\LIWTimer">
-      <UniqueIdentifier>{cab5d06a-fcf5-439e-b270-2b479b8bc933}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application">
-      <UniqueIdentifier>{660cb8cd-66cd-41dd-ae1a-00fe361429e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Window">
-      <UniqueIdentifier>{02b5ffcf-308d-4860-9bbe-cf8747a62127}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device">
-      <UniqueIdentifier>{ba42e746-c4b4-4dc1-ad2a-6eb9dace9bdc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Output">
-      <UniqueIdentifier>{808772df-365f-4318-9958-23c08da1c84d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Output\TextOutput">
-      <UniqueIdentifier>{6a226f08-f83c-4e08-a9bb-05345d5d33ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Input">
-      <UniqueIdentifier>{6ccbaa4b-6e9d-4b93-a676-67d05cab1c8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Input\Keyboard">
-      <UniqueIdentifier>{c09d6ad1-d946-493f-9b8a-a3bd841f17cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Input\Keyboard\GLFW">
-      <UniqueIdentifier>{627cd9b0-295d-4fc1-aa97-0a58ba40478f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Input\Mouse">
-      <UniqueIdentifier>{a4a34882-dbbb-4474-ab86-63fa691f508c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Input\Mouse\GLFW">
-      <UniqueIdentifier>{b54a9642-bd3a-4237-a075-f9f264937d4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Application\Device\Output\TextOutput\TextConsole">
-      <UniqueIdentifier>{250b03e6-bffe-4aae-8872-7b6ed254e83f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\Common\LIWDebug">
-      <UniqueIdentifier>{664cc620-1df6-4b8b-b03b-27b9862090cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\ECSFramework\LIWSystem">
-      <UniqueIdentifier>{016ae882-8fa1-40aa-bda5-8fc2ce97ef78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Test">
       <UniqueIdentifier>{3b1a745d-8a44-40cb-840a-d769411f2bee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Test\Renderers">
       <UniqueIdentifier>{c0746866-4389-45d7-8487-f203f02bbdd3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Application\Environment">
-      <UniqueIdentifier>{2dc8d044-f49a-4219-a0d9-b09be1f6daaa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Editor">
       <UniqueIdentifier>{8f03c892-270a-4fa7-9167-af6485dc865a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\ECSFramework\Common\LIWReflection">
+    <Filter Include="Core">
+      <UniqueIdentifier>{a1d8ff8a-7bf5-4adb-8668-08637540fe22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ECSFramework">
+      <UniqueIdentifier>{a993d0d7-02a2-4a0c-8738-4bd20a5456b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ECSFramework\LIWEntity">
+      <UniqueIdentifier>{91c120a5-5144-4ee9-a823-46458a733363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ECSFramework\LIWComponent">
+      <UniqueIdentifier>{c64fb3d9-bfe9-4de2-b821-4890283d02e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ECSFramework\LIWGame">
+      <UniqueIdentifier>{5d6612be-b05b-4967-9b7f-ec8294755d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ECSFramework\LIWSystem">
+      <UniqueIdentifier>{016ae882-8fa1-40aa-bda5-8fc2ce97ef78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\TaskSystem">
+      <UniqueIdentifier>{071ada40-aaf0-4925-b5e9-551fb3f151b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Debug">
+      <UniqueIdentifier>{664cc620-1df6-4b8b-b03b-27b9862090cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Reflection">
       <UniqueIdentifier>{8d7289d6-d501-436a-b858-8c943ef44c16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utility\Debug">
-      <UniqueIdentifier>{e6c11b59-0121-4ffe-8dfc-ec6c96192514}</UniqueIdentifier>
+    <Filter Include="Core\Time">
+      <UniqueIdentifier>{1d459080-2ad5-459c-af45-fde3c835bec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application">
+      <UniqueIdentifier>{660cb8cd-66cd-41dd-ae1a-00fe361429e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Window">
+      <UniqueIdentifier>{02b5ffcf-308d-4860-9bbe-cf8747a62127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device">
+      <UniqueIdentifier>{ba42e746-c4b4-4dc1-ad2a-6eb9dace9bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Output">
+      <UniqueIdentifier>{808772df-365f-4318-9958-23c08da1c84d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Output\TextOutput">
+      <UniqueIdentifier>{6a226f08-f83c-4e08-a9bb-05345d5d33ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Output\TextOutput\TextConsole">
+      <UniqueIdentifier>{250b03e6-bffe-4aae-8872-7b6ed254e83f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Input">
+      <UniqueIdentifier>{6ccbaa4b-6e9d-4b93-a676-67d05cab1c8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Input\Keyboard">
+      <UniqueIdentifier>{c09d6ad1-d946-493f-9b8a-a3bd841f17cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Input\Keyboard\GLFW">
+      <UniqueIdentifier>{627cd9b0-295d-4fc1-aa97-0a58ba40478f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Input\Mouse">
+      <UniqueIdentifier>{a4a34882-dbbb-4474-ab86-63fa691f508c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Device\Input\Mouse\GLFW">
+      <UniqueIdentifier>{b54a9642-bd3a-4237-a075-f9f264937d4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Environment">
+      <UniqueIdentifier>{2dc8d044-f49a-4219-a0d9-b09be1f6daaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Maths">
+      <UniqueIdentifier>{e7a8b268-5cae-4f16-9107-312cf499d2b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utility">
+      <UniqueIdentifier>{ecc609fd-cc24-41b3-a1cb-221e61e2355a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Fiber">
+      <UniqueIdentifier>{b93c57f3-9bca-471f-9d4a-6ac36b115c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Containers">
+      <UniqueIdentifier>{36233590-7aec-4d36-8a37-bf4a80d4dfbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{1d887fed-0dce-41f8-b9d5-c8dcdef70db8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Renderers">
+      <UniqueIdentifier>{1732d455-ff80-41f1-8ae6-077fd80143c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,74 +141,95 @@
     <ClCompile Include="..\ThirdParty\imgui\imgui_widgets.cpp">
       <Filter>ThirdParty\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Application\Window</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="OGLRenderer.cpp">
-      <Filter>Framework\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths\Matrix2.cpp">
-      <Filter>Utility\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths\Matrix3.cpp">
-      <Filter>Utility\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths\Matrix4.cpp">
-      <Filter>Utility\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths\Quaternion.cpp">
-      <Filter>Utility\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths\Vector2.cpp">
-      <Filter>Utility\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths\Vector3.cpp">
-      <Filter>Utility\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths\Vector4.cpp">
-      <Filter>Utility\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\Keyboard.cpp">
-      <Filter>Application\Device\Input\Keyboard</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\Mouse.cpp">
-      <Filter>Application\Device\Input\Mouse</Filter>
     </ClCompile>
     <ClCompile Include="TestRenderer.cpp">
       <Filter>Framework\Test\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="Input\Keyboard_GLFW.cpp">
-      <Filter>Application\Device\Input\Keyboard\GLFW</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\Mouse_GLFW.cpp">
-      <Filter>Application\Device\Input\Mouse\GLFW</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\LIWEntity.cpp">
-      <Filter>Framework\ECSFramework\LIWEntity</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\LIWGameTimer.cpp">
-      <Filter>Framework\ECSFramework\Common\LIWTimer</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\LIWGame.cpp">
-      <Filter>Framework\ECSFramework\LIWGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Output\TextConsole.cpp">
-      <Filter>Application\Device\Output\TextOutput\TextConsole</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\LIWDebug.cpp">
-      <Filter>Framework\ECSFramework\Common\LIWDebug</Filter>
-    </ClCompile>
-    <ClCompile Include="Framework\LIWManager.cpp">
-      <Filter>Framework\ECSFramework\LIWEntity</Filter>
-    </ClCompile>
     <ClCompile Include="TestGame.cpp">
       <Filter>Framework\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\LIWEntity.cpp">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\LIWManager.cpp">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\LIWGame.cpp">
+      <Filter>Core\ECSFramework\LIWGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\LIWDebug.cpp">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Time\LIWGameTimer.cpp">
+      <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Application\Output\TextConsole.cpp">
+      <Filter>Core\Application\Device\Output\TextOutput\TextConsole</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Application\Input\Mouse.cpp">
+      <Filter>Core\Application\Device\Input\Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Application\Input\Mouse_GLFW.cpp">
+      <Filter>Core\Application\Device\Input\Mouse\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Application\Input\Keyboard.cpp">
+      <Filter>Core\Application\Device\Input\Keyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Application\Input\Keyboard_GLFW.cpp">
+      <Filter>Core\Application\Device\Input\Keyboard\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\Matrix2.cpp">
+      <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\Matrix3.cpp">
+      <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\Matrix4.cpp">
+      <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\Quaternion.cpp">
+      <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\Vector2.cpp">
+      <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\Vector3.cpp">
+      <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\Vector4.cpp">
+      <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Application\Window.cpp">
+      <Filter>Core\Application\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Utility.cpp">
+      <Filter>Core\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Renderers\OGLRenderer.cpp">
+      <Filter>Core\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Fiber\LIWFiberMain.cpp">
+      <Filter>Core\Fiber</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Fiber\LIWFiberWorker.cpp">
+      <Filter>Core\Fiber</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TaskSystem\LIWThreadPool.cpp">
+      <Filter>Core\TaskSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\LIWStandardSystem.cpp">
+      <Filter>Core\ECSFramework\LIWSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Fiber\LIWThread.cpp">
+      <Filter>Core\Fiber</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\LIWMemory.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LIWCore.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,125 +260,11 @@
     <ClInclude Include="..\ThirdParty\imgui\imstb_truetype.h">
       <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Application\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="OGLRenderer.h">
-      <Filter>Framework\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\Matrix2.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\Matrix3.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\Matrix4.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\MyMaths.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\Quaternion.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\Vector2.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\Vector3.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths\Vector4.h">
-      <Filter>Utility\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Exceptions.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Macros.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Keyboard.h">
-      <Filter>Application\Device\Input\Keyboard</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Mouse.h">
-      <Filter>Application\Device\Input\Mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\InputDevice.h">
-      <Filter>Application\Device\Input</Filter>
-    </ClInclude>
     <ClInclude Include="TestRenderer.h">
       <Filter>Framework\Test\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="Input\Keyboard_GLFW.h">
-      <Filter>Application\Device\Input\Keyboard\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Keycode.h">
-      <Filter>Application\Device\Input\Keyboard</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Mousecode.h">
-      <Filter>Application\Device\Input\Mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Mouse_GLFW.h">
-      <Filter>Application\Device\Input\Mouse\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWEntity.h">
-      <Filter>Framework\ECSFramework\LIWEntity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWEntityAttachment.h">
-      <Filter>Framework\ECSFramework\LIWEntity</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWGame.h">
-      <Filter>Framework\ECSFramework\LIWGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWObject.h">
-      <Filter>Framework\ECSFramework\LIWObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWGameTimer.h">
-      <Filter>Framework\ECSFramework\Common\LIWTimer</Filter>
-    </ClInclude>
-    <ClInclude Include="Output\OutputDevice.h">
-      <Filter>Application\Device\Output</Filter>
-    </ClInclude>
-    <ClInclude Include="LIWDevice.h">
-      <Filter>Application\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="Output\TextOutputDevice.h">
-      <Filter>Application\Device\Output\TextOutput</Filter>
-    </ClInclude>
-    <ClInclude Include="Output\TextConsole.h">
-      <Filter>Application\Device\Output\TextOutput\TextConsole</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWDebug.h">
-      <Filter>Framework\ECSFramework\Common\LIWDebug</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWComponent.h">
-      <Filter>Framework\ECSFramework\LIWComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWComponentManager.h">
-      <Filter>Framework\ECSFramework\LIWComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWSystem.h">
-      <Filter>Framework\ECSFramework\LIWSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWStandardSystem.h">
-      <Filter>Framework\ECSFramework\LIWSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWEntityManager.h">
-      <Filter>Framework\ECSFramework\LIWEntity</Filter>
-    </ClInclude>
     <ClInclude Include="TestGame.h">
       <Filter>Framework\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="Environment.h">
-      <Filter>Application\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Framework\LIWReflection.h">
-      <Filter>Framework\ECSFramework\Common\LIWReflection</Filter>
     </ClInclude>
     <ClInclude Include="Editor\LIWEditorUIHelper.h">
       <Filter>Editor</Filter>
@@ -359,8 +272,197 @@
     <ClInclude Include="TestComponent0.h">
       <Filter>Framework\Test</Filter>
     </ClInclude>
-    <ClInclude Include="Framework\LIWType.h">
-      <Filter>Framework\ECSFramework\Common\LIWReflection</Filter>
+    <ClInclude Include="Core\Framework\LIWComponent.h">
+      <Filter>Core\ECSFramework\LIWComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWComponentManager.h">
+      <Filter>Core\ECSFramework\LIWComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWEntity.h">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWEntityAttachment.h">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWEntityManager.h">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWGame.h">
+      <Filter>Core\ECSFramework\LIWGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWSystem.h">
+      <Filter>Core\ECSFramework\LIWSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWStandardSystem.h">
+      <Filter>Core\ECSFramework\LIWSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\LIWDebug.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Reflection\LIWReflection.h">
+      <Filter>Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWType.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWConstants.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWTypes.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Time\LIWGameTimer.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Output\OutputDevice.h">
+      <Filter>Core\Application\Device\Output</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Output\TextConsole.h">
+      <Filter>Core\Application\Device\Output\TextOutput\TextConsole</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Output\TextOutputDevice.h">
+      <Filter>Core\Application\Device\Output\TextOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Input\InputDevice.h">
+      <Filter>Core\Application\Device\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Input\Mouse.h">
+      <Filter>Core\Application\Device\Input\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Input\Mousecode.h">
+      <Filter>Core\Application\Device\Input\Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Input\Mouse_GLFW.h">
+      <Filter>Core\Application\Device\Input\Mouse\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Input\Keycode.h">
+      <Filter>Core\Application\Device\Input\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Input\Keyboard.h">
+      <Filter>Core\Application\Device\Input\Keyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Input\Keyboard_GLFW.h">
+      <Filter>Core\Application\Device\Input\Keyboard\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Matrix2.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Matrix3.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Matrix4.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\MyMaths.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Quaternion.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Vector2.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Vector3.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Vector4.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\LIWDevice.h">
+      <Filter>Core\Application\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Environment.h">
+      <Filter>Core\Application\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Application\Window.h">
+      <Filter>Core\Application\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\common.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exceptions.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Macros.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utility.h">
+      <Filter>Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Renderers\OGLRenderer.h">
+      <Filter>Core\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleThreadRunner.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiThreadRunner.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWFiberCommon.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWFiberMain.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWFiberTask.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWFiberThreadPoolSized.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWFiberWorker.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Containers\LIWArray.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Containers\LIWDArray.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\LIWAllocation.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\LIWLGGPAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\LIWLGPoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\LIWLGStackAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\LIWMemory.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TaskSystem\LIWITask.h">
+      <Filter>Core\TaskSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TaskSystem\LIWThreadPool.h">
+      <Filter>Core\TaskSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TaskSystem\LIWThreadPoolSized.h">
+      <Filter>Core\TaskSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="LIWCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWFiber.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWFrame.h">
+      <Filter>Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWThread.h">
+      <Filter>Core\Fiber</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

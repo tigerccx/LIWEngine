@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "LIWReflection.h"
+#include "Reflection/LIWReflection.h"
 
 namespace LIW{
 #define LIW_SET_COMPONENT_NAME(component) \
@@ -75,6 +75,6 @@ inline virtual std::string GetName() override{ return #component; }
 
 
 	protected:
-		LIWEntity* m_entity;
+		LIWEntity* m_entity{ nullptr };
 	LIW_REFLECT_CLASS_INHERIT_END
 }

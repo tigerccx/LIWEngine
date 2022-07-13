@@ -40,7 +40,7 @@ namespace LIW {
 		protected:
 
 			GLFWwindow* windowHandle = nullptr;
-			OGLRenderer* renderer;
+			OGLRenderer* renderer = nullptr;
 
 			std::string title = "";
 			int width = 0;
@@ -53,7 +53,7 @@ namespace LIW {
 			Mouse* mouse = nullptr;
 
 			/*Output*/
-			TextOutputDevice* textOutput;
+			TextOutputDevice* textOutput = nullptr;
 		};
 	}
 }

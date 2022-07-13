@@ -46,3 +46,17 @@ namespace LIW {
 		virtual void PostFrame(float dt) { }
 	};
 }
+
+#include "Memory/LIWMemory.h"
+#include "Fiber/LIWFiber.h"
+
+const int IDX_SYNCCOUNTER_STANDARDSYS_UPDATE = 10;
+const int IDX_SYNCCOUNTER_STANDARDSYS_RENDERUPDATE = 11;
+
+struct StandardSystemData {
+	liw_hdl_type m_hdlFrameData;
+	LIW::LIWStandardSystem* m_system;
+};
+
+void FT_SystemUpdate(LIW_FIBER_RUNNER_PARAM);
+void FT_SystemRenderUpdate(LIW_FIBER_RUNNER_PARAM);

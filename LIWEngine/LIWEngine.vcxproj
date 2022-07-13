@@ -79,13 +79,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>.\Framework;.\Maths;..\ThirdParty\imgui\backends;..\ThirdParty\imgui;..\ThirdParty\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\ThirdParty\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>.\Framework;.\Maths;..\ThirdParty\imgui\backends;..\ThirdParty\imgui;..\ThirdParty\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\ThirdParty\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -153,29 +153,36 @@
     <ClCompile Include="..\ThirdParty\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\ThirdParty\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\ThirdParty\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Framework\LIWDebug.cpp" />
-    <ClCompile Include="Framework\LIWEntity.cpp" />
-    <ClCompile Include="Framework\LIWGame.cpp" />
-    <ClCompile Include="Framework\LIWGameTimer.cpp" />
-    <ClCompile Include="Framework\LIWManager.cpp" />
-    <ClCompile Include="Input\Keyboard.cpp" />
-    <ClCompile Include="Input\Keyboard_GLFW.cpp" />
-    <ClCompile Include="Input\Mouse.cpp" />
-    <ClCompile Include="Input\Mouse_GLFW.cpp" />
+    <ClCompile Include="Core\Application\Input\Keyboard.cpp" />
+    <ClCompile Include="Core\Application\Input\Keyboard_GLFW.cpp" />
+    <ClCompile Include="Core\Application\Input\Mouse.cpp" />
+    <ClCompile Include="Core\Application\Input\Mouse_GLFW.cpp" />
+    <ClCompile Include="Core\Application\Output\TextConsole.cpp" />
+    <ClCompile Include="Core\Application\Window.cpp" />
+    <ClCompile Include="Core\Debug\LIWDebug.cpp" />
+    <ClCompile Include="Core\Fiber\LIWFiberMain.cpp" />
+    <ClCompile Include="Core\Fiber\LIWFiberWorker.cpp" />
+    <ClCompile Include="Core\Fiber\LIWThread.cpp" />
+    <ClCompile Include="Core\Framework\LIWEntity.cpp" />
+    <ClCompile Include="Core\Framework\LIWGame.cpp" />
+    <ClCompile Include="Core\Framework\LIWManager.cpp" />
+    <ClCompile Include="Core\Framework\LIWStandardSystem.cpp" />
+    <ClCompile Include="Core\LIWCore.cpp" />
+    <ClCompile Include="Core\Maths\Matrix2.cpp" />
+    <ClCompile Include="Core\Maths\Matrix3.cpp" />
+    <ClCompile Include="Core\Maths\Matrix4.cpp" />
+    <ClCompile Include="Core\Maths\Quaternion.cpp" />
+    <ClCompile Include="Core\Maths\Vector2.cpp" />
+    <ClCompile Include="Core\Maths\Vector3.cpp" />
+    <ClCompile Include="Core\Maths\Vector4.cpp" />
+    <ClCompile Include="Core\Memory\LIWMemory.cpp" />
+    <ClCompile Include="Core\Renderers\OGLRenderer.cpp" />
+    <ClCompile Include="Core\TaskSystem\LIWThreadPool.cpp" />
+    <ClCompile Include="Core\Time\LIWGameTimer.cpp" />
+    <ClCompile Include="Core\Utility.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Maths\Matrix2.cpp" />
-    <ClCompile Include="Maths\Matrix3.cpp" />
-    <ClCompile Include="Maths\Matrix4.cpp" />
-    <ClCompile Include="Maths\Quaternion.cpp" />
-    <ClCompile Include="Maths\Vector2.cpp" />
-    <ClCompile Include="Maths\Vector3.cpp" />
-    <ClCompile Include="Maths\Vector4.cpp" />
-    <ClCompile Include="OGLRenderer.cpp" />
-    <ClCompile Include="Output\TextConsole.cpp" />
     <ClCompile Include="TestGame.cpp" />
     <ClCompile Include="TestRenderer.cpp" />
-    <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h" />
@@ -187,49 +194,74 @@
     <ClInclude Include="..\ThirdParty\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\ThirdParty\imgui\imstb_textedit.h" />
     <ClInclude Include="..\ThirdParty\imgui\imstb_truetype.h" />
-    <ClInclude Include="common.h" />
+    <ClInclude Include="Core\Application\Environment.h" />
+    <ClInclude Include="Core\Application\Input\InputDevice.h" />
+    <ClInclude Include="Core\Application\Input\Keyboard.h" />
+    <ClInclude Include="Core\Application\Input\Keyboard_GLFW.h" />
+    <ClInclude Include="Core\Application\Input\Keycode.h" />
+    <ClInclude Include="Core\Application\Input\Mouse.h" />
+    <ClInclude Include="Core\Application\Input\Mousecode.h" />
+    <ClInclude Include="Core\Application\Input\Mouse_GLFW.h" />
+    <ClInclude Include="Core\Application\LIWDevice.h" />
+    <ClInclude Include="Core\Application\Output\OutputDevice.h" />
+    <ClInclude Include="Core\Application\Output\TextConsole.h" />
+    <ClInclude Include="Core\Application\Output\TextOutputDevice.h" />
+    <ClInclude Include="Core\Application\Window.h" />
+    <ClInclude Include="Core\common.h" />
+    <ClInclude Include="Core\Containers\LIWArray.h" />
+    <ClInclude Include="Core\Containers\LIWDArray.h" />
+    <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
+    <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
+    <ClInclude Include="Core\Debug\LIWDebug.h" />
+    <ClInclude Include="Core\Exceptions.h" />
+    <ClInclude Include="Core\Fiber\LIWFiber.h" />
+    <ClInclude Include="Core\Fiber\LIWFiberCommon.h" />
+    <ClInclude Include="Core\Fiber\LIWFiberMain.h" />
+    <ClInclude Include="Core\Fiber\LIWFiberTask.h" />
+    <ClInclude Include="Core\Fiber\LIWFiberThreadPoolSized.h" />
+    <ClInclude Include="Core\Fiber\LIWFiberWorker.h" />
+    <ClInclude Include="Core\Fiber\LIWThread.h" />
+    <ClInclude Include="Core\Framework\LIWComponent.h" />
+    <ClInclude Include="Core\Framework\LIWComponentManager.h" />
+    <ClInclude Include="Core\Framework\LIWEntity.h" />
+    <ClInclude Include="Core\Framework\LIWEntityAttachment.h" />
+    <ClInclude Include="Core\Framework\LIWEntityManager.h" />
+    <ClInclude Include="Core\Framework\LIWGame.h" />
+    <ClInclude Include="Core\Framework\LIWStandardSystem.h" />
+    <ClInclude Include="Core\Framework\LIWSystem.h" />
+    <ClInclude Include="Core\LIWConstants.h" />
+    <ClInclude Include="Core\LIWFrame.h" />
+    <ClInclude Include="Core\LIWObject.h" />
+    <ClInclude Include="Core\LIWType.h" />
+    <ClInclude Include="Core\LIWTypes.h" />
+    <ClInclude Include="Core\Macros.h" />
+    <ClInclude Include="Core\Maths\Matrix2.h" />
+    <ClInclude Include="Core\Maths\Matrix3.h" />
+    <ClInclude Include="Core\Maths\Matrix4.h" />
+    <ClInclude Include="Core\Maths\MyMaths.h" />
+    <ClInclude Include="Core\Maths\Quaternion.h" />
+    <ClInclude Include="Core\Maths\Vector2.h" />
+    <ClInclude Include="Core\Maths\Vector3.h" />
+    <ClInclude Include="Core\Maths\Vector4.h" />
+    <ClInclude Include="Core\Memory\LIWAllocation.h" />
+    <ClInclude Include="Core\Memory\LIWLGGPAllocator.h" />
+    <ClInclude Include="Core\Memory\LIWLGPoolAllocator.h" />
+    <ClInclude Include="Core\Memory\LIWLGStackAllocator.h" />
+    <ClInclude Include="Core\Memory\LIWMemory.h" />
+    <ClInclude Include="Core\Reflection\LIWReflection.h" />
+    <ClInclude Include="Core\Renderers\OGLRenderer.h" />
+    <ClInclude Include="Core\TaskSystem\LIWITask.h" />
+    <ClInclude Include="Core\TaskSystem\LIWThreadPool.h" />
+    <ClInclude Include="Core\TaskSystem\LIWThreadPoolSized.h" />
+    <ClInclude Include="Core\Time\LIWGameTimer.h" />
+    <ClInclude Include="Core\Utility.h" />
     <ClInclude Include="Editor\LIWEditorUIHelper.h" />
-    <ClInclude Include="Environment.h" />
-    <ClInclude Include="Exceptions.h" />
-    <ClInclude Include="Framework\LIWComponent.h" />
-    <ClInclude Include="Framework\LIWComponentManager.h" />
-    <ClInclude Include="Framework\LIWDebug.h" />
-    <ClInclude Include="Framework\LIWEntity.h" />
-    <ClInclude Include="Framework\LIWEntityAttachment.h" />
-    <ClInclude Include="Framework\LIWEntityManager.h" />
-    <ClInclude Include="Framework\LIWGame.h" />
-    <ClInclude Include="Framework\LIWGameTimer.h" />
-    <ClInclude Include="Framework\LIWObject.h" />
-    <ClInclude Include="Framework\LIWReflection.h" />
-    <ClInclude Include="Framework\LIWStandardSystem.h" />
-    <ClInclude Include="Framework\LIWSystem.h" />
-    <ClInclude Include="Framework\LIWType.h" />
-    <ClInclude Include="Input\InputDevice.h" />
-    <ClInclude Include="Input\Keyboard.h" />
-    <ClInclude Include="Input\Keyboard_GLFW.h" />
-    <ClInclude Include="Input\Keycode.h" />
-    <ClInclude Include="Input\Mouse.h" />
-    <ClInclude Include="Input\Mousecode.h" />
-    <ClInclude Include="Input\Mouse_GLFW.h" />
-    <ClInclude Include="LIWDevice.h" />
-    <ClInclude Include="Macros.h" />
-    <ClInclude Include="Maths\Matrix2.h" />
-    <ClInclude Include="Maths\Matrix3.h" />
-    <ClInclude Include="Maths\Matrix4.h" />
-    <ClInclude Include="Maths\MyMaths.h" />
-    <ClInclude Include="Maths\Quaternion.h" />
-    <ClInclude Include="Maths\Vector2.h" />
-    <ClInclude Include="Maths\Vector3.h" />
-    <ClInclude Include="Maths\Vector4.h" />
-    <ClInclude Include="OGLRenderer.h" />
-    <ClInclude Include="Output\OutputDevice.h" />
-    <ClInclude Include="Output\TextConsole.h" />
-    <ClInclude Include="Output\TextOutputDevice.h" />
+    <ClInclude Include="LIWCore.h" />
+    <ClInclude Include="MultiThreadRunner.h" />
+    <ClInclude Include="SingleThreadRunner.h" />
     <ClInclude Include="TestComponent0.h" />
     <ClInclude Include="TestGame.h" />
     <ClInclude Include="TestRenderer.h" />
-    <ClInclude Include="Utility.h" />
-    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

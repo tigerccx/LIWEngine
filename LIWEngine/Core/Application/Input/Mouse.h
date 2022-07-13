@@ -20,7 +20,7 @@ _-_-_-_-_-_-_-""  ""
 
 #include "InputDevice.h"
 #include <map>
-#include "Vector2.h"
+#include "Maths/Vector2.h"
 
 #include "Mousecode.h"
 namespace LIW {
