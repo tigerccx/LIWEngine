@@ -118,6 +118,9 @@
     <Filter Include="Core\Renderers">
       <UniqueIdentifier>{1732d455-ff80-41f1-8ae6-077fd80143c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Test\Memory">
+      <UniqueIdentifier>{13d12786-f8f7-4e9b-8268-b08f7fdb34fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.cpp">
@@ -463,6 +466,15 @@
     </ClInclude>
     <ClInclude Include="Core\Fiber\LIWThread.h">
       <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWThreadWorker.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Fiber\LIWThreadWorkerTask.h">
+      <Filter>Core\Fiber</Filter>
+    </ClInclude>
+    <ClInclude Include="test_mem_0.h">
+      <Filter>Framework\Test\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

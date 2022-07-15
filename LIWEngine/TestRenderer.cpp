@@ -58,8 +58,8 @@ void FT_TestRenderUpdate(LIW_FIBER_RUNNER_PARAM)
 {
 	using namespace LIW;
 
-	TestRenderData* ptrData = (TestRenderData*)liw_maddr_frame((liw_hdl_type)param);
-	LIWFrameData* ptrFrameData = (LIWFrameData*)liw_maddr_frame(ptrData->m_hdlFrameData);
+	LIWPointer<TestRenderData, LIWMem_Frame> ptrData((liw_hdl_type)param);
+	auto ptrFrameData = ptrData->m_hdlFrameData;
 	ptrData->m_renderer->Update(ptrFrameData->m_timeDelta);
 
 	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender , param });
@@ -69,11 +69,23 @@ void FT_TestRenderRender(LIW_FIBER_RUNNER_PARAM)
 {
 	using namespace LIW;
 
-	TestRenderData* ptrData = (TestRenderData*)liw_maddr_frame((liw_hdl_type)param);
-	LIWFrameData* ptrFrameData = (LIWFrameData*)liw_maddr_frame(ptrData->m_hdlFrameData);
+	LIWPointer<TestRenderData, LIWMem_Frame> ptrData((liw_hdl_type)param);
+	auto ptrFrameData = ptrData->m_hdlFrameData;
+
+	LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
+	LIWCore::s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ TT_TestRenderRender, param });
+	LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, thisFiber);
+
+	
+	liw_delete_frame<TestRenderData>(ptrData);
+
+	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIWCore::LIW_FT_EDTR_UIDrawBeg , (void*)ptrFrameData.get_handle() });
+}
+
+void TT_TestRenderRender(LIW_THREADWORKER_RUNNER_PARAM) {
+	LIWPointer<TestRenderData, LIWMem_Frame> ptrData((liw_hdl_type)param);
+	auto ptrFrameData = ptrData->m_hdlFrameData;
 	ptrData->m_renderer->RenderScene();
 
-	liw_delete_frame<TestRenderData>((liw_hdl_type)param);
-
-	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIWCore::LIW_FT_FrameEnd , param });
+	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
 }

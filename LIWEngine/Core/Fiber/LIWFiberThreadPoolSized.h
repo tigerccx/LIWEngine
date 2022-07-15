@@ -247,33 +247,38 @@ namespace LIW {
 				!thisTP->m_fibersAwakeList.empty() ||
 				thisTP->m_isRunning) {
 				fiber = nullptr;
-				if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
+				if (!thisTP->m_fibersAwakeList.empty()) {
+					if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
 					// Set fiber to perform task
-					fiber->SetMainFiber(fiberMain);
-
-					// Switch to fiber
-					fiberMain->YieldTo(fiber);
-
-					if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-						thisTP->m_fibers.push_now(fiber);
-					}
-				}
-				else if (thisTP->m_fibers.pop_now(fiber)) { // Acquire fiber from idle fiber list. //TODO: Currently this is spinning when empty. Make it wait. 
-					if (thisTP->m_tasks.pop_now(task)) { // Acquire task
-						// Set fiber to perform task
 						fiber->SetMainFiber(fiberMain);
-						fiber->SetRunFunction(task->m_runner, task->m_param);
 
 						// Switch to fiber
 						fiberMain->YieldTo(fiber);
 
-						// Delete task, since everything was copied into call stack (fiber).
-						delete task;
-					}
-					if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-						thisTP->m_fibers.push_now(fiber);
+						if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+							thisTP->m_fibers.push_now(fiber);
+						}
 					}
 				}
+				else if (!thisTP->m_tasks.empty()) {
+					if (thisTP->m_fibers.pop_now(fiber)) { // Acquire fiber from idle fiber list. //TODO: Currently this is spinning when empty. Make it wait. 
+						if (thisTP->m_tasks.pop_now(task)) { // Acquire task
+							// Set fiber to perform task
+							fiber->SetMainFiber(fiberMain);
+							fiber->SetRunFunction(task->m_runner, task->m_param);
+
+							// Switch to fiber
+							fiberMain->YieldTo(fiber);
+
+							// Delete task, since everything was copied into call stack (fiber).
+							delete task;
+						}
+						if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+							thisTP->m_fibers.push_now(fiber);
+						}
+					}
+				}
+				 
 			}
 
 			// Cleanup thread

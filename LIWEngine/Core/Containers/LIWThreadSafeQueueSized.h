@@ -165,7 +165,7 @@ namespace LIW {
 			/// <summary>
 			/// Block the thread until queue is empty. 
 			/// </summary>
-			inline void block_till_empty() {
+			inline void block_till_empty() { //TODO: Make this more efficient
 				while (!empty()) { std::this_thread::yield(); }
 			}
 			/// <summary>
@@ -178,10 +178,10 @@ namespace LIW {
 			}
 
 		protected:
-			T __m_queue[Size];
-			std::atomic<size_type> __m_front;
+			T __m_queue[Size]{};
+			std::atomic<size_type> __m_front{0};
 			//size_type __m_front = 0;
-			std::atomic<size_type> __m_back;
+			std::atomic<size_type> __m_back{0};
 			//size_type __m_back = 0;
 		private:
 			mutable std::mutex __m_mtx_data;

@@ -4,7 +4,7 @@
 
 #include "LIWTypes.h"
 #include "LIWConstants.h"
-#include "LIWMemory.h"
+#include "Memory/LIWMemory.h"
 
 enum LIWDArrayExpandType {
 	LIWDArrayExpand_Double,		// 2x capacity
@@ -185,20 +185,20 @@ public:
 	//
 	// Capacity
 	//
-	constexpr inline size_t get_capacity() const {
+	inline size_t get_capacity() const {
 		return m_capacity;
 	}
-	constexpr inline size_t get_size() const {
+	inline size_t get_size() const {
 		return m_size;
 	}
-	constexpr inline size_t is_empty() const {
+	inline size_t is_empty() const {
 		return !m_size;
 	}
 
 	//
 	// Access
 	//
-	constexpr inline liw_hdl_type get_data_handle() const {
+	inline liw_hdl_type get_data_handle() const {
 		return m_dataBuffer;
 	}
 	inline T* get_data() const {

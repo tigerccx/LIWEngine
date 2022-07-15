@@ -3,9 +3,20 @@
 #include <vector>
 #include <array>
 #include "LIWTypes.h"
+#include "LIWConstants.h"
 #include "LIWLGStackAllocator.h"
 #include "LIWLGGPAllocator.h"
 #include "Fiber/LIWThread.h"
+
+
+enum LIWMemAllocation {
+	LIWMem_System,
+	LIWMem_Default,
+	LIWMem_Static,
+	LIWMem_Frame,
+	LIWMem_DFrame,
+	LIWMem_Max
+};
 
 inline const liw_memsize_type operator""_KB(liw_memsize_type const x) { return 1024 * x; }
 inline const liw_memsize_type operator""_MB(liw_memsize_type const x) { return 1024 * 1024 * x; }
@@ -36,6 +47,23 @@ inline const liw_memsize_type operator""_GB(liw_memsize_type const x) { return 1
 * liw_adelete_MODE:			delete array
 */
 
+//
+// Fighting with templates everyday...
+//
+#include <type_traits>
+
+struct liw__mem_alloc_tag_sys {};
+struct liw__mem_alloc_tag_def {};
+struct liw__mem_alloc_tag_static {};
+struct liw__mem_alloc_tag_frame {};
+struct liw__mem_alloc_tag_dframe {};
+
+template <LIWMemAllocation MemAlloc> struct liw__mem_alloc_tag;
+template <> struct liw__mem_alloc_tag<LIWMem_System> { typedef liw__mem_alloc_tag_sys type; };
+template <> struct liw__mem_alloc_tag<LIWMem_Default> { typedef liw__mem_alloc_tag_def type; };
+template <> struct liw__mem_alloc_tag<LIWMem_Static> { typedef liw__mem_alloc_tag_static type; };
+template <> struct liw__mem_alloc_tag<LIWMem_Frame> { typedef liw__mem_alloc_tag_frame type; };
+template <> struct liw__mem_alloc_tag<LIWMem_DFrame> { typedef liw__mem_alloc_tag_dframe type; };
 
 //
 // System memory allocation
@@ -65,36 +93,6 @@ inline liw_hdl_type liw_malloc_sys(liw_memsize_type size) {
 
 inline void liw_free_sys(liw_hdl_type handle) {
 	free((void*)handle);
-}
-
-template<class T, class ... Args>
-inline liw_hdl_type liw_new_sys(Args&&... args) {
-	T* ptr = (T*)liw_malloc_sys(sizeof(T));
-	return (liw_hdl_type)(new(ptr)T(std::forward<Args>(args)...));
-}
-
-template<class T>
-inline void liw_delete_sys(liw_hdl_type handle) {
-	((T*)handle)->~T();
-	liw_free_sys(handle);
-}
-
-template<class T, class ... Args>
-inline liw_hdl_type liw_anew_sys(size_t size, Args&&... args) {
-	T* ptr = (T*)liw_malloc_sys(sizeof(T) * size);
-	for (size_t i = 0; i < size; i++) {
-		new(&ptr[i]) T(std::forward<Args>(args)...);
-	}
-	return (liw_hdl_type)(ptr);
-}
-
-template<class T>
-inline void liw_adelete_sys(liw_hdl_type handle, size_t size) {
-	T* ptr = (T*)handle;
-	for (size_t i = 0; i < size; i++) {
-		ptr[i].~T();
-	}
-	liw_free_sys(handle);
 }
 
 //
@@ -164,40 +162,6 @@ inline void liw_free_def(liw_hdl_type handle) {
 	DefaultMemBuffer::s_defaultBufferLAllocators[LIW::LIWThreadGetID()].Free(handle);
 }
 
-template<class T, class ... Args>
-inline liw_hdl_type liw_new_def(Args&&... args) {
-	liw_hdl_type handle = liw_malloc_def(sizeof(T));
-	T* ptr = (T*)liw_maddr_def(handle);
-	new(ptr)T(std::forward<Args>(args)...);
-	return handle;
-}
-
-template<class T>
-inline void liw_delete_def(liw_hdl_type handle) {
-	T* ptr = (T*)liw_maddr_def(handle);
-	ptr->~T();
-	liw_free_def(handle);
-}
-
-template<class T, class ... Args>
-inline liw_hdl_type liw_anew_def(size_t size, Args&&... args) {
-	liw_hdl_type handle = liw_malloc_def(sizeof(T) * size);
-	T* ptr = (T*)liw_maddr_def(handle);
-	for (size_t i = 0; i < size; i++) {
-		new(&ptr[i]) T(std::forward<Args>(args)...);
-	}
-	return handle;
-}
-
-template<class T>
-inline void liw_adelete_def(liw_hdl_type handle, size_t size) {
-	T* ptr = (T*)liw_maddr_def(handle);
-	for (size_t i = 0; i < size; i++) {
-		ptr[i].~T();
-	}
-	liw_free_def(handle);
-}
-
 
 //
 // Static buffer
@@ -265,36 +229,6 @@ inline void liw_free_static(liw_hdl_type handle) {
 
 }
 
-template<class T, class ... Args>
-inline liw_hdl_type liw_new_static(Args&&... args) {
-	T* ptr = (T*)liw_malloc_static(sizeof(T));
-	return (liw_hdl_type)(new(ptr)T(std::forward<Args>(args)...));
-}
-
-template<class T>
-inline void liw_delete_static(liw_hdl_type handle) {
-	((T*)handle)->~T();
-	liw_free_static(handle);
-}
-
-template<class T, class ... Args>
-inline liw_hdl_type liw_anew_static(size_t size, Args&&... args) {
-	T* ptr = (T*)liw_malloc_static(sizeof(T) * size);
-	for (size_t i = 0; i < size; i++) {
-		new(&ptr[i]) T(std::forward<Args>(args)...);
-	}
-	return (liw_hdl_type)(ptr);
-}
-
-template<class T>
-inline void liw_adelete_static(liw_hdl_type handle, size_t size) {
-	T* ptr = (T*)handle;
-	for (size_t i = 0; i < size; i++) {
-		ptr[i].~T();
-	}
-	liw_free_static(handle);
-}
-
 //
 // Per frame buffer
 //
@@ -359,36 +293,6 @@ inline liw_hdl_type liw_malloc_frame(liw_memsize_type size) {
 
 inline void liw_free_frame(liw_hdl_type handle) {
 	
-}
-
-template<class T, class ... Args>
-inline liw_hdl_type liw_new_frame(Args&&... args) {
-	T* ptr = (T*)liw_malloc_frame(sizeof(T));
-	return (liw_hdl_type)(new(ptr)T(std::forward<Args>(args)...));
-}
-
-template<class T>
-inline void liw_delete_frame(liw_hdl_type handle) {
-	((T*)handle)->~T();
-	liw_free_frame(handle);
-}
-
-template<class T, class ... Args>
-inline liw_hdl_type liw_anew_frame(size_t size, Args&&... args) {
-	T* ptr = (T*)liw_malloc_frame(sizeof(T) * size);
-	for (size_t i = 0; i < size; i++) {
-		new(&ptr[i]) T(std::forward<Args>(args)...);
-	}
-	return (liw_hdl_type)(ptr);
-}
-
-template<class T>
-inline void liw_adelete_frame(liw_hdl_type handle, size_t size) {
-	T* ptr = (T*)handle;
-	for (size_t i = 0; i < size; i++) {
-		ptr[i].~T();
-	}
-	liw_free_frame(handle);
 }
 
 //
@@ -461,229 +365,493 @@ inline void liw_free_dframe(liw_hdl_type handle) {
 
 }
 
-template<class T, class ... Args>
-inline liw_hdl_type liw_new_dframe(Args&&... args) {
-	T* ptr = (T*)liw_malloc_dframe(sizeof(T));
-	return (liw_hdl_type)(new(ptr)T(std::forward<Args>(args)...));
+//
+// Interface
+//
+
+inline void* liw__maddr_foo(liw__mem_alloc_tag_sys, liw_hdl_type handle) { return liw_maddr_sys(handle); }
+inline void* liw__maddr_foo(liw__mem_alloc_tag_def, liw_hdl_type handle) { return liw_maddr_def(handle); }
+inline void* liw__maddr_foo(liw__mem_alloc_tag_static, liw_hdl_type handle) { return liw_maddr_static(handle); }
+inline void* liw__maddr_foo(liw__mem_alloc_tag_frame, liw_hdl_type handle) { return liw_maddr_frame(handle); }
+inline void* liw__maddr_foo(liw__mem_alloc_tag_dframe, liw_hdl_type handle) { return liw_maddr_dframe(handle); }
+
+template<LIWMemAllocation MemAlloc>
+inline void* liw_maddr(liw_hdl_type handle) {
+	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	return liw__maddr_foo(tag(), handle);
 }
 
 template<class T>
-inline void liw_delete_dframe(liw_hdl_type handle) {
+inline void liw__mset_foo(liw__mem_alloc_tag_sys, liw_hdl_type handle, T&& val) { liw_mset_sys<T>(handle, std::forward<T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_def, liw_hdl_type handle, T&& val) { liw_mset_def<T>(handle, std::forward<T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_static, liw_hdl_type handle, T&& val) { liw_mset_static<T>(handle, std::forward<T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_frame, liw_hdl_type handle, T&& val) { liw_mset_frame<T>(handle, std::forward<T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_dframe, liw_hdl_type handle, T&& val) { liw_mset_dframe<T>(handle, std::forward<T>(val)); }
+
+template<LIWMemAllocation MemAlloc, class T>
+inline void liw_mset(liw_hdl_type handle, T&& val) {
+	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	liw__mset_foo<T>(tag(), handle, std::forward<T>(val));
+}
+
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_sys, liw_hdl_type handle, const T& val) { liw_mset_sys<T>(handle, std::forward<const T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_def, liw_hdl_type handle, const T& val) { liw_mset_def<T>(handle, std::forward<const T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_static, liw_hdl_type handle, const T& val) { liw_mset_static<T>(handle, std::forward<const T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_frame, liw_hdl_type handle, const T& val) { liw_mset_frame<T>(handle, std::forward<const T>(val)); }
+template<class T>
+inline void liw__mset_foo(liw__mem_alloc_tag_dframe, liw_hdl_type handle, const T& val) { liw_mset_dframe<T>(handle, std::forward<const T>(val)); }
+
+template<LIWMemAllocation MemAlloc, class T>
+inline void liw_mset(liw_hdl_type handle, const T& val) {
+	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	liw__mset_foo<T>(tag(), handle, std::forward<T>(val));
+}
+
+template<class T>
+inline T liw__mget_foo(liw__mem_alloc_tag_sys, liw_hdl_type handle) { return liw_mget_sys<T>(handle); }
+template<class T>
+inline T liw__mget_foo(liw__mem_alloc_tag_def, liw_hdl_type handle) { return liw_mget_def<T>(handle); }
+template<class T>
+inline T liw__mget_foo(liw__mem_alloc_tag_static, liw_hdl_type handle) { return liw_mget_static<T>(handle); }
+template<class T>
+inline T liw__mget_foo(liw__mem_alloc_tag_frame, liw_hdl_type handle) { return liw_mget_frame<T>(handle); }
+template<class T>
+inline T liw__mget_foo(liw__mem_alloc_tag_dframe, liw_hdl_type handle) { return liw_mget_dframe<T>(handle); }
+
+template<LIWMemAllocation MemAlloc, class T>
+inline T liw_mget(liw_hdl_type handle) {
+	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	return liw__mget_foo<T>(tag(), handle);
+}
+
+inline liw_hdl_type liw__malloc_foo(liw__mem_alloc_tag_sys, liw_memsize_type size) { return liw_malloc_sys(size); }
+inline liw_hdl_type liw__malloc_foo(liw__mem_alloc_tag_def, liw_memsize_type size) { return liw_malloc_def(size); }
+inline liw_hdl_type liw__malloc_foo(liw__mem_alloc_tag_static, liw_memsize_type size) { return liw_malloc_static(size); }
+inline liw_hdl_type liw__malloc_foo(liw__mem_alloc_tag_frame, liw_memsize_type size) { return liw_malloc_frame(size); }
+inline liw_hdl_type liw__malloc_foo(liw__mem_alloc_tag_dframe, liw_memsize_type size) { return liw_malloc_dframe(size); }
+
+template<LIWMemAllocation MemAlloc>
+inline liw_hdl_type liw_malloc(liw_memsize_type size) {
+	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	return liw__malloc_foo(tag(), size);
+}
+
+inline void liw__free_foo(liw__mem_alloc_tag_sys, liw_hdl_type handle) { liw_free_sys(handle); }
+inline void liw__free_foo(liw__mem_alloc_tag_def, liw_hdl_type handle) { liw_free_def(handle); }
+inline void liw__free_foo(liw__mem_alloc_tag_static, liw_hdl_type handle) { liw_free_static(handle); }
+inline void liw__free_foo(liw__mem_alloc_tag_frame, liw_hdl_type handle) { liw_free_frame(handle); }
+inline void liw__free_foo(liw__mem_alloc_tag_dframe, liw_hdl_type handle) { liw_free_dframe(handle); }
+
+template<LIWMemAllocation MemAlloc>
+inline void liw_free(liw_hdl_type handle) {
+	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	liw__free_foo(tag(), handle);
+}
+
+
+//
+// LIWPointer
+//
+
+template<LIWMemAllocation AllocType>
+class LIWBasePointer {
+public:
+	LIWBasePointer() : m_handle(liw_c_nullhdl) {}
+	LIWBasePointer(liw_hdl_type handle) : m_handle(handle) {}
+	LIWBasePointer(const LIWBasePointer& other) = default;
+	LIWBasePointer(LIWBasePointer&& other) = default;
+	LIWBasePointer& operator=(const LIWBasePointer& other) = default;
+	LIWBasePointer& operator=(LIWBasePointer&& other) = default;
+
+	//
+	// Compare
+	//
+	inline bool operator==(const LIWBasePointer& other) const {
+		return m_handle == other.m_handle;
+	}
+	inline bool operator!=(const LIWBasePointer& other) const {
+		return !(*this == other);
+	}
+	inline bool is_null() const {
+		return m_handle == liw_c_nullhdl;
+	}
+
+	//
+	// Access
+	//
+	inline liw_hdl_type get_handle() const {
+		return m_handle;
+	}
+protected:
+	liw_hdl_type m_handle;
+};
+
+template<class T, LIWMemAllocation AllocType>
+class LIWPointer : public LIWBasePointer<AllocType> {
+private:
+	typedef LIWBasePointer<AllocType> base_type;
+	typedef LIWPointer<T, AllocType> this_type;
+public:
+	LIWPointer() :base_type() {}
+	LIWPointer(liw_hdl_type handle) : base_type(handle) {}
+	LIWPointer(const LIWPointer& other) = default;
+	LIWPointer(LIWPointer&& other) = default;
+	LIWPointer& operator=(const LIWPointer& other) = default;
+	LIWPointer& operator=(LIWPointer&& other) = default;
+
+	LIWPointer(const base_type& other) { *this = other; }
+	LIWPointer& operator=(const base_type& other) { base_type::m_handle = other.get_handle(); }
+
+	// No Step (cannot step handle)
+
+	//
+	// Access
+	//
+	inline T& operator*() {
+		return *((T*)liw_maddr<AllocType>(base_type::m_handle));
+	}
+	inline const T& operator*() const {
+		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
+	}
+	inline T* operator->() {
+		return (T*)liw_maddr<AllocType>(base_type::m_handle);
+	}
+	inline const T* operator->() const {
+		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
+	}
+	inline T& operator[](size_t idx) {
+		T* ptr = (T*)liw_maddr<AllocType>(base_type::m_handle);
+		return ptr[idx];
+	}
+	inline const T& operator[](size_t idx) const {
+		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
+		return ptr[idx];
+	}
+	inline T* get_ptr() const {
+		return (T*)liw_maddr<AllocType>(base_type::m_handle);
+	}
+};
+
+template<class T, LIWMemAllocation AllocType>
+class LIWCPointer : public LIWBasePointer<AllocType> {
+private:
+	typedef LIWBasePointer<AllocType> base_type;
+	typedef LIWCPointer<T, AllocType> this_type;
+public:
+	LIWCPointer() :base_type() {}
+	LIWCPointer(liw_hdl_type handle) : base_type(handle) {}
+	LIWCPointer(const LIWCPointer& other) = default;
+	LIWCPointer(LIWCPointer&& other) = default;
+	LIWCPointer& operator=(const LIWCPointer& other) = default;
+	LIWCPointer& operator=(LIWCPointer&& other) = default;
+
+	LIWCPointer(const base_type& other) { *this = other; };
+	LIWCPointer& operator=(const base_type& other) { base_type::m_handle = other.get_handle(); }
+
+	// No Step (cannot step handle)
+
+	//
+	// Access
+	//
+	inline const T& operator*() {
+		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
+	}
+	inline const T& operator*() const {
+		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
+	}
+	inline const T* operator->() {
+		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
+	}
+	inline const T* operator->() const {
+		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
+	}
+	inline const T& operator[](size_t idx) {
+		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
+		return ptr[idx];
+	}
+	inline const T& operator[](size_t idx) const {
+		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
+		return ptr[idx];
+	}
+	inline T* get_ptr() const {
+		return (T*)liw_maddr<AllocType>(base_type::m_handle);
+	}
+};
+
+//
+// New&Delete (Variable&Array)
+//
+
+//
+// System memory allocation (new delete)
+// 
+
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_System> liw_new_sys(Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_sys(sizeof(T));
+	const liw_hdl_type handle = (liw_hdl_type)(new(ptrRaw)T(std::forward<Args>(args)...));
+	return LIWPointer<T, LIWMem_System>(handle);
+}
+
+template<class T>
+inline void liw_delete_sys(LIWPointer<T, LIWMem_System> ptr) {
+	const liw_hdl_type handle = ptr.get_handle();
+	((T*)handle)->~T();
+	liw_free_sys(handle);
+}
+
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_System> liw_anew_sys(size_t size, Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_sys(sizeof(T) * size);
+	for (size_t i = 0; i < size; i++) {
+		new(&ptrRaw[i]) T(std::forward<Args>(args)...);
+	}
+	const liw_hdl_type handle = (liw_hdl_type)(ptrRaw);
+	return LIWPointer<T, LIWMem_System>(handle);
+}
+
+template<class T>
+inline void liw_adelete_sys(LIWPointer<T, LIWMem_System> ptr, size_t size) {
+	const liw_hdl_type handle = ptr.get_handle();
+	T* ptrRaw = (T*)handle;
+	for (size_t i = 0; i < size; i++) {
+		ptrRaw[i].~T();
+	}
+	liw_free_sys(handle);
+}
+
+//
+// Default memory allocation (new delete)
+// 
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Default> liw_new_def(Args&&... args) {
+	liw_hdl_type handle = liw_malloc_def(sizeof(T));
+	T* ptrRaw = (T*)liw_maddr_def(handle);
+	new(ptrRaw)T(std::forward<Args>(args)...);
+	return LIWPointer<T, LIWMem_Default>(handle);
+}
+
+template<class T>
+inline void liw_delete_def(LIWPointer<T, LIWMem_Default> ptr) {
+	const liw_hdl_type handle = ptr.get_handle();
+	T* ptrRaw = (T*)liw_maddr_def(handle);
+	ptrRaw->~T();
+	liw_free_def(handle);
+}
+
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Default> liw_anew_def(size_t size, Args&&... args) {
+	liw_hdl_type handle = liw_malloc_def(sizeof(T) * size);
+	T* ptrRaw = (T*)liw_maddr_def(handle);
+	for (size_t i = 0; i < size; i++) {
+		new(&ptrRaw[i]) T(std::forward<Args>(args)...);
+	}
+	return LIWPointer<T, LIWMem_Default>(handle);
+}
+
+template<class T>
+inline void liw_adelete_def(LIWPointer<T, LIWMem_Default> ptr, size_t size) {
+	const liw_hdl_type handle = ptr.get_handle();
+	T* ptrRaw = (T*)liw_maddr_def(handle);
+	for (size_t i = 0; i < size; i++) {
+		ptrRaw[i].~T();
+	}
+	liw_free_def(handle);
+}
+
+//
+// Static buffer (new delete)
+//
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Static> liw_new_static(Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_static(sizeof(T));
+	const liw_hdl_type handle = (liw_hdl_type)(new(ptrRaw)T(std::forward<Args>(args)...));
+	return LIWPointer<T, LIWMem_Static>(handle);
+}
+
+template<class T>
+inline void liw_delete_static(LIWPointer<T, LIWMem_Static> ptr) {
+	const liw_hdl_type handle = ptr.get_handle();
+	((T*)handle)->~T();
+	liw_free_static(handle);
+}
+
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Static> liw_anew_static(size_t size, Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_static(sizeof(T) * size);
+	for (size_t i = 0; i < size; i++) {
+		new(&ptrRaw[i]) T(std::forward<Args>(args)...);
+	}
+	const liw_hdl_type handle = (liw_hdl_type)(ptrRaw);
+	return LIWPointer<T, LIWMem_Static>(handle);
+}
+
+template<class T>
+inline void liw_adelete_static(LIWPointer<T, LIWMem_Static> ptr, size_t size) {
+	const liw_hdl_type handle = ptr.get_handle();
+	T* ptrRaw = (T*)handle;
+	for (size_t i = 0; i < size; i++) {
+		ptrRaw[i].~T();
+	}
+	liw_free_static(handle);
+}
+
+//
+// Per frame buffer (new delete)
+//
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Frame> liw_new_frame(Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_frame(sizeof(T));
+	const liw_hdl_type handle = (liw_hdl_type)(new(ptrRaw)T(std::forward<Args>(args)...));
+	return LIWPointer<T, LIWMem_Frame>(handle);
+}
+
+template<class T>
+inline void liw_delete_frame(LIWPointer<T, LIWMem_Frame> ptr) {
+	const liw_hdl_type handle = ptr.get_handle();
+	((T*)handle)->~T();
+	liw_free_frame(handle);
+}
+
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Frame> liw_anew_frame(size_t size, Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_frame(sizeof(T) * size);
+	for (size_t i = 0; i < size; i++) {
+		new(&ptrRaw[i]) T(std::forward<Args>(args)...);
+	}
+	const liw_hdl_type handle = (liw_hdl_type)(ptrRaw);
+	return LIWPointer<T, LIWMem_Frame>(handle);
+}
+
+template<class T>
+inline void liw_adelete_frame(LIWPointer<T, LIWMem_Frame> ptr, size_t size) {
+	const liw_hdl_type handle = ptr.get_handle();
+	T* ptrRaw = (T*)handle;
+	for (size_t i = 0; i < size; i++) {
+		ptrRaw[i].~T();
+	}
+	liw_free_frame(handle);
+}
+
+//
+// Double frame buffer (new delete)
+//
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_DFrame> liw_new_dframe(Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_dframe(sizeof(T));
+	const liw_hdl_type handle = (liw_hdl_type)(new(ptrRaw)T(std::forward<Args>(args)...));
+	return LIWPointer<T, LIWMem_DFrame>(handle);
+}
+
+template<class T>
+inline void liw_delete_dframe(LIWPointer<T, LIWMem_DFrame> ptr) {
+	const liw_hdl_type handle = ptr.get_handle();
 	((T*)handle)->~T();
 	liw_free_dframe(handle);
 }
 
 template<class T, class ... Args>
-inline liw_hdl_type liw_anew_dframe(size_t size, Args&&... args) {
-	T* ptr = (T*)liw_malloc_dframe(sizeof(T) * size);
+inline LIWPointer<T, LIWMem_DFrame> liw_anew_dframe(size_t size, Args&&... args) {
+	T* ptrRaw = (T*)liw_malloc_dframe(sizeof(T) * size);
 	for (size_t i = 0; i < size; i++) {
-		new(&ptr[i]) T(std::forward<Args>(args)...);
+		new(&ptrRaw[i]) T(std::forward<Args>(args)...);
 	}
-	return (liw_hdl_type)(ptr);
+	const liw_hdl_type handle = (liw_hdl_type)(ptrRaw);
+	return LIWPointer<T, LIWMem_DFrame>(handle);
 }
 
 template<class T>
-inline void liw_adelete_dframe(liw_hdl_type handle, size_t size) {
-	T* ptr = (T*)handle;
+inline void liw_adelete_dframe(LIWPointer<T, LIWMem_DFrame> ptr, size_t size) {
+	const liw_hdl_type handle = ptr.get_handle();
+	T* ptrRaw = (T*)handle;
 	for (size_t i = 0; i < size; i++) {
-		ptr[i].~T();
+		ptrRaw[i].~T();
 	}
 	liw_free_dframe(handle);
 }
 
-//
-// LIW memory interface
-//
-enum LIWMemAllocation {
-	LIWMem_System,
-	LIWMem_Default,
-	LIWMem_Static,
-	LIWMem_Frame,
-	LIWMem_DFrame,
-	LIWMem_Max
-};
-
-
-template<LIWMemAllocation MemAlloc>
-inline void* liw_maddr(liw_hdl_type handle) {
-	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		return liw_maddr_sys(handle);
-	case LIWMem_Default:
-		return liw_maddr_def(handle);
-	case LIWMem_Static:
-		return liw_maddr_static(handle);
-	case LIWMem_Frame:
-		return liw_maddr_frame(handle);
-	case LIWMem_DFrame:
-		return liw_maddr_dframe(handle);
-	}
-	throw "Im just here to stop the warning...";
-}
-
-template<LIWMemAllocation MemAlloc, class T>
-inline void liw_mset(liw_hdl_type handle, T&& val) {
-	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		liw_mset_sys<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_Default:
-		liw_mset_def<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_Static:
-		liw_mset_static<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_Frame:
-		liw_mset_frame<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_DFrame:
-		liw_mset_dframe<T>(handle, std::forward<T>(val)); break;
-	}
-}
-template<LIWMemAllocation MemAlloc, class T>
-inline void liw_mset(liw_hdl_type handle, const T& val) {
-	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		liw_mset_sys<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_Default:
-		liw_mset_def<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_Static:
-		liw_mset_static<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_Frame:
-		liw_mset_frame<T>(handle, std::forward<T>(val)); break;
-	case LIWMem_DFrame:
-		liw_mset_dframe<T>(handle, std::forward<T>(val)); break;
-	}
-}
-
-template<LIWMemAllocation MemAlloc, class T>
-inline T liw_mget(liw_hdl_type handle) {
-	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		return std::move(liw_mget_sys<T>(handle)); 
-	case LIWMem_Default:
-		return std::move(liw_mget_def<T>(handle));
-	case LIWMem_Static:
-		return std::move(liw_mget_static<T>(handle));
-	case LIWMem_Frame:
-		return std::move(liw_mget_frame<T>(handle));
-	case LIWMem_DFrame:
-		return std::move(liw_mget_dframe<T>(handle));
-	}
-	throw "Im just here to stop the warning...";
-}
-
-template<LIWMemAllocation MemAlloc>
-inline liw_hdl_type liw_malloc(liw_memsize_type size) {
-	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		return liw_malloc_sys(size);
-	case LIWMem_Default:
-		return liw_malloc_def(size);
-	case LIWMem_Static:
-		return liw_malloc_static(size);
-	case LIWMem_Frame:
-		return liw_malloc_frame(size);
-	case LIWMem_DFrame:
-		return liw_malloc_dframe(size);
-	}
-	throw "Im just here to stop the warning...";
-}
-
-template<LIWMemAllocation MemAlloc>
-inline void liw_free(liw_hdl_type handle) {
-	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		liw_free_sys(handle); break;
-	case LIWMem_Default:
-		liw_free_def(handle); break;
-	case LIWMem_Static:
-		liw_free_static(handle); break;
-	case LIWMem_Frame:
-		liw_free_frame(handle); break;
-	case LIWMem_DFrame:
-		liw_free_dframe(handle); break;
-	}
-}
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_System> liw__new_foo(liw__mem_alloc_tag_sys, Args&&... args) { return liw_new_sys<T>(std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Default> liw__new_foo(liw__mem_alloc_tag_def, Args&&... args) { return liw_new_def<T>(std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Static> liw__new_foo(liw__mem_alloc_tag_static, Args&&... args) { return liw_new_static<T>(std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Frame> liw__new_foo(liw__mem_alloc_tag_frame, Args&&... args) { return liw_new_frame<T>(std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_DFrame> liw__new_foo(liw__mem_alloc_tag_dframe, Args&&... args) { return liw_new_dframe<T>(std::forward<Args>(args)...); }
 
 template<LIWMemAllocation MemAlloc, class T, class ... Args>
-inline liw_hdl_type liw_new(Args&&... args) {
+inline LIWPointer<T, MemAlloc> liw_new(Args&&... args) {
 	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		return liw_new_sys<T>(std::forward<Args>(args)...);
-	case LIWMem_Default:
-		return liw_new_def<T>(std::forward<Args>(args)...);
-	case LIWMem_Static:
-		return liw_new_static<T>(std::forward<Args>(args)...);
-	case LIWMem_Frame:
-		return liw_new_frame<T>(std::forward<Args>(args)...);
-	case LIWMem_DFrame:
-		return liw_new_dframe<T>(std::forward<Args>(args)...);
-	}
-	throw "Im just here to stop the warning...";
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	return liw__new_foo<T>(tag(), std::forward<Args>(args)...);
 }
 
+template<class T, class ... Args>
+inline void liw__delete_foo(liw__mem_alloc_tag_sys, LIWPointer<T, LIWMem_System> ptr) { liw_delete_sys<T>(ptr); }
+template<class T, class ... Args>
+inline void liw__delete_foo(liw__mem_alloc_tag_def, LIWPointer<T, LIWMem_Default> ptr) { liw_delete_def<T>(ptr); }
+template<class T, class ... Args>
+inline void liw__delete_foo(liw__mem_alloc_tag_static, LIWPointer<T, LIWMem_Static> ptr) { liw_delete_static<T>(ptr); }
+template<class T, class ... Args>
+inline void liw__delete_foo(liw__mem_alloc_tag_frame, LIWPointer<T, LIWMem_Frame> ptr) { liw_delete_frame<T>(ptr); }
+template<class T, class ... Args>
+inline void liw__delete_foo(liw__mem_alloc_tag_dframe, LIWPointer<T, LIWMem_DFrame> ptr) { liw_delete_dframe<T>(ptr); }
+
 template<LIWMemAllocation MemAlloc, class T>
-inline void liw_delete(liw_hdl_type handle) {
+inline void liw_delete(LIWPointer<T, MemAlloc> ptr) {
 	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		liw_delete_sys<T>(handle); break;
-	case LIWMem_Default:
-		liw_delete_def<T>(handle); break;
-	case LIWMem_Static:
-		liw_delete_static<T>(handle); break;
-	case LIWMem_Frame:
-		liw_delete_frame<T>(handle); break;
-	case LIWMem_DFrame:
-		liw_delete_dframe<T>(handle); break;
-	}
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	liw__delete_foo<T>(tag(), ptr);
 }
+
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_System> liw__anew_foo(liw__mem_alloc_tag_sys, size_t size, Args&&... args) { return liw_anew_sys<T>(size, std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Default> liw__anew_foo(liw__mem_alloc_tag_def, size_t size, Args&&... args) { return liw_anew_def<T>(size, std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Static> liw__anew_foo(liw__mem_alloc_tag_static, size_t size, Args&&... args) { return liw_anew_static<T>(size, std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_Frame> liw__anew_foo(liw__mem_alloc_tag_frame, size_t size, Args&&... args) { return liw_anew_frame<T>(size, std::forward<Args>(args)...); }
+template<class T, class ... Args>
+inline LIWPointer<T, LIWMem_DFrame> liw__anew_foo(liw__mem_alloc_tag_dframe, size_t size, Args&&... args) { return liw_anew_dframe<T>(size, std::forward<Args>(args)...); }
 
 template<LIWMemAllocation MemAlloc, class T, class ... Args>
-inline liw_hdl_type liw_anew(size_t size, Args&&... args) {
+inline LIWPointer<T, MemAlloc> liw_anew(size_t size, Args&&... args) {
 	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		return liw_anew_sys<T>(size, std::forward<Args>(args)...);
-	case LIWMem_Default:
-		return liw_anew_def<T>(size, std::forward<Args>(args)...);
-	case LIWMem_Static:
-		return liw_anew_static<T>(size, std::forward<Args>(args)...);
-	case LIWMem_Frame:
-		return liw_anew_frame<T>(size, std::forward<Args>(args)...);
-	case LIWMem_DFrame:
-		return liw_anew_dframe<T>(size, std::forward<Args>(args)...);
-	}
-	throw "Im just here to stop the warning...";
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	return liw__anew_foo<T>(tag(), size, std::forward<Args>(args)...);
 }
 
+template<class T, class ... Args>
+inline void liw__adelete_foo(liw__mem_alloc_tag_sys, LIWPointer<T, LIWMem_System> ptr, size_t size) { liw_adelete_sys<T>(ptr, size); }
+template<class T, class ... Args>
+inline void liw__adelete_foo(liw__mem_alloc_tag_def, LIWPointer<T, LIWMem_Default> ptr, size_t size) { liw_adelete_def<T>(ptr, size); }
+template<class T, class ... Args>
+inline void liw__adelete_foo(liw__mem_alloc_tag_static, LIWPointer<T, LIWMem_Static> ptr, size_t size) { liw_adelete_static<T>(ptr, size); }
+template<class T, class ... Args>
+inline void liw__adelete_foo(liw__mem_alloc_tag_frame, LIWPointer<T, LIWMem_Frame> ptr, size_t size) { liw_adelete_frame<T>(ptr, size); }
+template<class T, class ... Args>
+inline void liw__adelete_foo(liw__mem_alloc_tag_dframe, LIWPointer<T, LIWMem_DFrame> ptr, size_t size) { liw_adelete_dframe<T>(ptr, size); }
+
 template<LIWMemAllocation MemAlloc, class T>
-inline void liw_adelete(liw_hdl_type handle, size_t size) {
+inline void liw_adelete(LIWPointer<T, MemAlloc> ptr, size_t size) {
 	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
-	switch (MemAlloc)
-	{
-	case LIWMem_System:
-		liw_adelete_sys<T>(handle, size); break;
-	case LIWMem_Default:
-		liw_adelete_def<T>(handle, size); break;
-	case LIWMem_Static:
-		liw_adelete_static<T>(handle, size); break;
-	case LIWMem_Frame:
-		liw_adelete_frame<T>(handle, size); break;
-	case LIWMem_DFrame:
-		liw_adelete_dframe<T>(handle, size); break;
-	}
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	liw__adelete_foo<T>(tag(), ptr, size);
 }

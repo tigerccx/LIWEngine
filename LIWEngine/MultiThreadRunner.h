@@ -8,8 +8,7 @@ int run(void)
 
 	LIWCore::s_ins.Boot();
 
-	//std::this_thread::sleep_for(1s);
-	LIWCore::s_ins.MainThreadLoop();
+	LIWCore::s_ins.MainThreadRun();
 
 	LIWCore::s_ins.Shutdown();
 

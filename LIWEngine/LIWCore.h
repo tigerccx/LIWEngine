@@ -19,23 +19,29 @@
 #include "Fiber/LIWThread.h"
 #include "Memory/LIWMemory.h"
 #include "Fiber/LIWFiberThreadPoolSized.h"
+#include "Fiber/LIWThreadWorker.h"
 #include "LIWFrame.h"
 
 #include "TestRenderer.h"
 
+void TT_TestUIDraw(LIW_THREADWORKER_RUNNER_PARAM);
+
+
+#define LIW_FIBER_COUNT size_t(1) << 8
+#define LIW_FIBER_AWAKE_COUNT size_t(1) << 10
+#define LIW_FIBER_TASK_COUNT size_t(1) << 16
+#define LIW_FIBER_SYNC_COUNTER_COUNT size_t(1) << 10
+
+#define LIW_WORKER_MAIN_TASK_COUNT size_t(1) << 16
+
 namespace LIW {
-	const size_t LIW_FIBER_COUNT = 1 << 8;
-	const size_t LIW_FIBER_AWAKE_COUNT = 1 << 10;
-	const size_t LIW_FIBER_TASK_COUNT = 1 << 16;
-	const size_t LIW_FIBER_SYNC_COUNTER_COUNT = 1 << 10;
-
-
 	class LIWCore {
 	public:
 		typedef std::mutex mtx_type;
 		typedef std::unique_lock<std::mutex> uniqlk_type;
 		typedef std::condition_variable condvar_type;
-		typedef LIW::LIWFiberThreadPoolSized<LIW_FIBER_COUNT, LIW_FIBER_AWAKE_COUNT, LIW_FIBER_TASK_COUNT, LIW_FIBER_SYNC_COUNTER_COUNT> fiber_thd_pool_type;
+		typedef LIW::LIWFiberThreadPoolSized<LIW_FIBER_COUNT, LIW_FIBER_AWAKE_COUNT, LIW_FIBER_TASK_COUNT, LIW_FIBER_SYNC_COUNTER_COUNT> fiber_thdpool_type;
+		typedef LIW::LIWThreadWorker<LIW_WORKER_MAIN_TASK_COUNT> main_thdwkr_type;
 
 	public:
 		int Boot() {
@@ -54,8 +60,6 @@ namespace LIW {
 			LIWThreads::s_ins.m_threadCount = countThreads;
 			LIWThreadRegisterID(LIW_THREAD_IDX_MAIN);
 
-			int idxThread = LIW_THREAD_IDX_MAIN + 1;
-
 			//
 			// Init memory management
 			// 
@@ -66,14 +70,28 @@ namespace LIW {
 			liw_minit_frame(countThreads);
 			liw_minit_dframe(countThreads);
 
+			// Count threads
+			int idxThread = LIW_THREAD_IDX_MAIN;
+
 			// Init mem for main thread
 			LIWThreadInit();
 
+			//
+			// Init main thread worker
+			//
+			m_mainThreadWorker.Init();
+			if (!m_mainThreadWorker.IsInit()) {
+				throw "Main ThreadWorker init failed. ";
+			}
+			idxThread++;
 
 			//
 			// Init fiber thread pool
 			//
 			m_fiberThreadPool.Init(countWorkerThreads, idxThread);
+			if (!m_fiberThreadPool.IsInit()) {
+				throw "Fiber ThreadPool init failed. ";
+			}
 			idxThread += countWorkerThreads;
 
 			// Init GLFW
@@ -87,7 +105,7 @@ namespace LIW {
 			// Init Environment
 			/* Window */
 			m_window = liw_new_static<LIW::App::Window>("My First GLFW Window", 1280, 720, false);
-			auto ptrWindow = (LIW::App::Window*)liw_maddr_static(m_window);
+			auto ptrWindow = m_window;
 			if (!ptrWindow->Initialised()) {
 				return -1;
 			}
@@ -145,16 +163,12 @@ namespace LIW {
 			return 0;
 		}
 
-		void MainThreadLoop() {
-			using namespace std::chrono;
-			while (m_isRunning.load()) {
-				//TODO: DO things main thread should do
-				std::this_thread::sleep_for(5ms);
-			}
+		void MainThreadRun() {
+			m_mainThreadWorker.Run();
 		}
 
 		void NotifyShutdown() {
-			m_isRunning.store(false);
+			m_mainThreadWorker.WaitAndStop();
 		}
 
 		void Shutdown() {
@@ -168,7 +182,11 @@ namespace LIW {
 			// Shutdown fiber therad pool
 			//
 			m_fiberThreadPool.WaitAndStop();
-
+			
+			//
+			// Shutdown main thread worker
+			//
+			m_mainThreadWorker.WaitTillEmpty();
 
 			//
 			// Shutdown memory management
@@ -191,6 +209,10 @@ namespace LIW {
 		}
 
 	public:
+		/// <summary>
+		/// Begin a frame. 
+		/// </summary>
+		/// <param name=""> None </param>
 		static void LIW_FT_FrameBeg(LIW_FIBER_RUNNER_PARAM){
 			std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
 			const double timeFromStart = double((std::chrono::duration_cast<std::chrono::nanoseconds>(timeNow - s_ins.m_timeStart)).count()) * 1e-9;
@@ -198,24 +220,91 @@ namespace LIW {
 			s_ins.m_timeFrame = timeNow;
 			s_ins.m_frameCount++;
 
-			printf("FrameBeg %llu\n", s_ins.m_frameCount);
+			printf("FrameBeg %llu -- LastFrame %lf(s) \n", s_ins.m_frameCount, timeFrame);
+			
+			auto ptrFrameData = liw_new_frame<LIWFrameData>(
+				LIWFrameData{ 
+					timeNow, 
+					timeFrame, 
+					timeFromStart,
+					false
+				});
 
-			liw_hdl_type hdlFrameData = liw_new_frame<LIWFrameData>(LIWFrameData{ timeNow, timeFrame, timeFromStart });
-			liw_hdl_type hdlTestRenderData = liw_new_frame<TestRenderData>(TestRenderData{ hdlFrameData, s_ins.m_game.m_renderer });
+
+			// Window update
+			s_ins.m_fiberThreadPool.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEBEG, 2);
+			s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ LIW_TT_WindowUpdate, (void*)ptrFrameData.get_handle() });
+			s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ LIW_TT_EventPoll, nullptr });
+			s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEBEG, thisFiber);
+
+			if (ptrFrameData->m_singnalEnd) {
+				s_ins.NotifyShutdown();
+				return;
+			}
+
+			// Kick off the frame
+			auto ptrTestRenderData = liw_new_frame<TestRenderData>(TestRenderData{ ptrFrameData, s_ins.m_game.m_renderer });
 			
-			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender, (void*)hdlTestRenderData });
+			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender, (void*)ptrTestRenderData.get_handle() });
 			
+
+			//TODO: properly kick off to game
 			//liw_hdl_type hdlGameData = liw_new_frame<GameData>(GameData{ hdlFrameData, &s_ins.m_game });
 			//
 			//s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender, (void*)hdlGameData });
+
 		}
 
+		/// <summary>
+		/// Begin drawing editor UI
+		/// </summary>
+		/// <param name=""> LIWFrameData handle(frame) </param>
+		static void LIW_FT_EDTR_UIDrawBeg(LIW_FIBER_RUNNER_PARAM) {
+			s_ins.m_fiberThreadPool.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
+			s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ LIW_TT_ImguiDrawBeg, nullptr });
+			s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, thisFiber);
+
+			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIW_FT_EDTR_UIDraw, param });
+		}
+
+		/// <summary>
+		/// Draw editor UI
+		/// </summary>
+		/// <param name=""> LIWFrameData handle(frame) </param>
+		static void LIW_FT_EDTR_UIDraw(LIW_FIBER_RUNNER_PARAM) {
+			LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
+			LIWCore::s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ TT_TestUIDraw, nullptr });
+			LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, thisFiber);
+
+			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIW_FT_EDTR_UIDrawEnd, param });
+		}
+		
+		/// <summary>
+		/// End drawing editor UI
+		/// </summary>
+		/// <param name=""> LIWFrameData handle(frame) </param>
+		static void LIW_FT_EDTR_UIDrawEnd(LIW_FIBER_RUNNER_PARAM) {
+			s_ins.m_fiberThreadPool.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
+			s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ LIW_TT_ImguiDrawEndAndPresent, nullptr });
+			s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, thisFiber);
+
+			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIW_FT_FrameEnd, param });
+		}
+
+		/// <summary>
+		/// End a frame
+		/// </summary>
+		/// <param name=""> LIWFrameData handle(frame)(delete) </param>
 		static void LIW_FT_FrameEnd(LIW_FIBER_RUNNER_PARAM) {
 
 			LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEEND, thisFiber);
 
 			const liw_hdl_type handleFrameData = (liw_hdl_type)param;
 			LIWFrameData* ptrFrameData = (LIWFrameData*)liw_maddr_frame(handleFrameData);
+
+			LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEEND, 1);
+			LIWCore::s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ LIW_TT_SwapBuffer, nullptr });
+			LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEEND, thisFiber);
 
 			
 			liw_delete_frame<LIWFrameData>(handleFrameData);
@@ -234,9 +323,14 @@ namespace LIW {
 
 			printf("FrameEnd %llu\n", s_ins.m_frameCount);
 
-			LIWCore::s_ins.NotifyShutdown();
+			//LIWCore::s_ins.NotifyShutdown();
+			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIW_FT_FrameBeg, 0 });
 		}
 
+		/// <summary>
+		/// Run per frame memory management
+		/// </summary>
+		/// <param name=""> None </param>
 		static void LIW_FT_FrameMemoryThdUpdate(LIW_FIBER_RUNNER_PARAM) {
 			int idxThread = (int)((size_t)param);
 			liw_mupdate_def_thd(idxThread);
@@ -246,11 +340,76 @@ namespace LIW {
 			LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_MEMORY_UPDATE, 1);
 		}
 
+		/// <summary>
+		/// Notify to stop everything
+		/// </summary>
+		/// <param name=""> None </param>
+		static void LIW_FT_NotifyStop(LIW_FIBER_RUNNER_PARAM) {
+			s_ins.NotifyShutdown();
+		}
+
+		/// <summary>
+		/// Update window
+		/// </summary>
+		/// <param name=""> LIWFrameData handle(frame) </param>
+		static void LIW_TT_WindowUpdate(LIW_THREADWORKER_RUNNER_PARAM) {
+			auto ptrFrameData = LIWPointer<LIWFrameData, LIWMem_Frame>((liw_hdl_type)param);
+			auto ptrWindow = s_ins.m_window;
+			if (!ptrWindow->UpdateWindow()) {
+				s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIW_FT_NotifyStop, 0 });
+				ptrFrameData->m_singnalEnd = true;
+			}
+			LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEBEG, 1);
+		}
+
+		/// <summary>
+		/// Poll OS event
+		/// </summary>
+		/// <param name=""> None </param>
+		static void LIW_TT_EventPoll(LIW_THREADWORKER_RUNNER_PARAM) {
+			glfwPollEvents();
+			LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEBEG, 1);
+		}
+
+		/// <summary>
+		/// Begin imgui drawing
+		/// </summary>
+		/// <param name=""> None </param>
+		static void LIW_TT_ImguiDrawBeg(LIW_THREADWORKER_RUNNER_PARAM) {
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
+		}
+		/// <summary>
+		/// End imgui drawing and present
+		/// </summary>
+		/// <param name=""> None </param>
+		static void LIW_TT_ImguiDrawEndAndPresent(LIW_THREADWORKER_RUNNER_PARAM) {
+			// Prerender ImGUI
+			ImGui::Render();
+			// Render UI
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
+		}
+
+		/// <summary>
+		/// Swap buffer
+		/// </summary>
+		/// <param name=""> None </param>
+		static void LIW_TT_SwapBuffer(LIW_THREADWORKER_RUNNER_PARAM) {
+			auto ptrWindow = s_ins.m_window;
+			ptrWindow->SwapBuffer();
+
+			LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_FRAMEEND, 1);
+		}
+
 	public:
 		LIW::App::Environment m_environment;
-		liw_hdl_type m_window{ liw_c_nullhdl };
+		LIWPointer<LIW::App::Window, LIWMem_Static> m_window{ liw_c_nullhdl };
 		TestGame m_game;
-		fiber_thd_pool_type m_fiberThreadPool;
+		fiber_thdpool_type m_fiberThreadPool;
+		main_thdwkr_type m_mainThreadWorker;
 
 	private:
 		std::atomic<bool> m_isRunning;

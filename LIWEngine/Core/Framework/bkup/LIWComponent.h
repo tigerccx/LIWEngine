@@ -1,117 +1,80 @@
 #pragma once
-#include "LIWObject.h"
-#include "LIWModel.h"
-#include "LIWController.h"
+#include <string>
+#include "Reflection/LIWReflection.h"
 
-namespace LIW {
+namespace LIW{
+#define LIW_SET_COMPONENT_NAME(component) \
+inline virtual std::string GetName() override{ return #component; }
+
 	class LIWEntity;
-	
+
 	/*
 	* Class: LIWComponent
 	* Author: tigerccx
-	* Description:	This class is used as a baseclass Component in a ECS framework. 
-	*				A LIWComponent in LIW framework acts as a functional plugin. 
-	*				It must be attached to an LIWEntity to function, 
-	*				and it will use the data provided by LIWModel on the LIWEntity.
+	* Description:	This class is used as a baseclass Model part of a MVC-like framework. 
+	* 				Note: Please use macro LIWReflectAttr to declare reflectable attributes. 
+	*				eg. 
+	*				class SomeComponent: public LIWComponent
+	*				{
+	*					LIWReflectInt(m_MyInt0);
+	*					LIWReflectFloat(m_MyFloat0);
+	*					LIWReflectFloatVal(m_MyFloat1, 1.0f);
+	*					//...
+	*				}
 	*/
-	class LIWComponent :
-		public LIWObject {
+	LIW_REFLECT_CLASS_INHERIT_BEG(LIWComponent, LIWObject)
 	public:
-		LIWComponent() : LIWObject() { Initialise(nullptr); Register(); }
-		LIWComponent(void* param) : LIWObject() { Initialise(param); Register(); }
-		virtual ~LIWComponent() { Unregister(); }
+		LIWComponent() :
+			LIWObject() { }
+		virtual ~LIWComponent() { }
 
-
-		/*
-		* Func: Initialise
-		* Description:	Initialise the Component with some parameter.
-		*/
-		virtual void Initialise(void* param) = 0;
 		/*
 		* Func: SetEntity
 		* Description:	Set the Entity this Component is attached to.
-		*				Note: Should only be called by the Entity. 
+		*				Note: Should only be called by the Entity.
 		*/
-		inline void SetEntity(LIWEntity* entity) { entity = nullptr; }
-		
+		inline void SetEntity(LIWEntity* entity) { m_entity = entity; }
 		/*
-		* Func: Start
-		* Description:	Called the first frame of functioning.
+		* Func: GetEntity
+		* Description:	Get the Entity this Component is attached to.
 		*/
-		virtual void Start() { }
+		inline LIWEntity* GetEntity() const { return m_entity; }
 		/*
-		* Func: Update
-		* Desciption:	Update.
-		*				Called when active.
+		* Func: GetName
+		* Description: Get the name of Component.
 		*/
-		virtual void Update(float dt) { }
-		/*
-		* Func: FixedUpdate
-		* Desciption:	Update at a fixed rate.
-		*				Called when active.
-		*/
-		virtual void FixedUpdate(float dt) { }
-		/*
-		* Func: PreRenderUpdate
-		* Description:	Update before render.
-		*				Called when active.
-		*/
-		virtual void PreRenderUpdate() { }
-		/*
-		* Func: PostRenderUpdate
-		* Description:	Update after render.
-		*				Called when active.
-		*/
-		virtual void PostRenderUpdate() { }
-		
-		/*
-		* Func: Activate
-		* Description:	Activate component.
-		*/
-		inline void Activate() { if (!isActive) { isActive = true; OnActivated(); } }
-		/*
-		* Func: Deactivate
-		* Description:	Deactivate component.
-		*/
-		inline void Deactivate() { if (isActive) { isActive = false; OnDeactivated(); } }
-		/*
-		* Func: IsActive
-		* Desciprtion:	Check is component active.
-		*/
-		inline bool IsActive() const { return isActive; }
+		inline virtual std::string GetName() = 0;
+
+	//public:
+	//	//
+	//	// Reflection
+	//	//
+	//	template<class T> bool Set(const std::string& attrName, const T& val) {
+	//		return LIWReflectHelper::Set(this, attrName, val);
+	//	}
+
+	//	template<class T> bool Get(const std::string& attrName, T& valOut) const {
+	//		return LIWReflectHelper::Get(this, attrName, valOut);
+	//	}
+
+	//	template<class T> T* GetPt(const std::string& attrName) const {
+	//		return LIWReflectHelper::GetPt(this, attrName);
+	//	}
+
+	//	void* GetPtVoid(const std::string& attrName) const {
+	//		return LIWReflectHelper::GetPtVoid(this, attrName);
+	//	}
+
+	//	bool GetAttrs(ReflectAttrBook& attrs) const {
+	//		return LIWReflectHelper::GetAttrs(this->GetObjectType(), attrs);
+	//	}
+
+	//	bool GetAttrsR(ReflectAttrBook& attrs) const {
+	//		return LIWReflectHelper::GetAttrsR(this->GetObjectType(), attrs);
+	//	}
+
 
 	protected:
-		LIWEntity* entity;
-
-		bool isActive = false;
-		bool wasActive = false;
-
-		/*
-		* Func: Register
-		* Description:	Register the instance to LIWComponentManager.
-		*/
-		virtual void Register();
-		/*
-		* Func: Unregister
-		* Description:	Unregister the instance from LIWComponentManager.
-		*/
-		virtual void Unregister();
-
-		/*
-		* Func: PreUpdate
-		* Description:	Handle pre-update controller events.
-		*				Called no matter active or not.
-		*/
-		void PreUpdate() {
-			if (isActive && !wasActive) {
-				Start();
-			}
-			wasActive = isActive;
-		}
-
-		// Callbacks
-		virtual void OnActivated() {};
-		virtual void OnDeactivated() {};
-	};
-
+		LIWEntity* m_entity{ nullptr };
+	LIW_REFLECT_CLASS_INHERIT_END
 }

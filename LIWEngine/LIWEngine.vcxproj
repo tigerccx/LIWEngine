@@ -221,6 +221,8 @@
     <ClInclude Include="Core\Fiber\LIWFiberThreadPoolSized.h" />
     <ClInclude Include="Core\Fiber\LIWFiberWorker.h" />
     <ClInclude Include="Core\Fiber\LIWThread.h" />
+    <ClInclude Include="Core\Fiber\LIWThreadWorker.h" />
+    <ClInclude Include="Core\Fiber\LIWThreadWorkerTask.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
     <ClInclude Include="Core\Framework\LIWComponentManager.h" />
     <ClInclude Include="Core\Framework\LIWEntity.h" />
@@ -262,6 +264,7 @@
     <ClInclude Include="TestComponent0.h" />
     <ClInclude Include="TestGame.h" />
     <ClInclude Include="TestRenderer.h" />
+    <ClInclude Include="test_mem_0.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

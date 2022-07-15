@@ -1,6 +1,6 @@
 #pragma once
 #include "LIWTypes.h"
-#include "LIWMemory.h"
+#include "Memory/LIWMemory.h"
 
 template<class T, size_t Size>
 class LIWArray {

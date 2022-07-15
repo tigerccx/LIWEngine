@@ -54,12 +54,12 @@ __LIWRegisterReflectAttr(type, name)
 //
 
 /*Set up class hierarchy*/
-#define __LIW_REFLECT_SET_UP_BASE(className, classBase) \
+#define LIW__REFLECT_SET_UP_BASE(className, classBase) \
 const short __##className = LIW::LIWType<className>::type.__SetUpBaseType<classBase>(); \
 
 /*Set up dynamic type info*/
 /*Note: Don't know if there's a better way to do this.*/
-#define __LIW_REFLECT_GET_TYPE_BLOCK(className) \
+#define LIW__REFLECT_GET_TYPE_BLOCK(className) \
 inline virtual const LIW::LIWTypeID GetObjectTypeID() const override { return LIW::GetTypeID<className>(); } \
 inline virtual const std::string GetObjectTypeName() const override { return LIW::GetTypeName<className>(); } \
 inline virtual LIW::LIWBaseType* GetObjectType() override { return LIW::GetType<className>(); }
@@ -81,9 +81,9 @@ public: \
 	using typeBase = classBase; \
 	using type = className; \
 private: \
-	__LIW_REFLECT_SET_UP_BASE(className, classBase) \
+	LIW__REFLECT_SET_UP_BASE(className, classBase) \
 public: \
-	__LIW_REFLECT_GET_TYPE_BLOCK(className) \
+	LIW__REFLECT_GET_TYPE_BLOCK(className) \
 private: 
 #define LIW_REFLECT_CLASS_INHERIT_END };
 

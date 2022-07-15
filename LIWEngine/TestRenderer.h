@@ -12,15 +12,18 @@ public:
 };
 
 #include "Fiber/LIWFiber.h"
+#include "Fiber/LIWThreadWorkerTask.h"
 #include "Memory/LIWMemory.h"
 #include "LIWFrame.h"
 
 struct TestRenderData
 {
-    liw_hdl_type m_hdlFrameData;
+    LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;
     TestRenderer* m_renderer;
 };
 
 void FT_TestRenderUpdate(LIW_FIBER_RUNNER_PARAM);
 
 void FT_TestRenderRender(LIW_FIBER_RUNNER_PARAM);
+
+void TT_TestRenderRender(LIW_THREADWORKER_RUNNER_PARAM);
