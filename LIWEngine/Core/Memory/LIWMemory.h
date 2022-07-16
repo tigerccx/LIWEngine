@@ -514,7 +514,7 @@ public:
 	LIWPointer& operator=(LIWPointer&& other) = default;
 
 	LIWPointer(const base_type& other) { *this = other; }
-	LIWPointer& operator=(const base_type& other) { base_type::m_handle = other.get_handle(); }
+	LIWPointer& operator=(const base_type& other) { base_type::m_handle = other.get_handle(); return *this; }
 
 	// No Step (cannot step handle)
 

@@ -1,4 +1,5 @@
 #include "TestGame.h"
+#include "Editor/LIWEditorTasks.h"
 
 int TestGame::Initialise()
 {
@@ -15,25 +16,23 @@ int TestGame::Initialise()
 #include "TestFiberTaskIds.h"
 #include "TestSystem0.h"
 
-void FT_TestGameUpdate(LIW_FIBER_RUNNER_PARAM)
+void FT_TestGameUpdate::Execute(LIWFiberWorker* thisFiber)
 {
 	using namespace LIW;
 
-	LIWPointer<GameData, LIWMem_Frame> ptrData((liw_hdl_type)param);
-	auto ptrFrameData = ptrData->m_hdlFrameData;
-	TestGame* const ptrGame = (TestGame*)ptrData->m_game;
-	liw_delete_frame<GameData>((liw_hdl_type)param);
+	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
+	auto taskUpdateTestSys0 = new FT_TestSystem0Update();
+	taskUpdateTestSys0->m_ptrFrameData = m_ptrFrameData;
+	LIWFiberExecutor::m_executor.Submit(taskUpdateTestSys0);
+	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
 
-	LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
-	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ TestSystem0::FT_Update, (void*)ptrFrameData.get_handle() });
-	LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
+	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
+	auto ptrFT_TestRendererRender = new FT_TestRenderRender();
+	ptrFT_TestRendererRender->m_renderer = m_ptrGame->m_renderer;
+	LIWFiberExecutor::m_executor.Submit(ptrFT_TestRendererRender);
+	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
 
-	LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
-	auto ptrTestRenderData = liw_new_frame<TestRenderer::TestRenderData>(TestRenderer::TestRenderData{ ptrFrameData, ptrGame->m_renderer });
-	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ TestRenderer::FT_TestRenderRender, (void*)ptrTestRenderData.get_handle() });
-	LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
-
-	liw_delete_frame<GameData>(ptrData);
-
-	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIWCore::LIW_FT_EDTR_UIDrawBeg, (void*)ptrFrameData.get_handle()});
+	auto ptrFT_EdtrUIDrawBeg = new Editor::LIW_FT_EDTR_UIDrawBeg();
+	ptrFT_EdtrUIDrawBeg->ptrFrameData = m_ptrFrameData;
+	LIWFiberExecutor::m_executor.Submit(ptrFT_EdtrUIDrawBeg);
 }

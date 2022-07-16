@@ -54,38 +54,32 @@ void TestRenderer::RenderScene()
 
 #include "LIWCore.h"
 
-void TestRenderer::FT_TestRenderUpdate(LIW_FIBER_RUNNER_PARAM)
+
+void FT_TestRenderUpdate::Execute(LIWFiberWorker* thisFiber)
 {
 	using namespace LIW;
 
-	LIWPointer<TestRenderData, LIWMem_Frame> ptrData((liw_hdl_type)param);
-	auto ptrFrameData = ptrData->m_hdlFrameData;
-	ptrData->m_renderer->Update(ptrFrameData->m_timeDelta);
+	m_renderer->Update(m_ptrFrameData->m_timeDelta);
 
-	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender , param });
+	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_UPDATE, 1);
 }
 
-void TestRenderer::FT_TestRenderRender(LIW_FIBER_RUNNER_PARAM)
+void FT_TestRenderRender::Execute(LIWFiberWorker* thisFiber)
 {
 	using namespace LIW;
 
-	LIWPointer<TestRenderData, LIWMem_Frame> ptrData((liw_hdl_type)param);
-	auto ptrFrameData = ptrData->m_hdlFrameData;
+	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
+	auto ptrTT_TestRenderRender = new TT_TestRenderRender();
+	ptrTT_TestRenderRender->m_renderer = m_renderer;
+	LIWMainThreadExecutor::m_executor.Submit(ptrTT_TestRenderRender);
+	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, thisFiber);
 
-	LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
-	LIWCore::s_ins.m_mainThreadWorker.Submit(new LIWThreadWorkerTask{ TT_TestRenderRender, param });
-	LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, thisFiber);
-
-	
-	liw_delete_frame<TestRenderData>(ptrData);
-
-	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
+	LIWFiberExecutor::m_executor.DecreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
 }
 
-void TestRenderer::TT_TestRenderRender(LIW_THREADWORKER_RUNNER_PARAM) {
-	LIWPointer<TestRenderData, LIWMem_Frame> ptrData((liw_hdl_type)param);
-	auto ptrFrameData = ptrData->m_hdlFrameData;
-	ptrData->m_renderer->RenderScene();
+void TT_TestRenderRender::Execute()
+{
+	m_renderer->RenderScene();
 
-	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
+	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
 }

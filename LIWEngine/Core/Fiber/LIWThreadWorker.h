@@ -105,7 +105,7 @@ namespace LIW {
 			while (!m_tasks.empty() || m_isRunning.load()) {
 				LIWThreadWorkerTask* task = nullptr;
 				if (m_tasks.pop(task)) {
-					task->m_runner(task->m_param);
+					task->Execute();
 					delete task;
 				}
 			}

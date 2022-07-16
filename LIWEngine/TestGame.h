@@ -9,6 +9,8 @@
 #include "TestComponent0.h"
 #include "TestSystem0.h"
 #include "Fiber/LIWFiberCommon.h"
+#include "Fiber/LIWFiberTask.h"
+#include "Fiber/LIWFiberExecutor.h"
 
 using namespace LIW;
 
@@ -29,4 +31,13 @@ public:
     TestSystem0* m_sys0{ nullptr };
 };
 
-void FT_TestGameUpdate(LIW_FIBER_RUNNER_PARAM);
+class FT_TestGameUpdate final:
+    public LIWFiberTask 
+{
+public:
+    void Execute(LIWFiberWorker* thisFiber) override;
+public:
+    LIWPointer<GameData, LIWMem_Frame> m_ptrFrameData{};
+    //LIWPointer<TestGame, LIWMem_Static> m_ptrGame{};
+    TestGame* m_ptrGame{ nullptr };
+};

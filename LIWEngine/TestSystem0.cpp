@@ -2,43 +2,38 @@
 #include "LIWCore.h"
 
 
-void TestSystem0::FT_TestComponent0Update(LIW_FIBER_RUNNER_PARAM)
+void FT_TestSystem0Update::Execute(LIWFiberWorker* thisFiber)
 {
 	using namespace LIW;
-
-	auto ptrParam = LIWPointer<TestComponent0UpdateParam, LIWMem_Frame>((liw_hdl_type)param);
-
-	auto& testComponent0Mngr = LIWComponentManager<TestComponent0>::s_ins;
-	const int idxBeg = ptrParam->m_idxBeg;
-	const int idxEnd = ptrParam->m_idxEnd;
-	for (int i = idxBeg; i < idxEnd; i++) {
-		TestComponent0& component = *testComponent0Mngr.m_list[i];
-		component.m_float0 += ptrParam->m_dt;
-		printf("%llu : %f", component.GetID(), component.m_float0);
-	}
-	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, idxEnd - idxBeg);
-}
-
-void TestSystem0::FT_Update(LIW_FIBER_RUNNER_PARAM)
-{
-	using namespace LIW;
-
-	auto ptrParam = LIWPointer<LIWFrameData, LIWMem_Frame>((liw_hdl_type)param);
 
 	auto& testComponent0Mngr = LIWComponentManager<TestComponent0>::s_ins;
 	int componentCount = testComponent0Mngr.GetComponentCount();
-	LIWCore::s_ins.m_fiberThreadPool.IncreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, componentCount);
+	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, componentCount);
 
 	int dispatchSize = 20;
 
 	for (int iBeg = 0, iEnd = dispatchSize; iBeg < componentCount; iBeg = iEnd, iEnd += dispatchSize) {
-		auto ptrParamDispatch = liw_new_frame<TestComponent0UpdateParam>(TestComponent0UpdateParam{ iBeg,
-																									iEnd ,
-																									ptrParam->m_timeDelta });
-		LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask(LIWFiberTask{ FT_TestComponent0Update, (void*)ptrParamDispatch.get_handle() }));
+		auto ptrParamDispatch = new FT_TestSystem0Update_TestComponent0();
+		ptrParamDispatch->m_idxBeg = iBeg;
+		ptrParamDispatch->m_idxEnd = iEnd;
+		ptrParamDispatch->m_dt = m_ptrFrameData->m_timeDelta;
+		LIWFiberExecutor::m_executor.Submit(ptrParamDispatch);
 	}
 
-	LIWCore::s_ins.m_fiberThreadPool.WaitOnSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, thisFiber);
+	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, thisFiber);
 
-	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
+	LIWFiberExecutor::m_executor.DecreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
+}
+
+void FT_TestSystem0Update_TestComponent0::Execute(LIWFiberWorker* thisFiber)
+{
+	using namespace LIW;
+
+	auto& testComponent0Mngr = LIWComponentManager<TestComponent0>::s_ins;
+	for (int i = m_idxBeg; i < m_idxEnd; i++) {
+		TestComponent0& component = *testComponent0Mngr.m_list[i];
+		component.m_float0 += m_dt;
+		printf("%llu : %f", component.GetID(), component.m_float0);
+	}
+	LIWFiberExecutor::m_executor.DecreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, m_idxEnd - m_idxBeg);
 }

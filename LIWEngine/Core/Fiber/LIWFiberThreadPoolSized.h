@@ -22,6 +22,7 @@ namespace LIW {
 		typedef Util::LIWThreadSafeQueueSized<LIWFiberWorker*, FiberCount> fiber_queue_type;
 		typedef std::array<LIWFiberWorker*, FiberCount> fiber_array_type;
 		typedef Util::LIWThreadSafeQueueSized<LIWFiberWorker*, AwakeFiberCount> awake_fiber_queue_type;
+		//typedef Util::LIWThreadSafeQueueSized<LIWFiberTask*, TaskCount> task_queue_type;
 		typedef Util::LIWThreadSafeQueueSized<LIWFiberTask*, TaskCount> task_queue_type;
 		typedef typename fiber_queue_type::size_type size_type;
 		typedef uint32_t counter_size_type;
@@ -265,13 +266,10 @@ namespace LIW {
 						if (thisTP->m_tasks.pop_now(task)) { // Acquire task
 							// Set fiber to perform task
 							fiber->SetMainFiber(fiberMain);
-							fiber->SetRunFunction(task->m_runner, task->m_param);
+							fiber->SetRunTask(task);
 
 							// Switch to fiber
 							fiberMain->YieldTo(fiber);
-
-							// Delete task, since everything was copied into call stack (fiber).
-							delete task;
 						}
 						if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
 							thisTP->m_fibers.push_now(fiber);

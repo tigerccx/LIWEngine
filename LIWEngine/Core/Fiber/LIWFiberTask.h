@@ -1,9 +1,11 @@
 #pragma once
 #include "LIWFiberCommon.h"
+//#include "LIWFiberWorker.h"
 
 namespace LIW {
-	struct LIWFiberTask {
-		LIWFiberRunner m_runner = nullptr;
-		void* m_param = nullptr;
+	class LIWFiberWorker;
+	class LIWFiberTask {
+	public:
+		virtual void Execute(LIWFiberWorker* thisFiber) = 0;
 	};
 }

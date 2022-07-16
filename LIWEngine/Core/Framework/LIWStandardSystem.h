@@ -50,15 +50,3 @@ namespace LIW {
 		virtual void PostFrame(float dt) { }
 	};
 }
-
-#include "Memory/LIWMemory.h"
-#include "Fiber/LIWFiber.h"
-#include "LIWFrame.h"
-
-struct StandardSystemData {
-	LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;
-	LIW::LIWStandardSystem* m_system;
-};
-
-void FT_SystemUpdate(LIW_FIBER_RUNNER_PARAM);
-void FT_SystemRenderUpdate(LIW_FIBER_RUNNER_PARAM);

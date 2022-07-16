@@ -50,8 +50,8 @@ void LIW::App::Mouse::OnUpdateMovement(double xpos, double ypos)
 {
 	if (isAwake) {
 		Vector2 prevAbsolute = absolutePosition;
-		absolutePosition.x = xpos;
-		absolutePosition.y = ypos;
+		absolutePosition.x = float(xpos);
+		absolutePosition.y = float(ypos);
 
 		if (setAbsolute) {
 			relativePosition.x = (absolutePosition.x - prevAbsolute.x) * sensitivity;
@@ -63,8 +63,8 @@ void LIW::App::Mouse::OnUpdateMovement(double xpos, double ypos)
 
 void LIW::App::Mouse::OnUpdateScroll(double xoffset, double yoffset)
 {
-	frameWheel.x = xoffset;
-	frameWheel.y = yoffset;
+	frameWheel.x = float(xoffset);
+	frameWheel.y = float(yoffset);
 }
 
 /*

@@ -1,5 +1,6 @@
 #pragma once
 #include "LIWFiberCommon.h"
+#include "LIWFiberTask.h"
 
 /*
 * Here is a description of the standard API of LIWFiberWorker.
@@ -28,10 +29,9 @@ namespace LIW {
 		LIWFiberWorker& operator=(const LIWFiberWorker& other) = delete;
 		LIWFiberWorker& operator=(LIWFiberWorker&& other) = default;
 
-		//Set the run function for fiber
-		inline void SetRunFunction(LIWFiberRunner runFunc, void* param = nullptr) {
-			m_runFunction = runFunc;
-			m_param = param;
+		//Set the run task for fiber
+		inline void SetRunTask(LIWFiberTask* task) {
+			m_curTask = task;
 			m_state = LIWFiberState::Idle;
 		}
 		//Set the main fiber when obtained by another fiber
@@ -40,8 +40,9 @@ namespace LIW {
 		inline void Run() {
 			while (m_isRunning) {
 				m_state = LIWFiberState::Running;
-				m_runFunction(this, m_param);
+				m_curTask->Execute(this);
 				m_state = LIWFiberState::Idle;
+				delete m_curTask; // Delete task, since everything is done.
 				YieldToMain();
 			}
 		}
@@ -60,8 +61,7 @@ namespace LIW {
 
 	private:
 		LIWFiberState m_state = LIWFiberState::Uninit; // State of this fiber
-		LIWFiberRunner m_runFunction = nullptr; // Running function of this fiber
-		void* m_param = nullptr; // Parameters for the running function
+		LIWFiberTask* m_curTask = nullptr; // Current task of this fiber
 		LIWFiberMain* m_fiberMain = nullptr; // Current main fiber of the thread this fiber is running on
 		int m_id = -1; // ID of the fiber
 		bool m_isRunning = true; // Is this fiber still running? (Has it not been terminated?) 
