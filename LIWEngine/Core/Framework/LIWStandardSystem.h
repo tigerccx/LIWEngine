@@ -9,6 +9,10 @@ namespace LIW {
 		LIWStandardSystem() = default;
 		virtual ~LIWStandardSystem() = default;
 
+		virtual void Init() { }
+		virtual void Cleanup() { }
+
+
 		/*
 		* Func: PreFrame
 		* Description:	Called before frame update.
@@ -50,9 +54,6 @@ namespace LIW {
 #include "Memory/LIWMemory.h"
 #include "Fiber/LIWFiber.h"
 #include "LIWFrame.h"
-
-const int IDX_SYNCCOUNTER_STANDARDSYS_UPDATE = 10;
-const int IDX_SYNCCOUNTER_STANDARDSYS_RENDERUPDATE = 11;
 
 struct StandardSystemData {
 	LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;

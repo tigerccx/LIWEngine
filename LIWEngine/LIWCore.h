@@ -12,8 +12,6 @@
 #include "Application/Window.h"
 #include "Application/Environment.h"
 #include "TestGame.h"
-#include "TestRenderer.h"
-#include "Editor/LIWEditorUIHelper.h"
 
 #include "LIWConstants.h"
 #include "Fiber/LIWThread.h"
@@ -22,7 +20,7 @@
 #include "Fiber/LIWThreadWorker.h"
 #include "LIWFrame.h"
 
-#include "TestRenderer.h"
+//#include "TestRenderer.h"
 
 void TT_TestUIDraw(LIW_THREADWORKER_RUNNER_PARAM);
 
@@ -173,7 +171,7 @@ namespace LIW {
 
 		void Shutdown() {
 
-			m_game.CleanUp();
+			//m_game.CleanUp();
 
 			glfwTerminate();
 
@@ -215,8 +213,8 @@ namespace LIW {
 		/// <param name=""> None </param>
 		static void LIW_FT_FrameBeg(LIW_FIBER_RUNNER_PARAM){
 			std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
-			const double timeFromStart = double((std::chrono::duration_cast<std::chrono::nanoseconds>(timeNow - s_ins.m_timeStart)).count()) * 1e-9;
-			const double timeFrame = double((std::chrono::duration_cast<std::chrono::nanoseconds>(timeNow - s_ins.m_timeFrame)).count()) * 1e-9;
+			const float timeFromStart = float((std::chrono::duration_cast<std::chrono::nanoseconds>(timeNow - s_ins.m_timeStart)).count()) * 1e-9;
+			const float timeFrame = float((std::chrono::duration_cast<std::chrono::nanoseconds>(timeNow - s_ins.m_timeFrame)).count()) * 1e-9;
 			s_ins.m_timeFrame = timeNow;
 			s_ins.m_frameCount++;
 
@@ -243,16 +241,8 @@ namespace LIW {
 			}
 
 			// Kick off the frame
-			auto ptrTestRenderData = liw_new_frame<TestRenderData>(TestRenderData{ ptrFrameData, s_ins.m_game.m_renderer });
-			
-			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender, (void*)ptrTestRenderData.get_handle() });
-			
-
-			//TODO: properly kick off to game
-			//liw_hdl_type hdlGameData = liw_new_frame<GameData>(GameData{ hdlFrameData, &s_ins.m_game });
-			//
-			//s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender, (void*)hdlGameData });
-
+			auto ptrGameData = liw_new_frame<GameData>(GameData{ ptrFrameData, &s_ins.m_game });
+			s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestGameUpdate, (void*)ptrGameData.get_handle() });
 		}
 
 		/// <summary>
@@ -407,9 +397,9 @@ namespace LIW {
 	public:
 		LIW::App::Environment m_environment;
 		LIWPointer<LIW::App::Window, LIWMem_Static> m_window{ liw_c_nullhdl };
-		TestGame m_game;
 		fiber_thdpool_type m_fiberThreadPool;
 		main_thdwkr_type m_mainThreadWorker;
+		TestGame m_game;
 
 	private:
 		std::atomic<bool> m_isRunning;

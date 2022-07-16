@@ -163,9 +163,7 @@
     <ClCompile Include="Core\Fiber\LIWFiberMain.cpp" />
     <ClCompile Include="Core\Fiber\LIWFiberWorker.cpp" />
     <ClCompile Include="Core\Fiber\LIWThread.cpp" />
-    <ClCompile Include="Core\Framework\LIWEntity.cpp" />
     <ClCompile Include="Core\Framework\LIWGame.cpp" />
-    <ClCompile Include="Core\Framework\LIWManager.cpp" />
     <ClCompile Include="Core\Framework\LIWStandardSystem.cpp" />
     <ClCompile Include="Core\LIWCore.cpp" />
     <ClCompile Include="Core\Maths\Matrix2.cpp" />
@@ -183,6 +181,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestGame.cpp" />
     <ClCompile Include="TestRenderer.cpp" />
+    <ClCompile Include="TestSystem0.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h" />
@@ -225,16 +224,13 @@
     <ClInclude Include="Core\Fiber\LIWThreadWorkerTask.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
     <ClInclude Include="Core\Framework\LIWComponentManager.h" />
-    <ClInclude Include="Core\Framework\LIWEntity.h" />
-    <ClInclude Include="Core\Framework\LIWEntityAttachment.h" />
-    <ClInclude Include="Core\Framework\LIWEntityManager.h" />
+    <ClInclude Include="Core\Framework\LIWComponentType.h" />
     <ClInclude Include="Core\Framework\LIWGame.h" />
     <ClInclude Include="Core\Framework\LIWStandardSystem.h" />
     <ClInclude Include="Core\Framework\LIWSystem.h" />
     <ClInclude Include="Core\LIWConstants.h" />
     <ClInclude Include="Core\LIWFrame.h" />
     <ClInclude Include="Core\LIWObject.h" />
-    <ClInclude Include="Core\LIWType.h" />
     <ClInclude Include="Core\LIWTypes.h" />
     <ClInclude Include="Core\Macros.h" />
     <ClInclude Include="Core\Maths\Matrix2.h" />
@@ -250,20 +246,20 @@
     <ClInclude Include="Core\Memory\LIWLGPoolAllocator.h" />
     <ClInclude Include="Core\Memory\LIWLGStackAllocator.h" />
     <ClInclude Include="Core\Memory\LIWMemory.h" />
-    <ClInclude Include="Core\Reflection\LIWReflection.h" />
     <ClInclude Include="Core\Renderers\OGLRenderer.h" />
     <ClInclude Include="Core\TaskSystem\LIWITask.h" />
     <ClInclude Include="Core\TaskSystem\LIWThreadPool.h" />
     <ClInclude Include="Core\TaskSystem\LIWThreadPoolSized.h" />
     <ClInclude Include="Core\Time\LIWGameTimer.h" />
     <ClInclude Include="Core\Utility.h" />
-    <ClInclude Include="Editor\LIWEditorUIHelper.h" />
     <ClInclude Include="LIWCore.h" />
     <ClInclude Include="MultiThreadRunner.h" />
     <ClInclude Include="SingleThreadRunner.h" />
     <ClInclude Include="TestComponent0.h" />
+    <ClInclude Include="TestFiberTaskIds.h" />
     <ClInclude Include="TestGame.h" />
     <ClInclude Include="TestRenderer.h" />
+    <ClInclude Include="TestSystem0.h" />
     <ClInclude Include="test_mem_0.h" />
   </ItemGroup>
   <ItemGroup>

@@ -54,7 +54,7 @@ void TestRenderer::RenderScene()
 
 #include "LIWCore.h"
 
-void FT_TestRenderUpdate(LIW_FIBER_RUNNER_PARAM)
+void TestRenderer::FT_TestRenderUpdate(LIW_FIBER_RUNNER_PARAM)
 {
 	using namespace LIW;
 
@@ -65,7 +65,7 @@ void FT_TestRenderUpdate(LIW_FIBER_RUNNER_PARAM)
 	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ FT_TestRenderRender , param });
 }
 
-void FT_TestRenderRender(LIW_FIBER_RUNNER_PARAM)
+void TestRenderer::FT_TestRenderRender(LIW_FIBER_RUNNER_PARAM)
 {
 	using namespace LIW;
 
@@ -79,10 +79,10 @@ void FT_TestRenderRender(LIW_FIBER_RUNNER_PARAM)
 	
 	liw_delete_frame<TestRenderData>(ptrData);
 
-	LIWCore::s_ins.m_fiberThreadPool.Submit(new LIWFiberTask{ LIWCore::LIW_FT_EDTR_UIDrawBeg , (void*)ptrFrameData.get_handle() });
+	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
 }
 
-void TT_TestRenderRender(LIW_THREADWORKER_RUNNER_PARAM) {
+void TestRenderer::TT_TestRenderRender(LIW_THREADWORKER_RUNNER_PARAM) {
 	LIWPointer<TestRenderData, LIWMem_Frame> ptrData((liw_hdl_type)param);
 	auto ptrFrameData = ptrData->m_hdlFrameData;
 	ptrData->m_renderer->RenderScene();

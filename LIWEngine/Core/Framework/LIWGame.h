@@ -5,9 +5,6 @@
 #include "LIWObject.h"
 
 #include "Application/Environment.h"
-#include "LIWSystem.h"
-#include "LIWStandardSystem.h"
-#include "Time/LIWGameTimer.h"
 #include "Debug/LIWDebug.h"
 
 #include "TestRenderer.h"
@@ -25,20 +22,17 @@ namespace LIW {
     public:
         LIWGame(){}
         virtual ~LIWGame() {
-            delete m_timer;
             delete m_debug;
         }
 
         void InitGame(App::Environment* environment) {
             m_currentEnvironment = environment;
             m_debug = new LIWDebug(environment->m_window->GetTextOutput());
-            m_timer = new LIWGameTimer();
         }
 
     public:
         static LIWGame* instance;
 
-        LIWGameTimer* m_timer{ nullptr };
         LIWDebug* m_debug{ nullptr };
 
         int m_idealHZ = 120;
@@ -66,8 +60,6 @@ namespace LIW {
 
     //protected:
     public:
-        std::vector<LIWStandardSystem*> m_standardSystems;
-
         App::Environment* m_currentEnvironment{ nullptr };
 
         int m_realHZ = m_idealHZ;
@@ -86,5 +78,3 @@ struct GameData {
     LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;
     LIW::LIWGame* m_game;
 };
-
-void FT_GameUpdate(LIW_FIBER_RUNNER_PARAM);

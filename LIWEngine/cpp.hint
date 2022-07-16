@@ -1,0 +1,2 @@
+#define LIW__FT_OP_ON_CMS_COMPONENT(Op) static void LIW_FT_##Op##CMSManagedComponent(LIW_FIBER_RUNNER_PARAM) { using namespace LIW; auto ptrData = LIWPointer<LIWComponentOpsData, LIWMem_Frame>((liw_hdl_type)param); LIWComponent* ptrComponent = ptrData->m_component; auto ptrFrameData = ptrData->m_frameData; ptrComponent->Op(ptrFrameData->m_timeDelta); LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_CMSUPDATE, 1); };
+#define LIW_REGISTER_COMPONENT(ComponentType) LIWComponentType& GetObjType() override const { return GetType<ComponentType>(); }

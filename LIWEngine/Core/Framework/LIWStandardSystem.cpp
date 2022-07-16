@@ -8,14 +8,14 @@
 void FT_SystemUpdate(LIW_FIBER_RUNNER_PARAM) {
 	using namespace LIW;
 
-	auto ptrStdSysData = LIWPointer<StandardSystemData, LIWMem_Frame>((liw_hdl_type)param);
-	auto ptrFrameData = ptrStdSysData->m_hdlFrameData;
-	LIWStandardSystem* const ptrSys = ptrStdSysData->m_system;
-	liw_delete_frame<StandardSystemData>(ptrStdSysData);
+	//auto ptrStdSysData = LIWPointer<StandardSystemData, LIWMem_Frame>((liw_hdl_type)param);
+	//auto ptrFrameData = ptrStdSysData->m_hdlFrameData;
+	//LIWStandardSystem* const ptrSys = ptrStdSysData->m_system;
+	//liw_delete_frame<StandardSystemData>(ptrStdSysData);
 
-	ptrSys->Update(ptrFrameData->m_timeDelta);
+	//ptrSys->Update(ptrFrameData->m_timeDelta);
 
-	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_UPDATE);
+	//LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_UPDATE);
 }
 
 /// <summary>
@@ -25,12 +25,12 @@ void FT_SystemUpdate(LIW_FIBER_RUNNER_PARAM) {
 void FT_SystemRenderUpdate(LIW_FIBER_RUNNER_PARAM) {
 	using namespace LIW;
 
-	auto ptrStdSysData = LIWPointer<StandardSystemData, LIWMem_Frame>((liw_hdl_type)param);
-	auto ptrFrameData = ptrStdSysData->m_hdlFrameData;
-	LIWStandardSystem* const ptrSys = ptrStdSysData->m_system;
-	liw_delete_frame<StandardSystemData>(ptrStdSysData);
+	//auto ptrStdSysData = LIWPointer<StandardSystemData, LIWMem_Frame>((liw_hdl_type)param);
+	//auto ptrFrameData = ptrStdSysData->m_hdlFrameData;
+	//LIWStandardSystem* const ptrSys = ptrStdSysData->m_system;
+	//liw_delete_frame<StandardSystemData>(ptrStdSysData);
 
-	ptrSys->RenderUpdate(ptrFrameData->m_timeDelta);
+	//ptrSys->RenderUpdate(ptrFrameData->m_timeDelta);
 
-	LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_RENDERUPDATE);
+	//LIWCore::s_ins.m_fiberThreadPool.DecreaseSyncCounter(IDX_SYNCCOUNTER_STANDARDSYS_RENDERUPDATE);
 }
