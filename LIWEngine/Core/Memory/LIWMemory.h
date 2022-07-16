@@ -6,7 +6,7 @@
 #include "LIWConstants.h"
 #include "LIWLGStackAllocator.h"
 #include "LIWLGGPAllocator.h"
-#include "Fiber/LIWThread.h"
+#include "Threading/LIWThread.h"
 
 
 enum LIWMemAllocation {

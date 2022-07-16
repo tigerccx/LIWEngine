@@ -37,9 +37,6 @@
     <Filter Include="Core\ECSFramework\LIWSystem">
       <UniqueIdentifier>{016ae882-8fa1-40aa-bda5-8fc2ce97ef78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\TaskSystem">
-      <UniqueIdentifier>{071ada40-aaf0-4925-b5e9-551fb3f151b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Debug">
       <UniqueIdentifier>{664cc620-1df6-4b8b-b03b-27b9862090cb}</UniqueIdentifier>
     </Filter>
@@ -88,9 +85,6 @@
     <Filter Include="Core\Utility">
       <UniqueIdentifier>{ecc609fd-cc24-41b3-a1cb-221e61e2355a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Fiber">
-      <UniqueIdentifier>{b93c57f3-9bca-471f-9d4a-6ac36b115c05}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Containers">
       <UniqueIdentifier>{36233590-7aec-4d36-8a37-bf4a80d4dfbd}</UniqueIdentifier>
     </Filter>
@@ -127,10 +121,13 @@
     <Filter Include="Framework\Test\TestGame\System">
       <UniqueIdentifier>{4e2c50dd-467b-4d16-920e-fd786d1786dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Fiber\Utils">
+    <Filter Include="Core\Threading">
+      <UniqueIdentifier>{b93c57f3-9bca-471f-9d4a-6ac36b115c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Threading\Utils">
       <UniqueIdentifier>{e80ecfed-dfb1-4e64-a4c2-ca75ffffd2cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Fiber\Executors">
+    <Filter Include="Core\Threading\Executors">
       <UniqueIdentifier>{901a21ed-2726-428d-bd5f-e9282928d718}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -213,9 +210,6 @@
     <ClCompile Include="Core\Renderers\OGLRenderer.cpp">
       <Filter>Core\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="Core\TaskSystem\LIWThreadPool.cpp">
-      <Filter>Core\TaskSystem</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Memory\LIWMemory.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
@@ -240,26 +234,26 @@
     <ClCompile Include="Core\Time\LIWTime.cpp">
       <Filter>Core\Time</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Fiber\LIWFiberMain.cpp">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Fiber\LIWFiberWorker.cpp">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Fiber\LIWThread.cpp">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Fiber\LIWMainThreadExecutor.cpp">
-      <Filter>Core\Fiber\Executors</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Fiber\LIWFiberExecutor.cpp">
-      <Filter>Core\Fiber\Executors</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Application\LIWApplicationTasks.cpp">
       <Filter>Core\Application</Filter>
     </ClCompile>
     <ClCompile Include="Editor\LIWEditorTasks.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Threading\LIWFiberExecutor.cpp">
+      <Filter>Core\Threading\Executors</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Threading\LIWMainThreadExecutor.cpp">
+      <Filter>Core\Threading\Executors</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Threading\LIWFiberMain.cpp">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Threading\LIWFiberWorker.cpp">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Threading\LIWThread.cpp">
+      <Filter>Core\Threading\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -422,15 +416,6 @@
     <ClInclude Include="Core\Memory\LIWMemory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\TaskSystem\LIWITask.h">
-      <Filter>Core\TaskSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\TaskSystem\LIWThreadPool.h">
-      <Filter>Core\TaskSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\TaskSystem\LIWThreadPoolSized.h">
-      <Filter>Core\TaskSystem</Filter>
-    </ClInclude>
     <ClInclude Include="LIWCore.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -470,44 +455,44 @@
     <ClInclude Include="Core\Time\LIWTime.h">
       <Filter>Core\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWFiber.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWFiberCommon.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWFiberMain.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWFiberTask.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWFiberThreadPoolSized.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWFiberWorker.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWThread.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWThreadWorker.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWThreadWorkerTask.h">
-      <Filter>Core\Fiber\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWMainThreadExecutor.h">
-      <Filter>Core\Fiber\Executors</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Fiber\LIWFiberExecutor.h">
-      <Filter>Core\Fiber\Executors</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Application\LIWApplicationTasks.h">
       <Filter>Core\Application</Filter>
     </ClInclude>
     <ClInclude Include="Editor\LIWEditorTasks.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWFiberExecutor.h">
+      <Filter>Core\Threading\Executors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWMainThreadExecutor.h">
+      <Filter>Core\Threading\Executors</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWFiber.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWFiberCommon.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWFiberMain.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWFiberTask.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWFiberThreadPoolSized.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWFiberWorker.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWThread.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWThreadWorker.h">
+      <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Threading\LIWThreadWorkerTask.h">
+      <Filter>Core\Threading\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

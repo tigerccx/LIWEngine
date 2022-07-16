@@ -1,5 +1,5 @@
 #pragma once
-#include "Fiber/LIWFiberCommon.h"
+#include "Threading/LIWFiberCommon.h"
 
 enum TEST_SYNC_COUNTER {
 	TEST_SYNC_COUNTER_TESTSYSTEM0 = LIW_SYNC_COUNTER_RESERVE_EDTR_MAX,

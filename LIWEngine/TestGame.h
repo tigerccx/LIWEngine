@@ -8,9 +8,9 @@
 #include "Framework/LIWComponentManager.h"
 #include "TestComponent0.h"
 #include "TestSystem0.h"
-#include "Fiber/LIWFiberCommon.h"
-#include "Fiber/LIWFiberTask.h"
-#include "Fiber/LIWFiberExecutor.h"
+#include "Threading/LIWFiberCommon.h"
+#include "Threading/LIWFiberTask.h"
+#include "Threading/LIWFiberExecutor.h"
 
 using namespace LIW;
 

@@ -72,7 +72,7 @@ namespace LIW {
 
 
 #include "Memory/LIWMemory.h"
-#include "Fiber/LIWFiber.h"
+#include "Threading/LIWFiber.h"
 
 struct GameData {
     LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;

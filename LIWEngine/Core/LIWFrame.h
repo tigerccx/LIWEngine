@@ -4,10 +4,10 @@
 
 #include "Memory/LIWMemory.h"
 #include "Time/LIWTime.h"
-#include "Fiber/LIWFiberExecutor.h"
-#include "Fiber/LIWFiberTask.h"
-#include "Fiber/LIWThreadWorkerTask.h"
-#include "Fiber/LIWMainThreadExecutor.h"
+#include "Threading/LIWFiberExecutor.h"
+#include "Threading/LIWFiberTask.h"
+#include "Threading/LIWThreadWorkerTask.h"
+#include "Threading/LIWMainThreadExecutor.h"
 
 namespace LIW {
 	struct LIWFrameData {

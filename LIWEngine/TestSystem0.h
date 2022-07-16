@@ -4,7 +4,7 @@
 #include "Framework/LIWComponentManager.h"
 #include "TestFiberTaskIds.h"
 #include "Memory/LIWMemory.h"
-#include "Fiber/LIWFiberExecutor.h"
+#include "Threading/LIWFiberExecutor.h"
 #include "LIWFrame.h"
 
 using namespace LIW;
@@ -14,7 +14,7 @@ class TestSystem0:
 {
 };
 
-#include "Fiber/LIWFiberTask.h"
+#include "Threading/LIWFiberTask.h"
 
 class FT_TestSystem0Update final :
 	public LIWFiberTask
