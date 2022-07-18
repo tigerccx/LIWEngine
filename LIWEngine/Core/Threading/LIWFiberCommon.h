@@ -11,9 +11,9 @@ namespace LIW {
 	class LIWFiberTask;
 
 	typedef LIWPointer<LIWFiberWorker, LIWMem_Static> LIWFiberWorkerPointer;
-#define LIWFiberWorkerPointer_NULL LIWFiberWorkerPointer::null
+	 //LIWFiberWorkerPointer_NULL LIWFiberWorkerPointer::null
 	typedef LIWPointer<LIWFiberTask, LIWMem_Default> LIWFiberTaskPointer;
-#define LIWFiberTaskPointer_NULL LIWFiberTaskPointer::null
+//#define LIWFiberTaskPointer_NULL LIWFiberTaskPointer::null
 
 	enum class LIWFiberState {
 		Uninit,

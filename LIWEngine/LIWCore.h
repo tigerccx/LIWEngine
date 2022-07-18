@@ -59,6 +59,8 @@ namespace LIW {
 			liw_minit_frame(countThreads);
 			liw_minit_dframe(countThreads);
 
+			liw_mgc_init(countThreads); //Init gc
+
 			// Count threads
 			int idxThread = LIW_THREAD_IDX_MAIN;
 
@@ -185,6 +187,8 @@ namespace LIW {
 			LIWThreadCleanup();
 
 			// Cleanup mem
+			liw_mgc_wait_and_stop();
+
 			liw_mclnup_dframe();
 			liw_mclnup_frame();
 			liw_mclnup_static();

@@ -2,8 +2,13 @@
 #include <memory>
 #include <vector>
 #include <array>
+#include <list>
+#include <deque>
+#include <mutex>
+#include <condition_variable>
 #include "LIWTypes.h"
 #include "LIWConstants.h"
+
 #include "LIWLGStackAllocator.h"
 #include "LIWLGGPAllocator.h"
 #include "Threading/LIWThread.h"
@@ -474,23 +479,76 @@ inline void liw_free(liw_hdl_type handle) {
 // LIWPointer
 //
 
-template<LIWMemAllocation AllocType>
-class LIWBasePointer {
+//template<LIWMemAllocation AllocType>
+//class LIWBasePointer {
+//public:
+//	LIWBasePointer() : m_handle(liw_c_nullhdl) {}
+//	LIWBasePointer(liw_hdl_type handle) : m_handle(handle) {}
+//	LIWBasePointer(const LIWBasePointer& other) = default;
+//	LIWBasePointer(LIWBasePointer&& other) = default;
+//	LIWBasePointer& operator=(const LIWBasePointer& other) = default;
+//	LIWBasePointer& operator=(LIWBasePointer&& other) = default;
+//
+//	
+//
+//	//
+//	// Access
+//	//
+//	
+//
+//
+//public:
+//	static const LIWBasePointer null;
+//};
+
+template<class T, LIWMemAllocation AllocType>
+class LIWPointer final {
+private:
+	typedef LIWPointer<T, AllocType> this_type;
 public:
-	LIWBasePointer() : m_handle(liw_c_nullhdl) {}
-	LIWBasePointer(liw_hdl_type handle) : m_handle(handle) {}
-	LIWBasePointer(const LIWBasePointer& other) = default;
-	LIWBasePointer(LIWBasePointer&& other) = default;
-	LIWBasePointer& operator=(const LIWBasePointer& other) = default;
-	LIWBasePointer& operator=(LIWBasePointer&& other) = default;
+	LIWPointer() : m_handle(liw_c_nullhdl) {}
+	LIWPointer(liw_hdl_type handle) : m_handle(handle) {}
+	LIWPointer(const this_type& other) = default;
+	LIWPointer(this_type&& other) = default;
+	LIWPointer& operator=(const this_type& other) = default;
+	LIWPointer& operator=(this_type&& other) = default;
+
+	template<class TOther>
+	LIWPointer(const LIWPointer<TOther, AllocType>& other) {
+		static_assert(std::is_base_of_v<T, TOther>, "Cannot assign nonderived class pointer to base class pointer. ");
+		m_handle = other.get_handle();
+	}
+	template<class TOther>
+	LIWPointer(this_type && other) {
+		static_assert(std::is_base_of_v<T, TOther>, "Cannot assign nonderived class pointer to base class pointer. ");
+		m_handle = other.get_handle();
+	}
+	template<class TOther>
+	LIWPointer& operator=(const this_type & other) {
+		static_assert(std::is_base_of_v<T, TOther>, "Cannot assign nonderived class pointer to base class pointer. ");
+		m_handle = other.get_handle();
+		return *this;
+	}
+	template<class TOther>
+	LIWPointer& operator=(this_type && other) {
+		static_assert(std::is_base_of_v<T, TOther>, "Cannot assign nonderived class pointer to base class pointer. ");
+		m_handle = other.get_handle();
+		return *this;
+	}
+	//LIWPointer(const LIWPointer& other) = default;
+	//LIWPointer(LIWPointer && other) = default;
+	//LIWPointer& operator=(const LIWPointer & other) = default;
+	//LIWPointer& operator=(LIWPointer && other) = default;
+
+	// No Step (cannot step handle)
 
 	//
 	// Compare
 	//
-	inline bool operator==(const LIWBasePointer& other) const {
+	inline bool operator==(const this_type& other) const {
 		return m_handle == other.m_handle;
 	}
-	inline bool operator!=(const LIWBasePointer& other) const {
+	inline bool operator!=(const this_type& other) const {
 		return !(*this == other);
 	}
 	inline bool is_null() const {
@@ -500,110 +558,91 @@ public:
 	//
 	// Access
 	//
+	inline T& operator*() {
+		return *((T*)liw_maddr<AllocType>(m_handle));
+	}
+	inline const T& operator*() const {
+		return *((const T*)liw_maddr<AllocType>(m_handle));
+	}
+	inline T* operator->() {
+		return (T*)liw_maddr<AllocType>(m_handle);
+	}
+	inline const T* operator->() const {
+		return (const T*)liw_maddr<AllocType>(m_handle);
+	}
+	inline T& operator[](size_t idx) {
+		T* ptr = (T*)liw_maddr<AllocType>(m_handle);
+		return ptr[idx];
+	}
+	inline const T& operator[](size_t idx) const {
+		const T* ptr = (const T*)liw_maddr<AllocType>(m_handle);
+		return ptr[idx];
+	}
+	inline T* get_ptr() const {
+		return (T*)liw_maddr<AllocType>(m_handle);
+	}
 	inline liw_hdl_type get_handle() const {
 		return m_handle;
 	}
+	static inline constexpr bool get_null() {
+		return LIWPointer(liw_c_nullhdl);
+	}
+	inline void set_null() {
+		m_handle = liw_c_nullhdl;
+	}
 
-protected:
+private:
 	liw_hdl_type m_handle;
-public:
-	static const LIWBasePointer null;
+#ifdef _DEBUG
+
+#endif // _DEBUG
+
 };
 
-template<LIWMemAllocation AllocType>
-const LIWBasePointer<AllocType> LIWBasePointer<AllocType>::null = LIWBasePointer(liw_c_nullhdl);
-
-template<class T, LIWMemAllocation AllocType>
-class LIWPointer : public LIWBasePointer<AllocType> final {
-private:
-	typedef LIWBasePointer<AllocType> base_type;
-	typedef LIWPointer<T, AllocType> this_type;
-public:
-	LIWPointer() :base_type() {}
-	LIWPointer(liw_hdl_type handle) : base_type(handle) {}
-	LIWPointer(const LIWPointer& other) = default;
-	LIWPointer(LIWPointer&& other) = default;
-	LIWPointer& operator=(const LIWPointer& other) = default;
-	LIWPointer& operator=(LIWPointer&& other) = default;
-
-	LIWPointer(const base_type& other) { *this = other; }
-	LIWPointer& operator=(const base_type& other) { base_type::m_handle = other.get_handle(); return *this; }
-
-	// No Step (cannot step handle)
-
-	//
-	// Access
-	//
-	inline T& operator*() {
-		return *((T*)liw_maddr<AllocType>(base_type::m_handle));
-	}
-	inline const T& operator*() const {
-		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
-	}
-	inline T* operator->() {
-		return (T*)liw_maddr<AllocType>(base_type::m_handle);
-	}
-	inline const T* operator->() const {
-		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
-	}
-	inline T& operator[](size_t idx) {
-		T* ptr = (T*)liw_maddr<AllocType>(base_type::m_handle);
-		return ptr[idx];
-	}
-	inline const T& operator[](size_t idx) const {
-		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
-		return ptr[idx];
-	}
-	inline T* get_ptr() const {
-		return (T*)liw_maddr<AllocType>(base_type::m_handle);
-	}
-};
-
-template<class T, LIWMemAllocation AllocType>
-class LIWCPointer : public LIWBasePointer<AllocType> {
-private:
-	typedef LIWBasePointer<AllocType> base_type;
-	typedef LIWCPointer<T, AllocType> this_type;
-public:
-	LIWCPointer() :base_type() {}
-	LIWCPointer(liw_hdl_type handle) : base_type(handle) {}
-	LIWCPointer(const LIWCPointer& other) = default;
-	LIWCPointer(LIWCPointer&& other) = default;
-	LIWCPointer& operator=(const LIWCPointer& other) = default;
-	LIWCPointer& operator=(LIWCPointer&& other) = default;
-
-	LIWCPointer(const base_type& other) { *this = other; };
-	LIWCPointer& operator=(const base_type& other) { base_type::m_handle = other.get_handle(); }
-
-	// No Step (cannot step handle)
-
-	//
-	// Access
-	//
-	inline const T& operator*() {
-		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
-	}
-	inline const T& operator*() const {
-		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
-	}
-	inline const T* operator->() {
-		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
-	}
-	inline const T* operator->() const {
-		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
-	}
-	inline const T& operator[](size_t idx) {
-		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
-		return ptr[idx];
-	}
-	inline const T& operator[](size_t idx) const {
-		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
-		return ptr[idx];
-	}
-	inline T* get_ptr() const {
-		return (T*)liw_maddr<AllocType>(base_type::m_handle);
-	}
-};
+//template<class T, LIWMemAllocation AllocType>
+//class LIWCPointer {
+//private:
+//	typedef LIWCPointer<T, AllocType> this_type;
+//public:
+//	LIWCPointer() :base_type() {}
+//	LIWCPointer(liw_hdl_type handle) : base_type(handle) {}
+//	LIWCPointer(const LIWCPointer& other) = default;
+//	LIWCPointer(LIWCPointer&& other) = default;
+//	LIWCPointer& operator=(const LIWCPointer& other) = default;
+//	LIWCPointer& operator=(LIWCPointer&& other) = default;
+//
+//	LIWCPointer(const base_type& other) { *this = other; };
+//	LIWCPointer& operator=(const base_type& other) { base_type::m_handle = other.get_handle(); }
+//
+//	// No Step (cannot step handle)
+//
+//	//
+//	// Access
+//	//
+//	inline const T& operator*() {
+//		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
+//	}
+//	inline const T& operator*() const {
+//		return *((const T*)liw_maddr<AllocType>(base_type::m_handle));
+//	}
+//	inline const T* operator->() {
+//		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
+//	}
+//	inline const T* operator->() const {
+//		return (const T*)liw_maddr<AllocType>(base_type::m_handle);
+//	}
+//	inline const T& operator[](size_t idx) {
+//		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
+//		return ptr[idx];
+//	}
+//	inline const T& operator[](size_t idx) const {
+//		const T* ptr = (const T*)liw_maddr<AllocType>(base_type::m_handle);
+//		return ptr[idx];
+//	}
+//	inline T* get_ptr() const {
+//		return (T*)liw_maddr<AllocType>(base_type::m_handle);
+//	}
+//};
 
 //
 // New&Delete (Variable&Array)
@@ -868,3 +907,25 @@ inline void liw_adelete(LIWPointer<T, MemAlloc> ptr, size_t size) {
 	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
 	liw__adelete_foo<T>(tag(), ptr, size);
 }
+
+
+//
+// GC threads init
+//
+struct GCThreads
+{
+	static std::vector<std::thread> s_gcThreads;
+	static std::condition_variable s_gcThdCondVarExecute;
+	static std::deque<std::mutex> s_gcThdMutex;
+	static std::vector<bool> s_gcIsRunning;
+};
+
+void liw_mgc_thd(int idxThread);
+
+inline void liw_mgc_notify_execute() {
+	GCThreads::s_gcThdCondVarExecute.notify_all(); //TODO: maybe need to do more than this. (eg. when some gc thd is not waiting for cond)
+}
+
+void liw_mgc_init(int countThreads);
+
+void liw_mgc_wait_and_stop();

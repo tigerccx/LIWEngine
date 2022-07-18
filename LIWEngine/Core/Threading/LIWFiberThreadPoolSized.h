@@ -233,9 +233,9 @@ namespace LIW {
 					m_fibersAwakeList.push_now(counter.m_dependents.front());
 					counter.m_dependents.pop_front();
 				}*/
-				if (counter.m_dependent != LIWFiberWorkerPointer_NULL) {
+				if (!counter.m_dependent.is_null()) {
 					m_fibersAwakeList.push_now(counter.m_dependent);
-					counter.m_dependent = LIWFiberWorkerPointer_NULL;
+					counter.m_dependent.set_null();
 				}
 			}
 			return val;
@@ -277,10 +277,10 @@ namespace LIW {
 			// Start running fibers
 			const int threadID = param.m_threadID;
 			LIWFiberMain* fiberMain = LIWFiberMain::InitThreadMainFiber(threadID);
-			LIWFiberTaskPointer task = LIWFiberTaskPointer_NULL;
-			LIWFiberWorkerPointer fiber = LIWFiberWorkerPointer_NULL;
+			LIWFiberTaskPointer task{liw_c_nullhdl};
+			LIWFiberWorkerPointer fiber{liw_c_nullhdl};
 			while (true) {
-				fiber = LIWFiberWorkerPointer_NULL;
+				fiber.set_null();
 
 				if (!thisTP->m_fibersAwakeList.empty()) {
 					if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
@@ -331,7 +331,7 @@ namespace LIW {
 						while (thisTP->m_tasks.empty() && thisTP->m_fibersAwakeList.empty() && thisTP->m_isRunning)
 							//std::this_thread::yield();
 							using namespace std::chrono;
-							std::this_thread::sleep_for(1us);
+							std::this_thread::sleep_for(1ms);
 					}					
 					else
 						break;

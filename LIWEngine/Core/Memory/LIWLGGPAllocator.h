@@ -503,7 +503,7 @@ namespace LIW {
 							}
 
 #ifdef _DEBUG
-							memset(OffsetFromSegInfo(segDefragTo), 0xfbfbfbfb, segDefragTo->m_size);
+							memset(OffsetFromSegInfo(segDefragTo), 0xfafafafa, segDefragTo->m_size);
 #endif
 						}
 

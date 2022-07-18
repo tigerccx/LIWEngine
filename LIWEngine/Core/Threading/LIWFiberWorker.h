@@ -60,7 +60,7 @@ namespace LIW {
 		LIWFiberMain* m_fiberMain = nullptr; // Current main fiber of the thread this fiber is running on
 	//private:
 		LIWFiberState m_state = LIWFiberState::Uninit; // State of this fiber
-		LIWFiberTaskPointer m_curTask = LIWFiberTaskPointer_NULL; // Current task of this fiber
+		LIWFiberTaskPointer m_curTask{liw_c_nullhdl}; // Current task of this fiber
 		int m_id = -1; // ID of the fiber
 		bool m_isRunning = true; // Is this fiber still running? (Has it not been terminated?) 
 	public:

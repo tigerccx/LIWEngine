@@ -67,12 +67,14 @@ void LIW::LIW_FT_FrameEnd::Execute(LIWFiberWorkerPointer thisFiber)
 	int threadCount = LIW::LIWThreads::s_ins.GetThreadCount();
 
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_MEMORY_UPDATE, threadCount);
-	for (size_t i = 0; i < threadCount; i++) {
-		auto ptrFT_FrameThdUpdate = liw_new_def<LIW_FT_FrameMemoryThdUpdate>();
-		const int idxThread = int(i);
-		ptrFT_FrameThdUpdate->m_idxThread = idxThread;
-		LIWFiberExecutor::m_executor.Submit(ptrFT_FrameThdUpdate);
-	}
+	//for (size_t i = 0; i < threadCount; i++) {
+	//	auto ptrFT_FrameThdUpdate = liw_new_def<LIW_FT_FrameMemoryThdUpdate>();
+	//	const int idxThread = int(i);
+	//	ptrFT_FrameThdUpdate->m_idxThread = idxThread;
+	//	LIWFiberExecutor::m_executor.Submit(ptrFT_FrameThdUpdate); //TODO: ERROR! GC and handle access happen at the same time!
+	//}
+	liw_mgc_notify_execute();
+
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_MEMORY_UPDATE, thisFiber);
 
 	printf("FrameEnd %llu\n", LIWFrame::GetFrameCount());
