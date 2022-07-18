@@ -17,7 +17,7 @@ namespace LIW {
 		static inline LIWFiberMain* InitThreadMainFiber(int threadID) {
 			return new LIWFiberMain(threadID);
 		}
-		void YieldTo(LIWFiberWorker* fiberOther);
+		void YieldTo(LIWFiberWorkerPointer fiberOther);
 		inline int GetThreadID() const { return m_threadID; }
 	private:
 		LIWFiberMain(int threadID);

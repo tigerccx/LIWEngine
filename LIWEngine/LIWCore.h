@@ -146,7 +146,7 @@ namespace LIW {
 			// Make main thread wait
 			m_isRunning.store(true);
 			// Kick off the first fiber task
-			auto ptrFT_FrameBeg = new LIW_FT_FrameBeg();
+			auto ptrFT_FrameBeg = liw_new_def<LIW_FT_FrameBeg>();
 			LIWFiberExecutor::m_executor.Submit(ptrFT_FrameBeg);
 
 			return 0;
@@ -215,7 +215,7 @@ namespace LIW {
 		public LIWFiberTask
 	{
 	public:
-		void Execute(LIWFiberWorker* thisFiber) override;
+		void Execute(LIWFiberWorkerPointer thisFiber) override;
 	};
 }
 

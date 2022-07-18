@@ -20,7 +20,7 @@ class FT_TestSystem0Update final :
 	public LIWFiberTask
 {
 public:
-	void Execute(LIWFiberWorker* thisFiber) override;
+	void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
 	LIWPointer<LIWFrameData, LIWMem_Frame> m_ptrFrameData{};
 };
@@ -29,7 +29,7 @@ class FT_TestSystem0Update_TestComponent0 final :
 	public LIWFiberTask
 {
 public:
-	void Execute(LIWFiberWorker* thisFiber) override;
+	void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
 	int m_idxBeg;
 	int m_idxEnd;

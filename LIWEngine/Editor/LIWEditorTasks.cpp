@@ -4,38 +4,38 @@
 
 #include "LIWEditorTasks.h"
 
-void LIW::Editor::LIW_FT_EDTR_UIDrawBeg::Execute(LIWFiberWorker* thisFiber)
+void LIW::Editor::LIW_FT_EDTR_UIDrawBeg::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
 	auto ptrTT_ImguiDrawBeg = new LIW_TT_ImguiDrawBeg();
 	LIWMainThreadExecutor::m_executor.Submit(ptrTT_ImguiDrawBeg);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, thisFiber);
 
-	auto ptrFT_EdtrUIDraw = new LIW_FT_EDTR_UIDraw();
+	auto ptrFT_EdtrUIDraw = liw_new_def<LIW_FT_EDTR_UIDraw>();
 	ptrFT_EdtrUIDraw->ptrFrameData = ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_EdtrUIDraw);
 }
 
-void LIW::Editor::LIW_FT_EDTR_UIDraw::Execute(LIWFiberWorker* thisFiber)
+void LIW::Editor::LIW_FT_EDTR_UIDraw::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
 	auto ptrTT_TestDrawUI = new LIWTEST_TT_TestDrawUI();
 	LIWMainThreadExecutor::m_executor.Submit(ptrTT_TestDrawUI);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, thisFiber);
 
-	auto ptrFT_EdtrUIDrawEnd = new LIW_FT_EDTR_UIDrawEnd();
+	auto ptrFT_EdtrUIDrawEnd = liw_new_def<LIW_FT_EDTR_UIDrawEnd>();
 	ptrFT_EdtrUIDrawEnd->ptrFrameData = ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_EdtrUIDrawEnd);
 }
 
-void LIW::Editor::LIW_FT_EDTR_UIDrawEnd::Execute(LIWFiberWorker* thisFiber)
+void LIW::Editor::LIW_FT_EDTR_UIDrawEnd::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
 	auto ptrTT_ImguiDrawEndAndPresent = new LIW_TT_ImguiDrawEndAndPresent();
 	LIWMainThreadExecutor::m_executor.Submit(ptrTT_ImguiDrawEndAndPresent);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, thisFiber);
 
-	auto ptrFT_FrameEnd = new LIW_FT_FrameEnd();
+	auto ptrFT_FrameEnd = liw_new_def<LIW_FT_FrameEnd>();
 	ptrFT_FrameEnd->ptrFrameData = ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_FrameEnd);
 }

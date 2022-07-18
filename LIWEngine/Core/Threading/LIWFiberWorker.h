@@ -1,6 +1,7 @@
 #pragma once
 #include "LIWFiberCommon.h"
 #include "LIWFiberTask.h"
+#include "Memory/LIWMemory.h"
 
 /*
 * Here is a description of the standard API of LIWFiberWorker.
@@ -33,7 +34,7 @@ namespace LIW {
 		LIWFiberWorker& operator=(LIWFiberWorker&& other) = default;
 
 		//Set the run task for fiber
-		inline void SetRunTask(LIWFiberTask* task) {
+		inline void SetRunTask(LIWFiberTaskPointer task) {
 			m_curTask = task;
 			m_state = LIWFiberState::Idle;
 		}
@@ -48,7 +49,7 @@ namespace LIW {
 		//Yield
 		inline void YieldToMain();
 		//Yield to a specific fiber
-		inline void YieldTo(LIWFiberWorker* fiberYieldTo) {
+		inline void YieldTo(LIWFiberWorkerPointer fiberYieldTo) {
 			record.fetch_sub(1);
 			SwitchToFiber(fiberYieldTo->m_sysFiber);
 		}
@@ -59,7 +60,7 @@ namespace LIW {
 		LIWFiberMain* m_fiberMain = nullptr; // Current main fiber of the thread this fiber is running on
 	//private:
 		LIWFiberState m_state = LIWFiberState::Uninit; // State of this fiber
-		LIWFiberTask* m_curTask = nullptr; // Current task of this fiber
+		LIWFiberTaskPointer m_curTask = LIWFiberTaskPointer_NULL; // Current task of this fiber
 		int m_id = -1; // ID of the fiber
 		bool m_isRunning = true; // Is this fiber still running? (Has it not been terminated?) 
 	public:
@@ -67,7 +68,7 @@ namespace LIW {
 
 	private:
 		static void __stdcall InternalFiberRun(LPVOID param) {
-			LIWFiberWorker* thisFiber = reinterpret_cast<LIWFiberWorker*>(param);
+			LIWFiberWorkerPointer thisFiber = LIWFiberWorkerPointer((liw_hdl_type)param);
 			howmanytimes.fetch_add(1);
 			thisFiber->Run();
 		}

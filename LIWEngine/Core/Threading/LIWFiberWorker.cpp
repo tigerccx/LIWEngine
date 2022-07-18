@@ -25,10 +25,10 @@ void LIW::LIWFiberWorker::Run()
 {
 	while (m_isRunning) {
 		m_state = LIWFiberState::Running;
-		m_curTask->Execute(this);
+		m_curTask->Execute(LIWFiberWorkerPointer((liw_hdl_type)this));
 		m_state = LIWFiberState::Idle;
-		delete m_curTask; // Delete task, since everything is done.
-		m_curTask = nullptr;
+		liw_delete_def<LIWFiberTask>(m_curTask); // Delete task, since everything is done.
+		m_curTask = LIWFiberTaskPointer_NULL;
 		//printf("%p from fb%d thd%d\n", m_curTask, m_id, m_fiberMain->m_threadID);
 		YieldToMain();
 	}

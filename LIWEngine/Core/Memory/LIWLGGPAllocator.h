@@ -141,6 +141,16 @@ namespace LIW {
 				inline void* GetBlockPtr(size_t idx) {
 					return m_dataBuffer + c_blockSize * idx;
 				}
+				/// <summary>
+				/// Get pointer to the beginning of allocated memory
+				/// </summary>
+				/// <returns> pointer to memory </returns>
+				inline void* GetBegPtr() const { return m_dataBuffer; }
+				/// <summary>
+				/// Get pointer to the beginning of end of allocated memory
+				/// </summary>
+				/// <returns> pointer to the end of memory </returns>
+				inline void* GetEndPtr() const { return m_dataBufferEnd; }
 
 				/// <summary>
 				/// Fetch block(s) from buffer according to size. 
@@ -249,8 +259,9 @@ namespace LIW {
 					for (size_t idx = 0; idx < c_blockCount; idx++, ptr = ptrNext, ptrNext += c_blockSize) { // Set element availabilities
 						m_availability[idx] = true; // Mark as free
 
-						////DEBUG
-						//memset(ptr, 0xfafafafa, sizeof(uint64_t));
+#ifdef _DEBUG
+						memset(ptr, 0xfafafafa, c_blockSize);
+#endif
 					}
 					m_idxAvailableBlock = 0;
 				}
@@ -456,9 +467,6 @@ namespace LIW {
 								segCur->m_handle = nullptr;
 								handle->m_ptr.next = m_handleFree;
 								m_handleFree = handle;
-
-								////DEBUG
-								//memset(OffsetFromSegInfo(segCur), 0xffffffff, segCur->m_size);
 							}
 
 							const size_t sizeSeg = segCur->m_size + c_segInfoSize;
@@ -494,8 +502,9 @@ namespace LIW {
 								m_idxBlocksFree = idxCursor;
 							}
 
-							////DEBUG
-							//memset(OffsetFromSegInfo(segDefragTo), 0xffffffff, segDefragTo->m_size);
+#ifdef _DEBUG
+							memset(OffsetFromSegInfo(segDefragTo), 0xfbfbfbfb, segDefragTo->m_size);
+#endif
 						}
 
 

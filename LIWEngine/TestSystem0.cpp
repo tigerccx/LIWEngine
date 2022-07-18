@@ -2,7 +2,7 @@
 #include "LIWCore.h"
 
 
-void FT_TestSystem0Update::Execute(LIWFiberWorker* thisFiber)
+void FT_TestSystem0Update::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 
@@ -13,7 +13,7 @@ void FT_TestSystem0Update::Execute(LIWFiberWorker* thisFiber)
 	int dispatchSize = 20;
 
 	for (int iBeg = 0, iEnd = dispatchSize; iBeg < componentCount; iBeg = iEnd, iEnd += dispatchSize) {
-		auto ptrParamDispatch = new FT_TestSystem0Update_TestComponent0();
+		auto ptrParamDispatch = liw_new_def<FT_TestSystem0Update_TestComponent0>();
 		ptrParamDispatch->m_idxBeg = iBeg;
 		ptrParamDispatch->m_idxEnd = iEnd;
 		ptrParamDispatch->m_dt = m_ptrFrameData->m_timeDelta;
@@ -25,7 +25,7 @@ void FT_TestSystem0Update::Execute(LIWFiberWorker* thisFiber)
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
 }
 
-void FT_TestSystem0Update_TestComponent0::Execute(LIWFiberWorker* thisFiber)
+void FT_TestSystem0Update_TestComponent0::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 

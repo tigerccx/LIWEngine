@@ -11,6 +11,7 @@
 #include "LIWFiberMain.h"
 #include "LIWFiberWorker.h"
 #include "LIWThread.h"
+#include "Memory/LIWMemory.h"
 
 
 namespace LIW {
@@ -21,11 +22,11 @@ namespace LIW {
 	class LIWFiberThreadPoolSized
 	{
 	public:
-		typedef Util::LIWThreadSafeQueueSized<LIWFiberWorker*, FiberCount> fiber_queue_type;
-		typedef std::array<LIWFiberWorker*, FiberCount> fiber_array_type;
-		typedef Util::LIWThreadSafeQueueSized<LIWFiberWorker*, AwakeFiberCount> awake_fiber_queue_type;
-		//typedef Util::LIWThreadSafeQueueSized<LIWFiberTask*, TaskCount> task_queue_type;
-		typedef Util::LIWThreadSafeQueueSized<LIWFiberTask*, TaskCount> task_queue_type;
+		typedef Util::LIWThreadSafeQueueSized<LIWFiberWorkerPointer, FiberCount> fiber_queue_type;
+		typedef std::array<LIWFiberWorkerPointer, FiberCount> fiber_array_type;
+		typedef Util::LIWThreadSafeQueueSized<LIWFiberWorkerPointer, AwakeFiberCount> awake_fiber_queue_type;
+		//typedef Util::LIWThreadSafeQueueSized<LIWFiberTaskPointer, TaskCount> task_queue_type;
+		typedef Util::LIWThreadSafeQueueSized<LIWFiberTaskPointer, TaskCount> task_queue_type;
 		typedef typename fiber_queue_type::size_type size_type;
 		typedef uint32_t counter_size_type;
 		typedef int counter_type;
@@ -47,8 +48,8 @@ namespace LIW {
 		public:
 			typename atomic_counter_type m_counter;
 			std::mutex m_mtx;
-			//std::list<LIWFiberWorker*> m_dependents;
-			LIWFiberWorker* m_dependent;
+			//std::list<LIWFiberWorkerPointer> m_dependents;
+			LIWFiberWorkerPointer m_dependent;
 		};
 	public:
 		typedef std::array<LIWFiberSyncCounter, SyncCounterCount> sync_counter_array_type;
@@ -71,7 +72,7 @@ namespace LIW {
 			m_isRunning = true;
 
 			for (size_type i = 0; i < FiberCount; ++i) {
-				LIWFiberWorker* worker = new LIWFiberWorker((int)i);
+				LIWFiberWorkerPointer worker = liw_new_static<LIWFiberWorker>((int)i);
 				m_fibers.push_now(worker);
 				m_fibersRegistered[i] = worker;
 			}
@@ -102,7 +103,7 @@ namespace LIW {
 		/// </summary>
 		/// <param name="task"> task to execute </param>
 		/// <returns> is operation successful? </returns>
-		inline bool Submit(LIWFiberTask* task) {
+		inline bool Submit(LIWFiberTaskPointer task) {
 			if (!m_tasks.push_now(task))
 				throw "task queue size too small. Decrease task submission rate/Increase task queue size. ";
 			return true;
@@ -133,7 +134,7 @@ namespace LIW {
 		void Stop() {
 			m_isRunning = false;
 
-			LIWFiberTask* task;
+			LIWFiberTaskPointer task;
 			while (!m_tasks.empty()) {
 				task = nullptr;
 				m_tasks.pop(task);
@@ -163,13 +164,13 @@ namespace LIW {
 		///// <param name="idxCounter"> index of the sync counter </param>
 		///// <param name="worker"> dependent fiber worker </param>
 		///// <returns> is operation successful? </returns>
-		//inline bool AddDependencyToSyncCounter(counter_size_type idxCounter, LIWFiberWorker* worker) {
+		//inline bool AddDependencyToSyncCounter(counter_size_type idxCounter, LIWFiberWorkerPointer worker) {
 		//	LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
 		//	lkgd_type lk(counter.m_mtx);
 		//	counter.m_dependents.emplace_back(worker);
 		//	return true;
 		//}
-		inline bool WaitOnSyncCounter(counter_size_type idxCounter, LIWFiberWorker* worker) {
+		inline bool WaitOnSyncCounter(counter_size_type idxCounter, LIWFiberWorkerPointer worker) {
 			LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
 
 			counter.m_mtx.lock();
@@ -232,9 +233,9 @@ namespace LIW {
 					m_fibersAwakeList.push_now(counter.m_dependents.front());
 					counter.m_dependents.pop_front();
 				}*/
-				if (counter.m_dependent != nullptr) {
+				if (counter.m_dependent != LIWFiberWorkerPointer_NULL) {
 					m_fibersAwakeList.push_now(counter.m_dependent);
-					counter.m_dependent = nullptr;
+					counter.m_dependent = LIWFiberWorkerPointer_NULL;
 				}
 			}
 			return val;
@@ -276,10 +277,10 @@ namespace LIW {
 			// Start running fibers
 			const int threadID = param.m_threadID;
 			LIWFiberMain* fiberMain = LIWFiberMain::InitThreadMainFiber(threadID);
-			LIWFiberTask* task = nullptr;
-			LIWFiberWorker* fiber = nullptr;
+			LIWFiberTaskPointer task = LIWFiberTaskPointer_NULL;
+			LIWFiberWorkerPointer fiber = LIWFiberWorkerPointer_NULL;
 			while (true) {
-				fiber = nullptr;
+				fiber = LIWFiberWorkerPointer_NULL;
 
 				if (!thisTP->m_fibersAwakeList.empty()) {
 					if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 

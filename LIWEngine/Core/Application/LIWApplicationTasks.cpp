@@ -5,7 +5,7 @@ void LIW::LIW_TT_WindowUpdate::Execute()
 {
 	auto ptrWindow = LIWCore::s_ins.m_window;
 	if (!ptrWindow->UpdateWindow()) {
-		auto ptrFT_NotifyStop = new LIW_FT_NotifyStop();
+		auto ptrFT_NotifyStop = liw_new_def<LIW_FT_NotifyStop>();
 		LIWFiberExecutor::m_executor.Submit(ptrFT_NotifyStop);
 		m_ptrFrameData->m_singnalEnd = true;
 	}

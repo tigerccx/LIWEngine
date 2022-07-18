@@ -25,7 +25,7 @@ class FT_TestRenderUpdate final :
     public LIWFiberTask
 {
 public:
-    void Execute(LIWFiberWorker* thisFiber) override;
+    void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
     LIWPointer<LIWFrameData, LIWMem_Frame> m_ptrFrameData;
     TestRenderer* m_renderer;
@@ -35,7 +35,7 @@ class FT_TestRenderRender final :
     public LIWFiberTask
 {
 public:
-    void Execute(LIWFiberWorker* thisFiber) override;
+    void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
     TestRenderer* m_renderer;
 };

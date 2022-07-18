@@ -35,7 +35,7 @@ class FT_TestGameUpdate final:
     public LIWFiberTask 
 {
 public:
-    void Execute(LIWFiberWorker* thisFiber) override;
+    void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
     LIWPointer<GameData, LIWMem_Frame> m_ptrFrameData{};
     //LIWPointer<TestGame, LIWMem_Static> m_ptrGame{};

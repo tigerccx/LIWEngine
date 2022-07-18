@@ -16,7 +16,7 @@ namespace LIW {
 			public LIWFiberTask
 		{
 		public:
-			void Execute(LIWFiberWorker* thisFiber) override;
+			void Execute(LIWFiberWorkerPointer thisFiber) override;
 		public:
 			LIWPointer<LIWFrameData, LIWMem_Frame> ptrFrameData;
 		};
@@ -28,7 +28,7 @@ namespace LIW {
 			public LIWFiberTask
 		{
 		public:
-			void Execute(LIWFiberWorker* thisFiber) override;
+			void Execute(LIWFiberWorkerPointer thisFiber) override;
 		public:
 			LIWPointer<LIWFrameData, LIWMem_Frame> ptrFrameData;
 		};
@@ -40,7 +40,7 @@ namespace LIW {
 			public LIWFiberTask
 		{
 		public:
-			void Execute(LIWFiberWorker* thisFiber) override;
+			void Execute(LIWFiberWorkerPointer thisFiber) override;
 		public:
 			LIWPointer<LIWFrameData, LIWMem_Frame> ptrFrameData;
 		};

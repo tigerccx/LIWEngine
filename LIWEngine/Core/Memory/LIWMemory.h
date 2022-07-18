@@ -137,6 +137,13 @@ inline void liw_mclnup_def_thd(int idxThread) {
 }
 
 inline void* liw_maddr_def(liw_hdl_type handle) {
+#ifdef _DEBUG
+	void* mem = DefaultBufferAllocator::GetAddressFromHandle(handle);
+	DefaultBufferAllocator::GlobalGPAllocator& alloc = DefaultMemBuffer::s_defaultBufferGAllocator;
+	if ((uintptr_t)mem< (uintptr_t)alloc.GetBegPtr() || (uintptr_t)mem>=(uintptr_t)alloc.GetEndPtr())
+		throw "Access out of range! ";
+	return mem;
+#endif
 	return DefaultBufferAllocator::GetAddressFromHandle(handle);
 }
 
@@ -496,12 +503,18 @@ public:
 	inline liw_hdl_type get_handle() const {
 		return m_handle;
 	}
+
 protected:
 	liw_hdl_type m_handle;
+public:
+	static const LIWBasePointer null;
 };
 
+template<LIWMemAllocation AllocType>
+const LIWBasePointer<AllocType> LIWBasePointer<AllocType>::null = LIWBasePointer(liw_c_nullhdl);
+
 template<class T, LIWMemAllocation AllocType>
-class LIWPointer : public LIWBasePointer<AllocType> {
+class LIWPointer : public LIWBasePointer<AllocType> final {
 private:
 	typedef LIWBasePointer<AllocType> base_type;
 	typedef LIWPointer<T, AllocType> this_type;

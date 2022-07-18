@@ -55,7 +55,7 @@ void TestRenderer::RenderScene()
 #include "LIWCore.h"
 
 
-void FT_TestRenderUpdate::Execute(LIWFiberWorker* thisFiber)
+void FT_TestRenderUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 
@@ -64,7 +64,7 @@ void FT_TestRenderUpdate::Execute(LIWFiberWorker* thisFiber)
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_UPDATE, 1);
 }
 
-void FT_TestRenderRender::Execute(LIWFiberWorker* thisFiber)
+void FT_TestRenderRender::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 

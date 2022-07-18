@@ -6,6 +6,6 @@ namespace LIW {
 	class LIWFiberWorker;
 	class LIWFiberTask {
 	public:
-		virtual void Execute(LIWFiberWorker* thisFiber) = 0;
+		virtual void Execute(LIWFiberWorkerPointer thisFiber) = 0;
 	};
 }

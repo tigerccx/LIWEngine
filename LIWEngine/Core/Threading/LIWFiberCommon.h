@@ -3,17 +3,23 @@
 #include <atomic>
 #include <list>
 
+#include "Memory/LIWMemory.h"
+
 namespace LIW {
 	class LIWFiberMain;
 	class LIWFiberWorker;
+	class LIWFiberTask;
+
+	typedef LIWPointer<LIWFiberWorker, LIWMem_Static> LIWFiberWorkerPointer;
+#define LIWFiberWorkerPointer_NULL LIWFiberWorkerPointer::null
+	typedef LIWPointer<LIWFiberTask, LIWMem_Default> LIWFiberTaskPointer;
+#define LIWFiberTaskPointer_NULL LIWFiberTaskPointer::null
 
 	enum class LIWFiberState {
 		Uninit,
 		Idle,
 		Running
 	};
-
-	//typedef void(*LIWFiberRunner)(LIWFiberWorker* thisFiber, void* param);
 }
 
 enum LIW_SYNC_COUNTER_RESERVE {
@@ -29,6 +35,3 @@ enum LIW_SYNC_COUNTER_RESERVE_EDTR {
 	LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW = LIW_SYNC_COUNTER_RESERVE_MAX,
 	LIW_SYNC_COUNTER_RESERVE_EDTR_MAX
 };
-
-//#define LIW_FIBER_RUNNER_DEF(function_name) void function_name(LIW::LIWFiberWorker* thisFiber, void* param)
-//#define LIW_FIBER_RUNNER_PARAM LIW::LIWFiberWorker* thisFiber, void* param
