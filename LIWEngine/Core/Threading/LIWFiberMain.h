@@ -11,8 +11,8 @@ namespace LIW {
 	class LIWFiberMain final
 	{
 		friend class LIWFiberWorker;
-	public:
-		friend class LIWFiberWorker;
+		//template<uint64_t, uint64_t, uint64_t, uint32_t>
+		//friend class LIWFiberThreadPoolSized;
 	public:
 		static inline LIWFiberMain* InitThreadMainFiber(int threadID) {
 			return new LIWFiberMain(threadID);
@@ -25,6 +25,9 @@ namespace LIW {
 	private:
 		LPVOID m_sysFiber;
 		const int m_threadID;
+	public:
+		//std::atomic<uint32_t> m_counter = UINT32_MAX;
+		uint32_t m_counter = UINT32_MAX;
 	};
 #endif 
 }

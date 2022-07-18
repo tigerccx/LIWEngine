@@ -121,6 +121,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -184,6 +186,7 @@
     <ClCompile Include="Core\Utility.cpp" />
     <ClCompile Include="Editor\LIWEditorTasks.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="TestAromics.cpp" />
     <ClCompile Include="TestGame.cpp" />
     <ClCompile Include="TestRenderer.cpp" />
     <ClCompile Include="TestSystem0.cpp" />
@@ -262,6 +265,7 @@
     <ClInclude Include="LIWCore.h" />
     <ClInclude Include="MultiThreadRunner.h" />
     <ClInclude Include="SingleThreadRunner.h" />
+    <ClInclude Include="TestAtomics.h" />
     <ClInclude Include="TestComponent0.h" />
     <ClInclude Include="TestFiberTaskIds.h" />
     <ClInclude Include="TestGame.h" />

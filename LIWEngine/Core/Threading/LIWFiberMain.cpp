@@ -7,6 +7,7 @@
 #ifdef _WIN32
 void LIW::LIWFiberMain::YieldTo(LIWFiberWorker* fiberOther)
 {
+	fiberOther->record.fetch_add(1);
 	SwitchToFiber(fiberOther->m_sysFiber);
 }
 LIW::LIWFiberMain::LIWFiberMain(int threadID):

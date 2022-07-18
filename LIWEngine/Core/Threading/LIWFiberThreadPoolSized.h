@@ -1,7 +1,9 @@
 #pragma once
 #include <thread>
+#include <mutex>
 #include <functional>
 #include <vector>
+#include <list>
 #include <array>
 
 #include "Containers/LIWThreadSafeQueueSized.h"
@@ -42,10 +44,11 @@ namespace LIW {
 	private:
 		struct LIWFiberSyncCounter {
 			friend class LIWFiberThreadPoolSized;
-		private:
-			atomic_counter_type m_counter;
+		public:
+			typename atomic_counter_type m_counter;
 			std::mutex m_mtx;
-			std::list<LIWFiberWorker*> m_dependents;
+			//std::list<LIWFiberWorker*> m_dependents;
+			LIWFiberWorker* m_dependent;
 		};
 	public:
 		typedef std::array<LIWFiberSyncCounter, SyncCounterCount> sync_counter_array_type;
@@ -154,24 +157,34 @@ namespace LIW {
 		* Fiber task waiting
 		*/
 		
-		/// <summary>
-		/// Add a fiber worker as the dependency of a sync counter. 
-		/// </summary>
-		/// <param name="idxCounter"> index of the sync counter </param>
-		/// <param name="worker"> dependent fiber worker </param>
-		/// <returns> is operation successful? </returns>
-		inline bool AddDependencyToSyncCounter(counter_size_type idxCounter, LIWFiberWorker* worker) {
-			LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
-			lkgd_type lk(counter.m_mtx);
-			counter.m_dependents.emplace_back(worker);
-			return true;
-		}
+		///// <summary>
+		///// Add a fiber worker as the dependency of a sync counter. 
+		///// </summary>
+		///// <param name="idxCounter"> index of the sync counter </param>
+		///// <param name="worker"> dependent fiber worker </param>
+		///// <returns> is operation successful? </returns>
+		//inline bool AddDependencyToSyncCounter(counter_size_type idxCounter, LIWFiberWorker* worker) {
+		//	LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
+		//	lkgd_type lk(counter.m_mtx);
+		//	counter.m_dependents.emplace_back(worker);
+		//	return true;
+		//}
 		inline bool WaitOnSyncCounter(counter_size_type idxCounter, LIWFiberWorker* worker) {
 			LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
+
 			counter.m_mtx.lock();
 			if (counter.m_counter > 0) {
-				counter.m_dependents.emplace_back(worker);
-				counter.m_mtx.unlock();
+				//TODO: I think this is the issue!!!!!!!
+				// thread A fiber can add dependency->unlock->
+				// thread B fiber decreaseSyncCounter->add to awake list
+				// thread C fetch from awakelist->finish->set to idle
+				// thread A yeild to main->check idle
+				//counter.m_dependents.emplace_back(worker);
+				counter.m_dependent = worker;
+				worker->m_fiberMain->m_counter = idxCounter;
+
+				// SOMETHING BAD CAN HAPPEN HERE!!!
+				// Another thread can decrease counter and start invoking this fiber
 				worker->YieldToMain();
 			}
 			else
@@ -179,6 +192,18 @@ namespace LIW {
 				counter.m_mtx.unlock();
 			}
 			return true;
+
+			//LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
+			//counter.m_mtx.lock();
+			//if (counter.m_counter > 0) {
+			//	worker->m_synCounter = idxCounter;
+			//	counter.m_mtx.unlock();
+			//}
+			//else
+			//{
+			//	counter.m_mtx.unlock();
+			//}
+			//return true;
 		}
 		/// <summary>
 		/// Increase a sync counter. 
@@ -187,7 +212,9 @@ namespace LIW {
 		/// <param name="increase"> amount to increase (>0) </param>
 		/// <returns> sync counter after increment </returns>
 		inline counter_type IncreaseSyncCounter(counter_size_type idxCounter, counter_type increase = 1) {
-			return m_syncCounters[idxCounter].m_counter.fetch_add(increase, std::memory_order_relaxed) + increase;
+			LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
+			lkgd_type lock(counter.m_mtx);
+			return m_syncCounters[idxCounter].m_counter.fetch_add(increase) + increase;
 		}
 		/// <summary>
 		/// Decrease a sync counter (by 1).
@@ -198,12 +225,16 @@ namespace LIW {
 		/// <returns> sync counter after decrement </returns>
 		counter_type DecreaseSyncCounter(counter_size_type idxCounter, counter_type decrease = 1) {
 			LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
-			int val = counter.m_counter.fetch_add(-decrease, std::memory_order_relaxed) - decrease;
+			lkgd_type lock(counter.m_mtx);
+			int val = counter.m_counter.fetch_sub(decrease) - decrease;
 			if (val <= 0) { // Counter reach 0, move all dependents to awake list
-				lkgd_type lock(counter.m_mtx);
-				while (!counter.m_dependents.empty()) {
+				/*while (!counter.m_dependents.empty()) {
 					m_fibersAwakeList.push_now(counter.m_dependents.front());
 					counter.m_dependents.pop_front();
+				}*/
+				if (counter.m_dependent != nullptr) {
+					m_fibersAwakeList.push_now(counter.m_dependent);
+					counter.m_dependent = nullptr;
 				}
 			}
 			return val;
@@ -230,6 +261,9 @@ namespace LIW {
 		task_queue_type m_tasks;
 
 	private:
+		void* fibers[9] = {0,0,0,0,0,0,0,0,0};
+		std::mutex mtx;
+
 		/// <summary>
 		/// Loop function to process task. 
 		/// </summary>
@@ -244,39 +278,64 @@ namespace LIW {
 			LIWFiberMain* fiberMain = LIWFiberMain::InitThreadMainFiber(threadID);
 			LIWFiberTask* task = nullptr;
 			LIWFiberWorker* fiber = nullptr;
-			while (!thisTP->m_tasks.empty() ||
-				!thisTP->m_fibersAwakeList.empty() ||
-				thisTP->m_isRunning) {
-				fiber = nullptr;
-				if (!thisTP->m_fibersAwakeList.empty()) {
-					if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
-					// Set fiber to perform task
-						fiber->SetMainFiber(fiberMain);
+			while (true) {
+				if (!thisTP->m_tasks.empty() ||
+					!thisTP->m_fibersAwakeList.empty() ||
+					thisTP->m_isRunning) {
 
-						// Switch to fiber
-						fiberMain->YieldTo(fiber);
+					fiber = nullptr;
+					if (!thisTP->m_fibersAwakeList.empty()) {
+						if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
+																		// Set fiber to perform task
 
-						if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-							thisTP->m_fibers.push_now(fiber);
-						}
-					}
-				}
-				else if (!thisTP->m_tasks.empty()) {
-					if (thisTP->m_fibers.pop_now(fiber)) { // Acquire fiber from idle fiber list. //TODO: Currently this is spinning when empty. Make it wait. 
-						if (thisTP->m_tasks.pop_now(task)) { // Acquire task
-							// Set fiber to perform task
 							fiber->SetMainFiber(fiberMain);
-							fiber->SetRunTask(task);
 
+							//printf("Resume fb%d thd%d\n", fiber->m_id, threadID);
 							// Switch to fiber
 							fiberMain->YieldTo(fiber);
-						}
-						if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-							thisTP->m_fibers.push_now(fiber);
+
+							if (fiberMain->m_counter != UINT32_MAX) {
+								auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
+								fiberMain->m_counter = UINT32_MAX;
+								counter.m_mtx.unlock();
+							}
+							else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+								thisTP->m_fibers.push_now(fiber);
+							}
 						}
 					}
+					else if (!thisTP->m_tasks.empty()) {
+						if (thisTP->m_fibers.pop_now(fiber)) { // Acquire fiber from idle fiber list. //TODO: Currently this is spinning when empty. Make it wait. 
+							if (thisTP->m_tasks.pop_now(task)) { // Acquire task
+																// Set fiber to perform task
+
+								fiber->SetMainFiber(fiberMain);
+								fiber->SetRunTask(task);
+
+								//printf("NewStart fb%d thd%d\n", fiber->m_id, threadID);
+								// Switch to fiber
+								fiberMain->YieldTo(fiber);
+							}
+
+							if (fiberMain->m_counter != UINT32_MAX) {
+								auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
+								fiberMain->m_counter = UINT32_MAX;
+								counter.m_mtx.unlock();
+							}
+							else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+								thisTP->m_fibers.push_now(fiber);
+							}
+						}
+					}
+
 				}
-				 
+				else
+				{
+					if (thisTP->m_isRunning)
+						std::this_thread::yield();
+					else
+						break;
+				}
 			}
 
 			// Cleanup thread

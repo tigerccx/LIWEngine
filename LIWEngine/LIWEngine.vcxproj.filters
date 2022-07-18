@@ -130,6 +130,9 @@
     <Filter Include="Core\Threading\Executors">
       <UniqueIdentifier>{901a21ed-2726-428d-bd5f-e9282928d718}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Test\Debug">
+      <UniqueIdentifier>{d98bdb2b-85f7-4adb-99a4-ee505112572f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.cpp">
@@ -254,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="Core\Threading\LIWThread.cpp">
       <Filter>Core\Threading\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAromics.cpp">
+      <Filter>Framework\Test\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -493,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="Core\Threading\LIWThreadWorkerTask.h">
       <Filter>Core\Threading\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAtomics.h">
+      <Filter>Framework\Test\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
