@@ -183,7 +183,7 @@ namespace LIW {
 			//size_type __m_front = 0;
 			std::atomic<size_type> __m_back{0};
 			//size_type __m_back = 0;
-		private:
+		//private:
 			mutable std::mutex __m_mtx_data;
 			std::condition_variable __m_cv_nonempty;
 			std::condition_variable __m_cv_nonfull;

@@ -279,60 +279,59 @@ namespace LIW {
 			LIWFiberTask* task = nullptr;
 			LIWFiberWorker* fiber = nullptr;
 			while (true) {
-				if (!thisTP->m_tasks.empty() ||
-					!thisTP->m_fibersAwakeList.empty() ||
-					thisTP->m_isRunning) {
+				fiber = nullptr;
 
-					fiber = nullptr;
-					if (!thisTP->m_fibersAwakeList.empty()) {
-						if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
-																		// Set fiber to perform task
+				if (!thisTP->m_fibersAwakeList.empty()) {
+					if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
+																	// Set fiber to perform task
+
+						fiber->SetMainFiber(fiberMain);
+
+						//printf("Resume fb%d thd%d\n", fiber->m_id, threadID);
+						// Switch to fiber
+						fiberMain->YieldTo(fiber);
+
+						if (fiberMain->m_counter != UINT32_MAX) {
+							auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
+							fiberMain->m_counter = UINT32_MAX;
+							counter.m_mtx.unlock();
+						}
+						else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+							thisTP->m_fibers.push_now(fiber);
+						}
+					}
+				}
+				else if (!thisTP->m_tasks.empty()) {
+					if (thisTP->m_fibers.pop_now(fiber)) { // Acquire fiber from idle fiber list. //TODO: Currently this is spinning when empty. Make it wait. 
+						if (thisTP->m_tasks.pop_now(task)) { // Acquire task
+															// Set fiber to perform task
 
 							fiber->SetMainFiber(fiberMain);
+							fiber->SetRunTask(task);
 
-							//printf("Resume fb%d thd%d\n", fiber->m_id, threadID);
+							//printf("NewStart fb%d thd%d\n", fiber->m_id, threadID);
 							// Switch to fiber
 							fiberMain->YieldTo(fiber);
+						}
 
-							if (fiberMain->m_counter != UINT32_MAX) {
-								auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
-								fiberMain->m_counter = UINT32_MAX;
-								counter.m_mtx.unlock();
-							}
-							else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-								thisTP->m_fibers.push_now(fiber);
-							}
+						if (fiberMain->m_counter != UINT32_MAX) {
+							auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
+							fiberMain->m_counter = UINT32_MAX;
+							counter.m_mtx.unlock();
+						}
+						else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+							thisTP->m_fibers.push_now(fiber);
 						}
 					}
-					else if (!thisTP->m_tasks.empty()) {
-						if (thisTP->m_fibers.pop_now(fiber)) { // Acquire fiber from idle fiber list. //TODO: Currently this is spinning when empty. Make it wait. 
-							if (thisTP->m_tasks.pop_now(task)) { // Acquire task
-																// Set fiber to perform task
-
-								fiber->SetMainFiber(fiberMain);
-								fiber->SetRunTask(task);
-
-								//printf("NewStart fb%d thd%d\n", fiber->m_id, threadID);
-								// Switch to fiber
-								fiberMain->YieldTo(fiber);
-							}
-
-							if (fiberMain->m_counter != UINT32_MAX) {
-								auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
-								fiberMain->m_counter = UINT32_MAX;
-								counter.m_mtx.unlock();
-							}
-							else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-								thisTP->m_fibers.push_now(fiber);
-							}
-						}
-					}
-
 				}
 				else
 				{
-					if (thisTP->m_isRunning)
-						std::this_thread::yield();
+					if (thisTP->m_isRunning) {
+						while (thisTP->m_tasks.empty() && thisTP->m_fibersAwakeList.empty() && thisTP->m_isRunning)
+							//std::this_thread::yield();
+							using namespace std::chrono;
+							std::this_thread::sleep_for(1us);
+					}					
 					else
 						break;
 				}
