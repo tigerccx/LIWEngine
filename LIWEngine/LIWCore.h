@@ -42,7 +42,7 @@ namespace LIW {
 			if (countWorkerThreads == 0)
 				countWorkerThreads = 16;
 			
-			countWorkerThreads = 10;
+			//countWorkerThreads = 16;
 
 			int countThreads = countWorkerThreads + 1;
 

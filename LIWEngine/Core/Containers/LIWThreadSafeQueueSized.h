@@ -32,6 +32,7 @@ namespace LIW {
 				if (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) < Size) {
 					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = val;
 					__m_cv_nonempty.notify_one();
+					if (m_cvCondNonEmptyNotify)m_cvCondNonEmptyNotify->notify_one();
 					return true;
 				}
 				else {
@@ -43,6 +44,7 @@ namespace LIW {
 				if (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) < Size) {
 					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = val;
 					__m_cv_nonempty.notify_one();
+					if (m_cvCondNonEmptyNotify)m_cvCondNonEmptyNotify->notify_one();
 					return true;
 				}
 				else {
@@ -63,6 +65,7 @@ namespace LIW {
 				if (__m_running) {
 					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = val;
 					__m_cv_nonempty.notify_one();
+					if (m_cvCondNonEmptyNotify)m_cvCondNonEmptyNotify->notify_one();
 					return true;
 				}
 				else {
@@ -177,17 +180,19 @@ namespace LIW {
 				__m_cv_nonfull.notify_all();
 			}
 
-		protected:
+		private:
 			T __m_queue[Size]{};
 			std::atomic<size_type> __m_front{0};
 			//size_type __m_front = 0;
 			std::atomic<size_type> __m_back{0};
 			//size_type __m_back = 0;
-		//private:
 			mutable std::mutex __m_mtx_data;
 			std::condition_variable __m_cv_nonempty;
 			std::condition_variable __m_cv_nonfull;
 			bool __m_running = true;
+		public:
+			//TODO: Probably move this to move this into LIWFiberThreadPoolSized, because it's only used there. 
+			std::condition_variable* m_cvCondNonEmptyNotify{ nullptr }; 
 		};
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 #include <functional>
 #include <vector>
 #include <list>
@@ -71,6 +72,9 @@ namespace LIW {
 			//TODO: Make this adaptive somehow
 			m_isRunning = true;
 
+			m_fibers.m_cvCondNonEmptyNotify = &m_cvRequireExecution;
+			m_fibersAwakeList.m_cvCondNonEmptyNotify = &m_cvRequireExecution;
+
 			for (size_type i = 0; i < FiberCount; ++i) {
 				LIWFiberWorkerPointer worker = liw_new_static<LIWFiberWorker>((int)i);
 				m_fibers.push_now(worker);
@@ -120,9 +124,11 @@ namespace LIW {
 				fiber->Stop();
 			}
 			using namespace std::chrono;
-			std::this_thread::sleep_for(1ms);
+			std::this_thread::sleep_for(1ms); //Wait for everyone to go in condition wait
 			m_tasks.notify_stop();
 			m_fibersAwakeList.notify_stop();
+
+			m_cvRequireExecution.notify_all();
 
 			for (int i = 0; i < m_workers.size(); ++i) {
 				m_workers[i].join();
@@ -145,8 +151,11 @@ namespace LIW {
 				fiber->Stop();
 			}
 			using namespace std::chrono;
-			std::this_thread::sleep_for(1ms);
+			std::this_thread::sleep_for(1ms); //Wait for everyone to go in condition wait
 			m_tasks.notify_stop();
+			m_fibersAwakeList.notify_stop();
+
+			m_cvRequireExecution.notify_all();
 
 			for (int i = 0; i < m_workers.size(); ++i) {
 				m_workers[i].join();
@@ -170,22 +179,26 @@ namespace LIW {
 		//	counter.m_dependents.emplace_back(worker);
 		//	return true;
 		//}
+		
+		/// <summary>
+		/// Wait for a sync counter to hit 0;
+		/// </summary>
+		/// <param name="idxCounter"> index of the sync counter </param>
+		/// <param name="worker"> dependent fiber worker </param>
+		/// <returns> is operation successful? </returns>
 		inline bool WaitOnSyncCounter(counter_size_type idxCounter, LIWFiberWorkerPointer worker) {
 			LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
 
 			counter.m_mtx.lock();
 			if (counter.m_counter > 0) {
-				//TODO: I think this is the issue!!!!!!!
-				// thread A fiber can add dependency->unlock->
-				// thread B fiber decreaseSyncCounter->add to awake list
-				// thread C fetch from awakelist->finish->set to idle
-				// thread A yeild to main->check idle
-				//counter.m_dependents.emplace_back(worker);
 				counter.m_dependent = worker;
 				worker->m_fiberMain->m_counter = idxCounter;
 
+				// counter.m_mtx is not unlocked here because...
 				// SOMETHING BAD CAN HAPPEN HERE!!!
-				// Another thread can decrease counter and start invoking this fiber
+				// Another thread can decrease counter and start invoking this fiber, causing fiber execution stack corruption. 
+				// So to make adding to wait and yielding into an atomic op, unlock is moved to mainFiber. 
+				//TODO: Figure out a way to do this more elegantly. 
 				worker->YieldToMain();
 			}
 			else
@@ -193,18 +206,6 @@ namespace LIW {
 				counter.m_mtx.unlock();
 			}
 			return true;
-
-			//LIWFiberSyncCounter& counter = m_syncCounters[idxCounter];
-			//counter.m_mtx.lock();
-			//if (counter.m_counter > 0) {
-			//	worker->m_synCounter = idxCounter;
-			//	counter.m_mtx.unlock();
-			//}
-			//else
-			//{
-			//	counter.m_mtx.unlock();
-			//}
-			//return true;
 		}
 		/// <summary>
 		/// Increase a sync counter. 
@@ -262,79 +263,92 @@ namespace LIW {
 		task_queue_type m_tasks;
 
 	private:
-		void* fibers[9] = {0,0,0,0,0,0,0,0,0};
-		std::mutex mtx;
-
 		/// <summary>
 		/// Loop function to process task. 
 		/// </summary>
 		static void PoolThread(LIWFiberThreadPoolSized* thisTP, const ThreadParam& param) {
+			using namespace std::chrono;
+			
 			// Register thread
 			LIWThreadRegisterID(param.m_threadID);
 			// Init thread
 			LIWThreadInit();
+
 
 			// Start running fibers
 			const int threadID = param.m_threadID;
 			LIWFiberMain* fiberMain = LIWFiberMain::InitThreadMainFiber(threadID);
 			LIWFiberTaskPointer task{liw_c_nullhdl};
 			LIWFiberWorkerPointer fiber{liw_c_nullhdl};
+
 			while (true) {
 				fiber.set_null();
+				task.set_null();
 
-				if (!thisTP->m_fibersAwakeList.empty()) {
-					if (thisTP->m_fibersAwakeList.pop_now(fiber)) { // Acquire fiber from awake fiber list. 
-																	// Set fiber to perform task
-
-						fiber->SetMainFiber(fiberMain);
-
-						//printf("Resume fb%d thd%d\n", fiber->m_id, threadID);
-						// Switch to fiber
-						fiberMain->YieldTo(fiber);
-
-						if (fiberMain->m_counter != UINT32_MAX) {
-							auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
-							fiberMain->m_counter = UINT32_MAX;
-							counter.m_mtx.unlock();
-						}
-						else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-							thisTP->m_fibers.push_now(fiber);
-						}
-					}
-				}
-				else if (!thisTP->m_tasks.empty()) {
-					if (thisTP->m_fibers.pop_now(fiber)) { // Acquire fiber from idle fiber list. //TODO: Currently this is spinning when empty. Make it wait. 
-						if (thisTP->m_tasks.pop_now(task)) { // Acquire task
-															// Set fiber to perform task
-
-							fiber->SetMainFiber(fiberMain);
-							fiber->SetRunTask(task);
-
-							//printf("NewStart fb%d thd%d\n", fiber->m_id, threadID);
-							// Switch to fiber
-							fiberMain->YieldTo(fiber);
-						}
-
-						if (fiberMain->m_counter != UINT32_MAX) {
-							auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
-							fiberMain->m_counter = UINT32_MAX;
-							counter.m_mtx.unlock();
-						}
-						else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
-							thisTP->m_fibers.push_now(fiber);
-						}
-					}
-				}
-				else
-				{
-					if (thisTP->m_isRunning) {
-						while (thisTP->m_tasks.empty() && thisTP->m_fibersAwakeList.empty() && thisTP->m_isRunning)
-							//std::this_thread::yield();
-							using namespace std::chrono;
-							std::this_thread::sleep_for(1ms);
-					}					
-					else
+				// Try a few times before going into conditional wait
+				int trial = 0;
+				const int trialMax = 10; 
+				for (trial = 0; trial < trialMax; trial++) {
+					if (thisTP->m_fibersAwakeList.pop_now(fiber) || //Any awoken fiber?
+						thisTP->m_tasks.pop_now(task) || //Any task?
+						!thisTP->m_isRunning) //Or I am breaking?
 						break;
+				}
+				if (trial == trialMax) { // Fine... All trials are failed. Let's wait...
+					std::unique_lock<std::mutex> lk(thisTP->m_mtxData);
+					while (fiber.is_null() && task.is_null()) {
+						thisTP->m_cvRequireExecution.wait_for(lk, 1ms);
+						if (thisTP->m_fibersAwakeList.pop_now(fiber) || //Any awoken fiber?
+							thisTP->m_tasks.pop_now(task) || //Any task?
+							!thisTP->m_isRunning) //Or I am breaking?
+							break;
+					}
+					lk.unlock();
+				}
+				
+				//NOTE: At this point of execution, either fiber or task must be not null. 
+				//		Or it means it's breaking because it's exiting. 
+
+				if (!fiber.is_null()) { // Acquired fiber from awake fiber list. 
+										// Set fiber to perform task
+					fiber->SetMainFiber(fiberMain);
+
+					//printf("Resume fb%d thd%d\n", fiber->m_id, threadID);
+					// Switch to fiber
+					fiberMain->YieldTo(fiber);
+
+					if (fiberMain->m_counter != UINT32_MAX) {
+						auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
+						fiberMain->m_counter = UINT32_MAX;
+						counter.m_mtx.unlock();
+					}
+					else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+						thisTP->m_fibers.push_now(fiber);
+					}
+				}
+				else if (!task.is_null()) {
+					thisTP->m_fibers.pop(fiber); // Acquire fiber from idle fiber list. 
+
+					fiber->SetMainFiber(fiberMain);
+					fiber->SetRunTask(task);
+
+					//printf("NewStart fb%d thd%d\n", fiber->m_id, threadID);
+					// Switch to fiber
+					fiberMain->YieldTo(fiber);
+
+					if (fiberMain->m_counter != UINT32_MAX) {
+						auto& counter = thisTP->m_syncCounters[fiberMain->m_counter];
+						fiberMain->m_counter = UINT32_MAX;
+						counter.m_mtx.unlock();
+					}
+					else if (fiber->GetState() != LIWFiberState::Running) { // If fiber is not still running (meaning yielded manually), return for reuse. 
+						thisTP->m_fibers.push_now(fiber);
+					}
+
+				}
+				else {
+					printf("Worker thread %d Exit.. \n", threadID);
+					break;
 				}
 			}
 
@@ -345,6 +359,8 @@ namespace LIW {
 	private:
 		bool m_isRunning;
 		bool m_isInit;
+		std::mutex m_mtxData;
+		std::condition_variable m_cvRequireExecution;
 	};
 }
 
