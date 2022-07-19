@@ -323,6 +323,11 @@ namespace LIW {
 					for (size_t i = 0; i < c_handleCount; i++, handleCursor = handleCursorNext, handleCursorNext++) {
 						handleCursor->m_ptr.next = handleCursorNext;
 					}
+
+#ifdef  _DEBUG
+					s_handleCount += c_handleCount;
+#endif //  _DEBUG
+
 				}
 
 				/// <summary>
@@ -388,6 +393,10 @@ namespace LIW {
 							segCur->m_handle = ptrHandleData;
 							m_handleFree = ptrHandleData->m_ptr.next;
 							ptrHandleData->m_ptr.seg = segCur;
+#ifdef _DEBUG
+							m_handleCount--;
+							s_handleCount--;
+#endif
 
 							// No block is left, 
 							// so set block info m_freeSeg to nullptr. 
@@ -419,9 +428,18 @@ namespace LIW {
 							m_handleFree = ptrHandleData->m_ptr.next;
 							ptrHandleData->m_ptr.seg = segCur;
 
+#ifdef _DEBUG
+							m_handleCount--;
+							s_handleCount--;
+#endif
+
 							// Join new seg into freelist
 							ptrBlockInfo->m_freeSeg = segNew;
 						}
+#ifdef _DEBUG
+						m_allocCount++;
+						s_allocCount++;
+#endif
 						return (liw_hdl_type)(segCur->m_handle); // Found and returned
 					}
 				}
@@ -437,6 +455,10 @@ namespace LIW {
 					SegInfo* segFree = ((HandleData*)handle)->m_ptr.seg;
 					segFree->m_mark = true; // Mark for free
 					// Handle will be returned when actually freeing seg
+#ifdef _DEBUG
+					m_allocCount--;
+					s_allocCount--;
+#endif
 				}
 
 				/// <summary>
@@ -467,6 +489,11 @@ namespace LIW {
 								segCur->m_handle = nullptr;
 								handle->m_ptr.next = m_handleFree;
 								m_handleFree = handle;
+
+#ifdef _DEBUG
+								m_handleCount++;
+								s_handleCount++;
+#endif
 							}
 
 							const size_t sizeSeg = segCur->m_size + c_segInfoSize;
@@ -674,8 +701,22 @@ namespace LIW {
 				char* m_handleBufferEnd{ nullptr }; // Pointer to the end of allocated space for handle. (aligned)
 				char* m_handleBufferRaw{ nullptr }; // Pointer to allocated space for handle. (raw)
 				HandleData* m_handleFree{ nullptr }; // Pointer to the first free handle. 
+#ifdef _DEBUG
+			public:
+				size_t m_handleCount = c_handleCount;
+				static std::atomic<size_t> s_handleCount;
+				int64_t m_allocCount = 0;
+				static std::atomic<size_t> s_allocCount;
+#endif
 			};
 		};
+
+#ifdef _DEBUG
+		template<size_t SizeTotal, size_t CountHandlePerThread, size_t SizeBlock>
+		std::atomic<size_t> LIWLGGPAllocator<SizeTotal, CountHandlePerThread, SizeBlock>::LocalGPAllocator::s_handleCount{ 0 };
+		template<size_t SizeTotal, size_t CountHandlePerThread, size_t SizeBlock>
+		std::atomic<size_t> LIWLGGPAllocator<SizeTotal, CountHandlePerThread, SizeBlock>::LocalGPAllocator::s_allocCount{ 0 };
+#endif
 	}
 }
 

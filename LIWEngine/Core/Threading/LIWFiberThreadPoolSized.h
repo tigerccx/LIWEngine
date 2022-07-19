@@ -359,6 +359,7 @@ namespace LIW {
 	private:
 		bool m_isRunning;
 		bool m_isInit;
+		//TODO: Probably combine LIWThreadSafeQueueSized into this so there will be less conditional variables. 
 		std::mutex m_mtxData;
 		std::condition_variable m_cvRequireExecution;
 	};

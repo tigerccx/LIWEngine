@@ -28,11 +28,15 @@ void liw_mgc_thd(int idxThread)
 		GCThreads::s_gcThdCondVarExecute.wait(lk);
 		if (!GCThreads::s_gcIsRunning[idxThread])
 			break;
-		liw_mupdate_def_thd(LIWThreadGetID());
+		liw_mupdate_def_thd(idxThread);
 		liw_mupdate_static_thd(idxThread);
 		liw_mupdate_frame_thd(idxThread);
 		liw_mupdate_dframe_thd(idxThread);
-		//printf("GC%d\n", idxThread);
+#ifdef _DEBUG
+		printf("GC%d \t Def local_hdl: %llu global_hdl %llu \n", idxThread, 
+																 DefaultMemBuffer::s_defaultBufferLAllocators[idxThread].m_handleCount, 
+																 DefaultBufferAllocator::LocalGPAllocator::s_handleCount.load());
+#endif
 		LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_MEMORY_UPDATE, 1);
 	}
 }
