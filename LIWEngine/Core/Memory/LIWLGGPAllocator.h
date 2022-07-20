@@ -481,6 +481,10 @@ namespace LIW {
 
 						while (segCur < segBlockEnd) {
 							if (segCur->m_mark) { // If seg is marked to free, free seg and its handle
+#ifdef _DEBUG
+								if (*(char*)(&segCur->m_mark) != 1)
+									throw "Memory corruption. ";
+#endif
 								// Free seg
 								// (which is delayed to defrag step)
 								segCur->m_mark = false;

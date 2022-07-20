@@ -30,7 +30,7 @@ public:
     TestRenderer* m_renderer{ nullptr };
     TestSystem0* m_sys0{ nullptr };
 
-    LIWComponentManager<TestComponent0> componentManager_TestComponent0{ 2,2 };
+    LIWComponentManager<TestComponent0> m_componentManager_TestComponent0{ 2,2 };
     
     //static LIWPointer<TestGame, LIWMem_Static> s_ptrGame;
 };

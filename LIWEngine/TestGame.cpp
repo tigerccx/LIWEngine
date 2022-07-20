@@ -8,8 +8,17 @@ int TestGame::Initialise()
 	m_renderer = new TestRenderer(*(m_currentEnvironment->m_window));
 
 	//LIWEntity* entity = LIWEntityManager::instance.GetNewEntity();
-	//entity->AddComponent(LIWComponentManager<TestComponent0>::instance.GetNewComponent());
-	
+	//entity->AddComponent(LIWComponentManager<TestComponent0>::instance.GetNewComponent())
+
+	LIWDArray<liw_objhdl_type> components;
+	m_componentManager_TestComponent0.CreateComponents(components, 10);
+	for (int i = 0; i < 10; i++) {
+		auto& component = m_componentManager_TestComponent0.GetComponent(components[i]);
+		component.m_float0 = i + 0.7f;
+	}
+
+	m_componentManager_TestComponent0.ApplyChange();
+
 	return 0;
 }
 
@@ -32,6 +41,8 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 	ptrFT_TestRendererRender->m_renderer = m_ptrGame->m_renderer;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_TestRendererRender);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
+
+	m_ptrGame->m_componentManager_TestComponent0.ApplyChange();
 
 	auto ptrFT_EdtrUIDrawBeg = liw_new_def<Editor::LIW_FT_EDTR_UIDrawBeg>();
 	ptrFT_EdtrUIDrawBeg->ptrFrameData = m_ptrFrameData;

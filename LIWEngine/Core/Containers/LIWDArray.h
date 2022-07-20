@@ -205,10 +205,12 @@ public:
 		return (T*)liw_maddr<AllocType>(m_dataBuffer);
 	}
 	inline T& operator[](size_t idx) {
+		assert(idx < m_size);
 		T* ptr = get_data();
 		return ptr[idx];
 	}
 	inline const T& operator[](size_t idx) const {
+		assert(idx < m_size);
 		const T* ptr = (const T*)get_data();
 		return ptr[idx];
 	}
