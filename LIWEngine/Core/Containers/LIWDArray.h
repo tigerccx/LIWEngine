@@ -248,6 +248,24 @@ public:
 		lkgd_type lk(m_mtx);
 		set_capacity(capacity);
 	}
+	inline void expand() {
+		static_assert(ExpandType < LIWDArrayExpand_Max, "Must use a valid LIWDArrayExpandType enum. ");
+		size_t capacityNew = m_capacity;
+		switch (ExpandType)
+		{
+		case LIWDArrayExpand_Double:
+			capacityNew = size_t(2 * m_capacity); break;
+		case LIWDArrayExpand_Half:
+			capacityNew = size_t(1.5 * m_capacity); break;
+		case LIWDArrayExpand_Quater:
+			capacityNew = size_t(1.25 * m_capacity); break;
+		case LIWDArrayExpand_Constant: {
+			assert(m_sizeExpand != 0); // When ExpandType is LIWDArrayExpand_Constant, m_sizeExpand must be set to non-zero
+			capacityNew = m_capacity + m_sizeExpand;
+		} break;
+		}
+		set_capacity(capacityNew);
+	}
 
 	inline void push_back(const T& val) {
 		const size_t sizeNew = m_size + 1;
@@ -426,25 +444,6 @@ private:
 		for (size_t i = 0; i < m_size; i++) {
 			ptr[i].~T();
 		}
-	}
-
-	inline void expand() {
-		static_assert(ExpandType < LIWDArrayExpand_Max, "Must use a valid LIWDArrayExpandType enum. ");
-		size_t capacityNew = m_capacity;
-		switch (ExpandType)
-		{
-		case LIWDArrayExpand_Double:
-			capacityNew = 2 * m_capacity; break;
-		case LIWDArrayExpand_Half:
-			capacityNew = 1.5 * m_capacity; break;
-		case LIWDArrayExpand_Quater:
-			capacityNew = 1.25 * m_capacity; break;
-		case LIWDArrayExpand_Constant: {
-				assert(m_sizeExpand != 0); // When ExpandType is LIWDArrayExpand_Constant, m_sizeExpand must be set to non-zero
-				capacityNew = m_capacity + m_sizeExpand;
-			} break;
-		}
-		set_capacity(capacityNew);
 	}
 
 private:

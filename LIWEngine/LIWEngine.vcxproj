@@ -163,6 +163,9 @@
     <ClCompile Include="Core\Application\Output\TextConsole.cpp" />
     <ClCompile Include="Core\Application\Window.cpp" />
     <ClCompile Include="Core\Debug\LIWDebug.cpp" />
+    <ClCompile Include="Core\Framework\LIWComponent.cpp" />
+    <ClCompile Include="Core\Framework\LIWEntity.cpp" />
+    <ClCompile Include="Core\Framework\LIWEntityManager.cpp" />
     <ClCompile Include="Core\Framework\LIWGame.cpp" />
     <ClCompile Include="Core\Framework\LIWStandardSystem.cpp" />
     <ClCompile Include="Core\LIWCore.cpp" />
@@ -225,6 +228,8 @@
     <ClInclude Include="Core\Framework\LIWComponent.h" />
     <ClInclude Include="Core\Framework\LIWComponentManager.h" />
     <ClInclude Include="Core\Framework\LIWComponentType.h" />
+    <ClInclude Include="Core\Framework\LIWEntity.h" />
+    <ClInclude Include="Core\Framework\LIWEntityManager.h" />
     <ClInclude Include="Core\Framework\LIWGame.h" />
     <ClInclude Include="Core\Framework\LIWStandardSystem.h" />
     <ClInclude Include="Core\Framework\LIWSystem.h" />
@@ -271,10 +276,14 @@
     <ClInclude Include="TestGame.h" />
     <ClInclude Include="TestRenderer.h" />
     <ClInclude Include="TestSystem0.h" />
+    <ClInclude Include="test_ecs_0.h" />
     <ClInclude Include="test_mem_0.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="LIW.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

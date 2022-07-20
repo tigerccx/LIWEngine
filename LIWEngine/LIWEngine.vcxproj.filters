@@ -133,6 +133,9 @@
     <Filter Include="Framework\Test\Debug">
       <UniqueIdentifier>{d98bdb2b-85f7-4adb-99a4-ee505112572f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Test\Framework">
+      <UniqueIdentifier>{2daa7ad6-5bab-4258-be03-acd1885ade4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.cpp">
@@ -260,6 +263,15 @@
     </ClCompile>
     <ClCompile Include="TestAromics.cpp">
       <Filter>Framework\Test\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\LIWEntity.cpp">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\LIWEntityManager.cpp">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\LIWComponent.cpp">
+      <Filter>Core\ECSFramework\LIWComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -503,8 +515,20 @@
     <ClInclude Include="TestAtomics.h">
       <Filter>Framework\Test\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Framework\LIWEntity.h">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWEntityManager.h">
+      <Filter>Core\ECSFramework\LIWEntity</Filter>
+    </ClInclude>
+    <ClInclude Include="test_ecs_0.h">
+      <Filter>Framework\Test\Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="LIW.natvis" />
   </ItemGroup>
 </Project>

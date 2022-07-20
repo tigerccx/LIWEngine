@@ -1,14 +1,15 @@
 #include "TestGame.h"
 #include "Editor/LIWEditorTasks.h"
 
+//LIWPointer<TestGame, LIWMem_Static> TestGame::s_ptrGame{};
+
 int TestGame::Initialise()
 {
 	m_renderer = new TestRenderer(*(m_currentEnvironment->m_window));
 
 	//LIWEntity* entity = LIWEntityManager::instance.GetNewEntity();
 	//entity->AddComponent(LIWComponentManager<TestComponent0>::instance.GetNewComponent());
-
-	LIWGame::instance = this;
+	
 	return 0;
 }
 

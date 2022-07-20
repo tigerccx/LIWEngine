@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010"> 
+	<Type Name="LIWDArray&lt;*&gt;">
+		<Intrinsic Name="size" Expression="m_size" />
+		<Intrinsic Name="capacity" Expression="m_capacity" />
+		<Expand>
+			<Item Name="[capacity]">m_capacity</Item>
+			<Item Name="[size]">m_size</Item>
+			<Item Name="[raw_addr]">get_data()</Item>
+			<!--<ArrayItems>
+				<Size>m_size</Size>
+				<ValuePointer>get_data()</ValuePointer>
+			</ArrayItems>-->
+		</Expand>
+	</Type>	
+</AutoVisualizer>

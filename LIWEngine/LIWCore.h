@@ -118,9 +118,9 @@ namespace LIW {
 			}
 
 			// Init game
-			
-			m_game.InitGame(&m_environment);
-			int codeGameInit = m_game.Initialise();
+			m_game = liw_new_static<TestGame>();
+			m_game->InitGame(&m_environment);
+			int codeGameInit = m_game->Initialise();
 			if (codeGameInit)
 				return codeGameInit;
 
@@ -164,7 +164,8 @@ namespace LIW {
 
 		void Shutdown() {
 
-			//m_game.CleanUp();
+			m_game->CleanUp();
+			liw_delete_static<TestGame>(m_game);
 
 			glfwTerminate();
 
@@ -204,7 +205,7 @@ namespace LIW {
 	public:
 		LIW::App::Environment m_environment;
 		LIWPointer<LIW::App::Window, LIWMem_Static> m_window{ liw_c_nullhdl };
-		TestGame m_game;
+		LIWPointer<TestGame, LIWMem_Static> m_game;
 
 	private:
 		std::atomic<bool> m_isRunning;

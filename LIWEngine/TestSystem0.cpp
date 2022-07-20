@@ -6,8 +6,8 @@ void FT_TestSystem0Update::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 
-	auto& testComponent0Mngr = LIWComponentManager<TestComponent0>::s_ins;
-	int componentCount = testComponent0Mngr.GetComponentCount();
+	auto& testComponent0Mngr = LIWCore::s_ins.m_game->componentManager_TestComponent0;
+	int componentCount = testComponent0Mngr.GetActiveComponentCount();
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, componentCount);
 
 	int dispatchSize = 20;
@@ -29,9 +29,9 @@ void FT_TestSystem0Update_TestComponent0::Execute(LIWFiberWorkerPointer thisFibe
 {
 	using namespace LIW;
 
-	auto& testComponent0Mngr = LIWComponentManager<TestComponent0>::s_ins;
+	auto& testComponent0Mngr = LIWCore::s_ins.m_game->componentManager_TestComponent0;
 	for (int i = m_idxBeg; i < m_idxEnd; i++) {
-		TestComponent0& component = *testComponent0Mngr.m_list[i];
+		TestComponent0& component = testComponent0Mngr.m_components[i];
 		component.m_float0 += m_dt;
 		printf("%llu : %f", component.GetID(), component.m_float0);
 	}

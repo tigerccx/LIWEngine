@@ -7,7 +7,7 @@
 void test() {
 	printf("%llu\n", sizeof(LIWPointer<int, LIWMem_Default>));
 	printf("%llu\n", sizeof(LIWPointer<float, LIWMem_DFrame>));
-	printf("%llu\n", sizeof(LIWCPointer<float, LIWMem_Default>));
+	//printf("%llu\n", sizeof(LIWCPointer<float, LIWMem_Default>));
 
 	// Init mem
 	liw_minit_def(1);

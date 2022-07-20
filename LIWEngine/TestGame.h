@@ -29,6 +29,10 @@ public:
 
     TestRenderer* m_renderer{ nullptr };
     TestSystem0* m_sys0{ nullptr };
+
+    LIWComponentManager<TestComponent0> componentManager_TestComponent0{ 2,2 };
+    
+    //static LIWPointer<TestGame, LIWMem_Static> s_ptrGame;
 };
 
 class FT_TestGameUpdate final:
@@ -38,6 +42,5 @@ public:
     void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
     LIWPointer<LIWFrameData, LIWMem_Frame> m_ptrFrameData{};
-    //LIWPointer<TestGame, LIWMem_Static> m_ptrGame{};
-    TestGame* m_ptrGame{ nullptr };
+    LIWPointer<TestGame, LIWMem_Static> m_ptrGame{};
 };

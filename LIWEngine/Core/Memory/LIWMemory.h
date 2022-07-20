@@ -921,12 +921,16 @@ struct GCThreads
 	static std::vector<bool> s_gcIsRunning;
 };
 
+// GC thread
 void liw_mgc_thd(int idxThread);
 
+// Notify GC to be executed
 inline void liw_mgc_notify_execute() {
 	GCThreads::s_gcThdCondVarExecute.notify_all(); //TODO: maybe need to do more than this. (eg. when some gc thd is not waiting for cond)
 }
 
+// Initialize GC
 void liw_mgc_init(int countThreads);
 
+// Wait for GC to complete and stop
 void liw_mgc_wait_and_stop();
