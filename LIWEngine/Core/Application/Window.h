@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <GL/GL.h>
 
+#include "Memory/LIWMemory.h"
+
 #include "Input/Keyboard.h"
 #include "Input/Keyboard_GLFW.h"
 #include "Input/Mouse.h"
@@ -35,7 +37,7 @@ namespace LIW {
 
 			inline Keyboard* GetKeyboard() { return keyboard; }
 			inline Mouse* GetMouse() { return mouse; }
-			inline TextOutputDevice* GetTextOutput() { return textOutput; }
+			inline LIWPointer<TextOutputDevice, LIWMem_Static> GetTextOutput() { return textOutput; }
 
 		protected:
 
@@ -53,7 +55,7 @@ namespace LIW {
 			Mouse* mouse = nullptr;
 
 			/*Output*/
-			TextOutputDevice* textOutput = nullptr;
+			LIWPointer<TextOutputDevice, LIWMem_Static> textOutput{ liw_c_nullhdl };
 		};
 	}
 }

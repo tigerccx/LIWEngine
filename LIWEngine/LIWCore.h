@@ -103,7 +103,7 @@ namespace LIW {
 			/* Make the window's context current */
 			ptrWindow->SetCurrent();
 			/* Create environment */
-			m_environment.m_window = ptrWindow; //TODO: warning! use handle...
+			m_environment.m_window = ptrWindow; 
 
 
 			// Init GLEW

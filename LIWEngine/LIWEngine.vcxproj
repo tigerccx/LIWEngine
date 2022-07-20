@@ -163,6 +163,7 @@
     <ClCompile Include="Core\Application\Output\TextConsole.cpp" />
     <ClCompile Include="Core\Application\Window.cpp" />
     <ClCompile Include="Core\Debug\LIWDebug.cpp" />
+    <ClCompile Include="Core\Debug\LIWDebugTasks.cpp" />
     <ClCompile Include="Core\Framework\LIWComponent.cpp" />
     <ClCompile Include="Core\Framework\LIWEntity.cpp" />
     <ClCompile Include="Core\Framework\LIWEntityManager.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
     <ClInclude Include="Core\Debug\LIWDebug.h" />
+    <ClInclude Include="Core\Debug\LIWDebugTasks.h" />
     <ClInclude Include="Core\Exceptions.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
     <ClInclude Include="Core\Framework\LIWComponentManager.h" />

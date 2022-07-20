@@ -6,6 +6,7 @@
 #include "Memory/LIWMemory.h"
 #include "Threading/LIWFiberExecutor.h"
 #include "LIWFrame.h"
+#include "Debug/LIWDebugTasks.h"
 
 using namespace LIW;
 

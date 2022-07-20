@@ -4,7 +4,7 @@
 
 namespace LIW {
 	namespace App {
-		class TextConsole :
+		class TextConsole final:
 			public TextOutputDevice 
 		{
 		public:

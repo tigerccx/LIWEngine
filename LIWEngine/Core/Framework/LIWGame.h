@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "LIWObject.h"
+#include "Memory/LIWMemory.h"
 
 #include "Application/Environment.h"
 #include "Debug/LIWDebug.h"
@@ -22,18 +23,18 @@ namespace LIW {
     public:
         LIWGame(){}
         virtual ~LIWGame() {
-            delete m_debug;
+            liw_delete_static(m_debug);
         }
 
         void InitGame(App::Environment* environment) {
             m_currentEnvironment = environment;
-            m_debug = new LIWDebug(environment->m_window->GetTextOutput());
+            m_debug = liw_new_static<LIWDebug>(environment->m_window->GetTextOutput());
         }
 
     public:
         static LIWGame* instance;
 
-        LIWDebug* m_debug{ nullptr };
+        LIWPointer<LIWDebug, LIWMem_Static> m_debug{ liw_c_nullhdl };
 
         int m_idealHZ = 120;
         float m_idealDT = 1.0f / m_idealHZ;

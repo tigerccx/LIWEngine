@@ -25,8 +25,8 @@ LIW::App::Window::Window(const std::string& name, int width, int height, bool fu
 	}
 
 	/*Init output devices*/
-	if (!textOutput) {
-		textOutput = new TextConsole();
+	if (textOutput.is_null()) {
+		textOutput = liw_new_static<TextConsole>();
 	}
 
 	init = true;
@@ -42,9 +42,9 @@ LIW::App::Window::~Window()
 		delete mouse;
 		mouse = nullptr;
 	}
-	if (textOutput) {
-		delete textOutput;
-		textOutput = nullptr;
+	if (!textOutput.is_null()) {
+		liw_delete_static(textOutput);
+		textOutput.set_null();
 	}
 	if (windowHandle) {
 		glfwDestroyWindow(windowHandle);

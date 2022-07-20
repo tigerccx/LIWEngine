@@ -273,6 +273,9 @@
     <ClCompile Include="Core\Framework\LIWComponent.cpp">
       <Filter>Core\ECSFramework\LIWComponent</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Debug\LIWDebugTasks.cpp">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h">
@@ -523,6 +526,9 @@
     </ClInclude>
     <ClInclude Include="test_ecs_0.h">
       <Filter>Framework\Test\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\LIWDebugTasks.h">
+      <Filter>Core\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
