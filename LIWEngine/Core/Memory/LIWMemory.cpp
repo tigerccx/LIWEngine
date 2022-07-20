@@ -32,7 +32,7 @@ void liw_mgc_thd(int idxThread)
 		liw_mupdate_static_thd(idxThread);
 		liw_mupdate_frame_thd(idxThread);
 		liw_mupdate_dframe_thd(idxThread);
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 		printf("GC%d \t Def local_hdl: %llu global_hdl %llu \n", idxThread, 
 																 DefaultMemBuffer::s_defaultBufferLAllocators[idxThread].m_handleCount, 
 																 DefaultBufferAllocator::LocalGPAllocator::s_handleCount.load());

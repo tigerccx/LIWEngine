@@ -324,9 +324,9 @@ namespace LIW {
 						handleCursor->m_ptr.next = handleCursorNext;
 					}
 
-#ifdef  _DEBUG
+#ifdef  DEBUG_PRINT_MEMORY_INFO
 					s_handleCount += c_handleCount;
-#endif //  _DEBUG
+#endif //  DEBUG_PRINT_MEMORY_INFO
 
 				}
 
@@ -393,7 +393,7 @@ namespace LIW {
 							segCur->m_handle = ptrHandleData;
 							m_handleFree = ptrHandleData->m_ptr.next;
 							ptrHandleData->m_ptr.seg = segCur;
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 							m_handleCount--;
 							s_handleCount--;
 #endif
@@ -428,7 +428,7 @@ namespace LIW {
 							m_handleFree = ptrHandleData->m_ptr.next;
 							ptrHandleData->m_ptr.seg = segCur;
 
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 							m_handleCount--;
 							s_handleCount--;
 #endif
@@ -436,7 +436,7 @@ namespace LIW {
 							// Join new seg into freelist
 							ptrBlockInfo->m_freeSeg = segNew;
 						}
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 						m_allocCount++;
 						s_allocCount++;
 #endif
@@ -455,7 +455,7 @@ namespace LIW {
 					SegInfo* segFree = ((HandleData*)handle)->m_ptr.seg;
 					segFree->m_mark = true; // Mark for free
 					// Handle will be returned when actually freeing seg
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 					m_allocCount--;
 					s_allocCount--;
 #endif
@@ -494,7 +494,7 @@ namespace LIW {
 								handle->m_ptr.next = m_handleFree;
 								m_handleFree = handle;
 
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 								m_handleCount++;
 								s_handleCount++;
 #endif
@@ -705,7 +705,7 @@ namespace LIW {
 				char* m_handleBufferEnd{ nullptr }; // Pointer to the end of allocated space for handle. (aligned)
 				char* m_handleBufferRaw{ nullptr }; // Pointer to allocated space for handle. (raw)
 				HandleData* m_handleFree{ nullptr }; // Pointer to the first free handle. 
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 			public:
 				size_t m_handleCount = c_handleCount;
 				static std::atomic<size_t> s_handleCount;
@@ -715,7 +715,7 @@ namespace LIW {
 			};
 		};
 
-#ifdef _DEBUG
+#ifdef DEBUG_PRINT_MEMORY_INFO
 		template<size_t SizeTotal, size_t CountHandlePerThread, size_t SizeBlock>
 		std::atomic<size_t> LIWLGGPAllocator<SizeTotal, CountHandlePerThread, SizeBlock>::LocalGPAllocator::s_handleCount{ 0 };
 		template<size_t SizeTotal, size_t CountHandlePerThread, size_t SizeBlock>
