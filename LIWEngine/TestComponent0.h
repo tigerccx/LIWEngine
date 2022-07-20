@@ -6,8 +6,9 @@
 
 #include "Framework/LIWComponent.h"
 
+using namespace LIW;
+
 class TestComponent0 : public LIWComponent {
-public: virtual LIWComponentType& GetObjType() const override { return GetType<TestComponent0>(); }
 public:
 	float m_float0;
 	float m_float1 = 1.0f;

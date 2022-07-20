@@ -4,9 +4,10 @@
 
 #include "LIWObject.h"
 #include "Memory/LIWMemory.h"
-
 #include "Application/Environment.h"
 #include "Debug/LIWDebug.h"
+#include "LIWEntityManager.h"
+#include "LIWECSConfiguration.h"
 
 #include "TestRenderer.h"
 
@@ -26,14 +27,12 @@ namespace LIW {
             liw_delete_static(m_debug);
         }
 
-        void InitGame(App::Environment* environment) {
+        void InitGame(LIWPointer<App::Environment, LIWMem_Static> environment) {
             m_currentEnvironment = environment;
             m_debug = liw_new_static<LIWDebug>(environment->m_window->GetTextOutput());
         }
 
     public:
-        static LIWGame* instance;
-
         LIWPointer<LIWDebug, LIWMem_Static> m_debug{ liw_c_nullhdl };
 
         int m_idealHZ = 120;
@@ -61,13 +60,15 @@ namespace LIW {
 
     //protected:
     public:
-        App::Environment* m_currentEnvironment{ nullptr };
+        LIWPointer<App::Environment, LIWMem_Static> m_currentEnvironment{ liw_c_nullhdl };
 
         int m_realHZ = m_idealHZ;
         float m_realDT = m_idealDT;
         float m_dtFixedAccum = 0.0f;
 
-        TestRenderer* m_renderer{ nullptr };
+    public: 
+        LIW::LIW__ComponentCollectionType m__componentCollection;
+        LIW::LIWEntityManager m_entityManager{};
     };
 }
 

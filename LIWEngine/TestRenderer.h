@@ -28,7 +28,6 @@ public:
     void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
     LIWPointer<LIWFrameData, LIWMem_Frame> m_ptrFrameData;
-    TestRenderer* m_renderer{ nullptr };
 };
 
 class FT_TestRenderRender final :
@@ -36,8 +35,6 @@ class FT_TestRenderRender final :
 {
 public:
     void Execute(LIWFiberWorkerPointer thisFiber) override;
-public:
-    TestRenderer* m_renderer{ nullptr };
 };
 
 class TT_TestRenderRender final :
@@ -45,6 +42,4 @@ class TT_TestRenderRender final :
 {
 public:
     void Execute() override;
-public:
-    TestRenderer* m_renderer{ nullptr };
 };

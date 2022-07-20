@@ -11880,7 +11880,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
     // Settings
     if (TreeNode("Settings"))
     {
-        if (SmallButton("Clear"))
+        if (SmallButton("CleanUp"))
             ClearIniSettings();
         SameLine();
         if (SmallButton("Save to memory"))

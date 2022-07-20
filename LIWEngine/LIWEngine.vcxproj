@@ -136,7 +136,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>DEBUG_PRINT_MEMORY_INFO;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -165,12 +165,14 @@
     <ClCompile Include="Core\Debug\LIWDebug.cpp" />
     <ClCompile Include="Core\Debug\LIWDebugTasks.cpp" />
     <ClCompile Include="Core\Framework\LIWComponent.cpp" />
+    <ClCompile Include="Core\Framework\LIWECSFunctional.cpp" />
     <ClCompile Include="Core\Framework\LIWEntity.cpp" />
     <ClCompile Include="Core\Framework\LIWEntityManager.cpp" />
     <ClCompile Include="Core\Framework\LIWGame.cpp" />
     <ClCompile Include="Core\Framework\LIWStandardSystem.cpp" />
     <ClCompile Include="Core\LIWCore.cpp" />
     <ClCompile Include="Core\LIWFrame.cpp" />
+    <ClCompile Include="Core\LIWGlobal.cpp" />
     <ClCompile Include="Core\Maths\Matrix2.cpp" />
     <ClCompile Include="Core\Maths\Matrix3.cpp" />
     <ClCompile Include="Core\Maths\Matrix4.cpp" />
@@ -191,7 +193,9 @@
     <ClCompile Include="Editor\LIWEditorTasks.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestAromics.cpp" />
+    <ClCompile Include="TestComponentCollection.cpp" />
     <ClCompile Include="TestGame.cpp" />
+    <ClCompile Include="TestGlobal.cpp" />
     <ClCompile Include="TestRenderer.cpp" />
     <ClCompile Include="TestSystem0.cpp" />
   </ItemGroup>
@@ -228,8 +232,10 @@
     <ClInclude Include="Core\Debug\LIWDebugTasks.h" />
     <ClInclude Include="Core\Exceptions.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
+    <ClInclude Include="Core\Framework\LIWComponentCollection.h" />
+    <ClInclude Include="Core\Framework\LIWECSConfiguration.h" />
+    <ClInclude Include="Core\Framework\LIWECSFunctional.h" />
     <ClInclude Include="Core\Framework\LIWComponentManager.h" />
-    <ClInclude Include="Core\Framework\LIWComponentType.h" />
     <ClInclude Include="Core\Framework\LIWEntity.h" />
     <ClInclude Include="Core\Framework\LIWEntityManager.h" />
     <ClInclude Include="Core\Framework\LIWGame.h" />
@@ -237,6 +243,7 @@
     <ClInclude Include="Core\Framework\LIWSystem.h" />
     <ClInclude Include="Core\LIWConstants.h" />
     <ClInclude Include="Core\LIWFrame.h" />
+    <ClInclude Include="Core\LIWGlobal.h" />
     <ClInclude Include="Core\LIWObject.h" />
     <ClInclude Include="Core\LIWTypes.h" />
     <ClInclude Include="Core\Macros.h" />
@@ -274,8 +281,10 @@
     <ClInclude Include="SingleThreadRunner.h" />
     <ClInclude Include="TestAtomics.h" />
     <ClInclude Include="TestComponent0.h" />
+    <ClInclude Include="TestComponentCollection.h" />
     <ClInclude Include="TestFiberTaskIds.h" />
     <ClInclude Include="TestGame.h" />
+    <ClInclude Include="TestGlobal.h" />
     <ClInclude Include="TestRenderer.h" />
     <ClInclude Include="TestSystem0.h" />
     <ClInclude Include="test_ecs_0.h" />

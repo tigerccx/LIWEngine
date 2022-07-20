@@ -11,6 +11,7 @@
 #include "Threading/LIWFiberCommon.h"
 #include "Threading/LIWFiberTask.h"
 #include "Threading/LIWFiberExecutor.h"
+#include "TestGlobal.h"
 
 using namespace LIW;
 
@@ -26,13 +27,7 @@ public:
 
     }
     int Initialise() override;
-
-    TestRenderer* m_renderer{ nullptr };
-    TestSystem0* m_sys0{ nullptr };
-
-    LIWComponentManager<TestComponent0> m_componentManager_TestComponent0{ 2,2 };
-    
-    //static LIWPointer<TestGame, LIWMem_Static> s_ptrGame;
+    int CleanUp() override;
 };
 
 class FT_TestGameUpdate final:
@@ -42,5 +37,4 @@ public:
     void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
     LIWPointer<LIWFrameData, LIWMem_Frame> m_ptrFrameData{};
-    LIWPointer<TestGame, LIWMem_Static> m_ptrGame{};
 };

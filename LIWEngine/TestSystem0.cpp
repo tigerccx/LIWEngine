@@ -1,12 +1,12 @@
 #include "TestSystem0.h"
 #include "LIWCore.h"
-
+#include "Framework/LIWECSFunctional.h"
 
 void FT_TestSystem0Update::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 
-	auto& testComponent0Mngr = LIWCore::s_ins.m_game->m_componentManager_TestComponent0;
+	auto& testComponent0Mngr = LIW_ECS_GetComponentManager(TestComponent0);
 	int componentCount = testComponent0Mngr.GetActiveComponentCount();
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, componentCount);
 
@@ -29,11 +29,11 @@ void FT_TestSystem0Update_TestComponent0::Execute(LIWFiberWorkerPointer thisFibe
 {
 	using namespace LIW;
 
-	auto& testComponent0Mngr = LIWCore::s_ins.m_game->m_componentManager_TestComponent0;
+	auto& testComponent0Mngr = LIW_ECS_GetComponentManager(TestComponent0);
 	for (int i = m_idxBeg; i < m_idxEnd; i++) {
 		TestComponent0& component = testComponent0Mngr.m_components[i];
 		component.m_float0 += 1.0f;
-		printf("%llu : %f\n", component.GetID(), component.m_float0);
+		printf("TestComponent[%lu] from Entity[%lu] : %f\n", component.GetHandle(), component.GetEntity(), component.m_float0);
 	}
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, m_idxEnd - m_idxBeg);
 }

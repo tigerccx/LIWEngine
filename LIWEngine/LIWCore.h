@@ -17,6 +17,7 @@
 #include "Time/LIWTime.h"
 #include "Threading/LIWThread.h"
 #include "Memory/LIWMemory.h"
+#include "LIWGlobal.h"
 #include "Threading/LIWFiberExecutor.h"
 #include "Threading/LIWMainThreadExecutor.h"
 #include "LIWFrame.h"
@@ -94,17 +95,16 @@ namespace LIW {
 			}
 
 			// Init Environment
+			LIWGlobal::s_environment = liw_new_static<App::Environment>();
 			/* Window */
-			m_window = liw_new_static<LIW::App::Window>("My First GLFW Window", 1280, 720, false);
-			auto ptrWindow = m_window;
+			auto ptrWindow = liw_new_static<LIW::App::Window>("My First GLFW Window", 1280, 720, false);
+			LIWGlobal::s_environment->m_window = ptrWindow;
 			if (!ptrWindow->Initialised()) {
 				return -1;
 			}
 			/* Make the window's context current */
 			ptrWindow->SetCurrent();
 			/* Create environment */
-			m_environment.m_window = ptrWindow; 
-
 
 			// Init GLEW
 			GLenum err = glewInit();
@@ -118,9 +118,10 @@ namespace LIW {
 			}
 
 			// Init game
-			m_game = liw_new_static<TestGame>();
-			m_game->InitGame(&m_environment);
-			int codeGameInit = m_game->Initialise();
+			auto ptrGame = liw_new_static<TestGame>();
+			LIWGlobal::s_game = ptrGame;
+			ptrGame->InitGame(LIWGlobal::s_environment);
+			int codeGameInit = ptrGame->Initialise();
 			if (codeGameInit)
 				return codeGameInit;
 
@@ -138,8 +139,6 @@ namespace LIW {
 			//State
 			bool show_demo_window = true;
 			bool show_another_window = true;
-
-
 
 
 			//
@@ -163,12 +162,16 @@ namespace LIW {
 		}
 
 		void Shutdown() {
+			// Cleanup Game
+			LIWGlobal::s_game->CleanUp();
+			liw_delete_static(LIWGlobal::s_game);
 
-			m_game->CleanUp();
-			liw_delete_static<TestGame>(m_game);
+			// Cleanup Environment
+			liw_delete_static(LIWGlobal::s_environment);
+			
 
+			// Shutdown GLFW
 			glfwTerminate();
-
 
 			//
 			// Shutdown fiber therad pool
@@ -201,11 +204,6 @@ namespace LIW {
 		{
 			fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 		}
-
-	public:
-		LIW::App::Environment m_environment;
-		LIWPointer<LIW::App::Window, LIWMem_Static> m_window{ liw_c_nullhdl };
-		LIWPointer<TestGame, LIWMem_Static> m_game;
 
 	private:
 		std::atomic<bool> m_isRunning;

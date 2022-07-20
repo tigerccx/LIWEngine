@@ -246,10 +246,10 @@ public:
 		m_dataBuffer = handleNew;
 		m_capacity = capacity;
 	}
-	inline void set_capacity_thds(size_t capacity) {
-		lkgd_type lk(m_mtx);
-		set_capacity(capacity);
-	}
+	//inline void set_capacity_thds(size_t capacity) {
+	//	lkgd_type lk(m_mtx);
+	//	set_capacity(capacity);
+	//}
 	inline void expand() {
 		static_assert(ExpandType < LIWDArrayExpand_Max, "Must use a valid LIWDArrayExpandType enum. ");
 		size_t capacityNew = m_capacity;
@@ -287,14 +287,14 @@ public:
 		new (&ptr[m_size]) T(std::forward<T>(val));
 		m_size = sizeNew;
 	}
-	inline void push_back_thds(const T& val) {
-		lkgd_type lk(m_mtx);
-		push_back(std::forward<const T>(val));
-	}
-	inline void push_back_thds(T&& val) {
-		lkgd_type lk(m_mtx);
-		push_back(std::forward<T>(val));
-	}
+	//inline void push_back_thds(const T& val) {
+	//	lkgd_type lk(m_mtx);
+	//	push_back(std::forward<const T>(val));
+	//}
+	//inline void push_back_thds(T&& val) {
+	//	lkgd_type lk(m_mtx);
+	//	push_back(std::forward<T>(val));
+	//}
 
 	inline void pop_back() {
 		assert(m_size != 0); // Cannot pop from an empty DArray. 
@@ -303,10 +303,10 @@ public:
 		ptr[m_size].~T();
 		m_size = sizeNew;
 	}
-	inline void pop_back_thds() {
-		lkgd_type lk(m_mtx);
-		pop_back();
-	}
+	//inline void pop_back_thds() {
+	//	lkgd_type lk(m_mtx);
+	//	pop_back();
+	//}
 
 	Iterator insert(const Iterator& pos, const T& val) {
 		assert(pos.m_container == this); // pos must be from this container. 
@@ -373,19 +373,19 @@ public:
 		m_size = sizeNew;
 		return Iterator(*this, idx);
 	}
-	inline Iterator insert_thds(const Iterator& pos, const T& val) {
-		lkgd_type lk(m_mtx);
-		return std::move(insert(std::forward<const Iterator>(pos), std::forward<const T>(val)));
-	}
-	inline Iterator insert_thds(const Iterator& pos, T&& val) {
-		lkgd_type lk(m_mtx);
-		return std::move(insert(std::forward<const Iterator>(pos), std::forward<T>(val)));
-	}
-	template<class Iterator1>
-	inline Iterator insert_thds(const Iterator& pos, const Iterator1& beg, const Iterator1& end) {
-		lkgd_type lk(m_mtx);
-		return std::move(insert(std::forward<const Iterator>(pos), std::forward<const Iterator1&>(beg), std::forward<const Iterator1&>(end)));
-	}
+	//inline Iterator insert_thds(const Iterator& pos, const T& val) {
+	//	lkgd_type lk(m_mtx);
+	//	return std::move(insert(std::forward<const Iterator>(pos), std::forward<const T>(val)));
+	//}
+	//inline Iterator insert_thds(const Iterator& pos, T&& val) {
+	//	lkgd_type lk(m_mtx);
+	//	return std::move(insert(std::forward<const Iterator>(pos), std::forward<T>(val)));
+	//}
+	//template<class Iterator1>
+	//inline Iterator insert_thds(const Iterator& pos, const Iterator1& beg, const Iterator1& end) {
+	//	lkgd_type lk(m_mtx);
+	//	return std::move(insert(std::forward<const Iterator>(pos), std::forward<const Iterator1&>(beg), std::forward<const Iterator1&>(end)));
+	//}
 
 	Iterator erase(const Iterator& pos) {
 		assert(pos.m_container == this); // pos must be from this container. 
@@ -422,23 +422,23 @@ public:
 		m_size -= sizeErase;
 		return Iterator(*this, idxBeg);
 	}
-	Iterator erase_thds(const Iterator& pos) {
-		lkgd_type lk(m_mtx);
-		return std::move(erase(std::forward<const Iterator>(pos)));
-	}
-	Iterator erase_thds(const Iterator& beg, const Iterator& end) {
-		lkgd_type lk(m_mtx);
-		return std::move(erase(std::forward<const Iterator>(beg), std::forward<const Iterator>(end)));
-	}
+	//Iterator erase_thds(const Iterator& pos) {
+	//	lkgd_type lk(m_mtx);
+	//	return std::move(erase(std::forward<const Iterator>(pos)));
+	//}
+	//Iterator erase_thds(const Iterator& beg, const Iterator& end) {
+	//	lkgd_type lk(m_mtx);
+	//	return std::move(erase(std::forward<const Iterator>(beg), std::forward<const Iterator>(end)));
+	//}
 
 	inline void clear() {
 		destroy_elements();
 		m_size = 0;
 	}
-	inline void clear_thds() {
-		lkgd_type lk(m_mtx);
-		clear();
-	}
+	//inline void clear_thds() {
+	//	lkgd_type lk(m_mtx);
+	//	clear();
+	//}
 
 private:
 	inline void destroy_elements() {
@@ -453,5 +453,5 @@ private:
 	size_t m_capacity{ 0 };
 	size_t m_size{ 0 };
 	size_t m_sizeExpand{ 4 };
-	mutable mtx_type m_mtx;
+	//mutable mtx_type m_mtx;
 };

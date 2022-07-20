@@ -5,7 +5,8 @@
 #include <string>
 
 #include "LIWObject.h"
-#include "LIWComponent.h"
+#include "LIWTypes.h"
+#include "LIWConstants.h"
 
 namespace LIW {
 
@@ -15,19 +16,21 @@ namespace LIW {
 	* Description:	This class is used as a baseclass Entity in a ECS framework.
 	*				A LIWEntity in LIW framework is only represented as a handle. 
 	*/
-	class LIWEntity final :
-		public LIWObject
-	{
-		friend class LIWEntityManager;
-	public:
-		typedef uint32_t handle_type;
-		static const handle_type sc_hdlnull;
-	public:
-		LIWEntity();
-		~LIWEntity() = default;
-	private:
-		handle_type m_handle;
-	};
+	typedef liw_objhdl_type LIWEntity;
+	extern LIWEntity LIWEntityInvalid;
+
+	
+
+	//class LIWEntity final :
+	//	public LIWObject
+	//{
+	//	friend class LIWEntityManager;
+	//public:
+	//	LIWEntity();
+	//	~LIWEntity() = default;
+	//private:
+	//	liw_objhdl_type m_handle;
+	//};
 	//public:
 	//	friend class LIWEntityManager;
 

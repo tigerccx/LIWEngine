@@ -44,7 +44,6 @@ void LIW::LIW_FT_FrameBeg::Execute(LIWFiberWorkerPointer thisFiber)
 	// Kick off the frame
 	auto ptrFT_GameUpdate = liw_new_def<FT_TestGameUpdate>();
 	ptrFT_GameUpdate->m_ptrFrameData = ptrFrameData;
-	ptrFT_GameUpdate->m_ptrGame = LIWCore::s_ins.m_game;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_GameUpdate);
 }
 

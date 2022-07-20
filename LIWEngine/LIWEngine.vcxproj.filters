@@ -276,6 +276,18 @@
     <ClCompile Include="Core\Debug\LIWDebugTasks.cpp">
       <Filter>Core\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Framework\LIWECSFunctional.cpp">
+      <Filter>Core\ECSFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LIWGlobal.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGlobal.cpp">
+      <Filter>Framework\Test\TestGame</Filter>
+    </ClCompile>
+    <ClCompile Include="TestComponentCollection.cpp">
+      <Filter>Framework\Test\TestGame\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h">
@@ -455,9 +467,6 @@
     <ClInclude Include="Core\Framework\LIWComponentManager.h">
       <Filter>Core\ECSFramework\LIWComponent</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Framework\LIWComponentType.h">
-      <Filter>Core\ECSFramework\LIWComponent</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Framework\LIWGame.h">
       <Filter>Core\ECSFramework\LIWGame</Filter>
     </ClInclude>
@@ -529,6 +538,24 @@
     </ClInclude>
     <ClInclude Include="Core\Debug\LIWDebugTasks.h">
       <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWECSFunctional.h">
+      <Filter>Core\ECSFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWGlobal.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGlobal.h">
+      <Filter>Framework\Test\TestGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWComponentCollection.h">
+      <Filter>Core\ECSFramework\LIWComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWECSConfiguration.h">
+      <Filter>Core\ECSFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="TestComponentCollection.h">
+      <Filter>Framework\Test\TestGame\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
