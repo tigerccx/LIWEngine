@@ -10,6 +10,7 @@
 
 #include "LIWTypes.h"
 #include "LIWAllocation.h"
+#include "LIWExceptions.h"
 
 // Improvements to make
 //TODO: Switch to global handle buffer
@@ -152,6 +153,14 @@ namespace LIW {
 				/// <returns> pointer to the end of memory </returns>
 				inline void* GetEndPtr() const { return m_dataBufferEnd; }
 
+				void PrintMemoryConsumption() {
+					printf("Blocks Availability: ");
+					for (size_t blockIdx = 0; blockIdx < c_blockCount; blockIdx++) {
+						printf("%d", m_availability[blockIdx]);
+					}
+					printf("\n");
+				}
+
 				/// <summary>
 				/// Fetch block(s) from buffer according to size. 
 				/// </summary>
@@ -193,7 +202,7 @@ namespace LIW {
 								idxBeg = (idxBeg + 1) % c_blockCount;
 							}
 							if (idxBeg == idxEnd) { // Exhausted all memory blocks and not one free. 
-								throw "Out of mem! All memory allocated! Reduce memory consumption!";
+								throw liwexcept_out_of_memory();
 							}
 							if (i == allocBlockCount) { // Success
 								m_idxAvailableBlock = idxBeg; // Assign a free block idx to m_idxAvailableBlock
@@ -206,7 +215,7 @@ namespace LIW {
 						}
 
 						if (counter == c_blockCount) // Exhausted all memory blocks and not one free. 
-							throw "Out of mem! All memory allocated! Reduce memory consumption!";
+							throw liwexcept_out_of_memory();
 
 						// Now that blocks are found...
 						idxEnd++;
@@ -284,6 +293,7 @@ namespace LIW {
 				}
 			};
 
+
 			class LocalGPAllocator {
 			private:
 				typedef LIWLGGPAllocator<SizeTotal, CountHandlePerThread, SizeBlock>::GlobalGPAllocator globalAllocator_type;
@@ -335,6 +345,17 @@ namespace LIW {
 				/// </summary>
 				inline void Cleanup() {
 					free(m_handleBufferRaw);
+				}
+
+				void PrintMemoryConsumption() {
+					size_t blockIdx = m_idxBlocksHead;
+					while (blockIdx != c_idxMax) {
+						BlockInfo* blockInfo = GetBlockInfoFromIdx(blockIdx);
+						SegInfo* segFree = blockInfo->m_freeSeg;
+						const size_t freeSize = segFree != nullptr ? segFree->m_size : 0;
+						printf("Block[%llu] size: %llu free: %llu\n", blockIdx, blockInfo->m_size, freeSize);
+						blockIdx = blockInfo->m_nextBlock;
+					}
 				}
 
 				/// <summary>
@@ -483,7 +504,7 @@ namespace LIW {
 							if (segCur->m_mark) { // If seg is marked to free, free seg and its handle
 #ifdef _DEBUG
 								if (*(char*)(&segCur->m_mark) != 1)
-									throw "Memory corruption. ";
+									throw liwexcept_memory_corruption(segCur);
 #endif
 								// Free seg
 								// (which is delayed to defrag step)

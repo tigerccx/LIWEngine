@@ -126,6 +126,14 @@ namespace LIW {
 		/// <param name="handles"> handles to components created </param>
 		/// <param name="count"> count of components to create </param>
 		void CreateComponents(LIWDArray<liw_objhdl_type>& handles, uint32_t count) {
+			handles.set_capacity(count);
+			//const size_t capCur = m_componentsInactive.get_capacity();
+			//const size_t sizeCur = m_componentsInactive.get_size();
+			//size_t capNew = capCur - sizeCur + count;
+			//if (capCur < capNew) {
+			//	m_componentsInactive.set_capacity(capNew);
+			//}
+
 			for (uint32_t i = 0; i < count; i++) {
 				auto handle = CreateComponent();
 				handles.push_back(handle);

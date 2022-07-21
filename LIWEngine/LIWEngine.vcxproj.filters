@@ -136,6 +136,9 @@
     <Filter Include="Framework\Test\Framework">
       <UniqueIdentifier>{2daa7ad6-5bab-4258-be03-acd1885ade4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ECSFramework\Components">
+      <UniqueIdentifier>{646fe375-d17b-46f0-86d8-3b2978058d88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.cpp">
@@ -556,6 +559,12 @@
     </ClInclude>
     <ClInclude Include="TestComponentCollection.h">
       <Filter>Framework\Test\TestGame\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Components\LIWComponent_Transform.h">
+      <Filter>Core\ECSFramework\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWExceptions.h">
+      <Filter>Core\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

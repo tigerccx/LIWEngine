@@ -60,3 +60,9 @@ void liw_mgc_wait_and_stop() {
 		GCThreads::s_gcThreads[i].join();
 	}
 }
+
+
+void liw_mdebug_print_def(int idxThread) {
+	//TODO: Add debug print for other allocators
+	DefaultMemBuffer::s_defaultBufferLAllocators[idxThread].PrintMemoryConsumption();
+}

@@ -231,6 +231,7 @@
     <ClInclude Include="Core\Debug\LIWDebug.h" />
     <ClInclude Include="Core\Debug\LIWDebugTasks.h" />
     <ClInclude Include="Core\Exceptions.h" />
+    <ClInclude Include="Core\Framework\Components\LIWComponent_Transform.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
     <ClInclude Include="Core\Framework\LIWComponentCollection.h" />
     <ClInclude Include="Core\Framework\LIWECSConfiguration.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Core\Framework\LIWStandardSystem.h" />
     <ClInclude Include="Core\Framework\LIWSystem.h" />
     <ClInclude Include="Core\LIWConstants.h" />
+    <ClInclude Include="Core\LIWExceptions.h" />
     <ClInclude Include="Core\LIWFrame.h" />
     <ClInclude Include="Core\LIWGlobal.h" />
     <ClInclude Include="Core\LIWObject.h" />

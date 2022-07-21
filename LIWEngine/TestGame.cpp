@@ -10,10 +10,13 @@ int TestGame::Initialise()
 	LIWDArray<liw_objhdl_type> components;
 	LIWDArray<LIWEntity> entities;
 
-	LIW_ECS_FetchEntities(entities, 10);
-	LIW_ECS_CreateComponents(TestComponent0, components, 10);
+	liw_mdebug_print_def(LIWThreadGetID());
+	uint32_t testCount = uint32_t(1) << 15;
+	LIW_ECS_FetchEntities(entities, testCount);
+	liw_mdebug_print_def(LIWThreadGetID());
+	LIW_ECS_CreateComponents(TestComponent0, components, testCount);
 
-	for (int i = 0; i < 10; i++) {
+	for (uint32_t i = 0; i < testCount; i++) {
 		auto& component = LIW_ECS_GetComponent(TestComponent0, components[i]);
 		component.m_float0 = i + 0.7f;
 		LIW_ECS_AttachComponentToEntity(TestComponent0, components[i], entities[i]);

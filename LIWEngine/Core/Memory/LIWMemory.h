@@ -8,7 +8,7 @@
 #include <condition_variable>
 #include "LIWTypes.h"
 #include "LIWConstants.h"
-
+#include "LIWExceptions.h"
 #include "LIWLGStackAllocator.h"
 #include "LIWLGGPAllocator.h"
 #include "Threading/LIWThread.h"
@@ -51,6 +51,12 @@ inline const liw_memsize_type operator""_GB(liw_memsize_type const x) { return 1
 * liw_delete_MODE:			delete
 * liw_adelete_MODE:			delete array
 */
+
+//
+// Debug Print
+//
+//TODO: Make more functions
+void liw_mdebug_print_def(int idxThread);
 
 //
 // Fighting with templates everyday...
@@ -168,7 +174,18 @@ inline T liw_mget_def(liw_hdl_type handle) {
 }
 
 inline liw_hdl_type liw_malloc_def(liw_memsize_type size) {
-	return DefaultMemBuffer::s_defaultBufferLAllocators[LIW::LIWThreadGetID()].Allocate(size);
+	const int threadID = LIW::LIWThreadGetID();
+	try {
+		return DefaultMemBuffer::s_defaultBufferLAllocators[threadID].Allocate(size);
+	}
+	catch (const liwexcept_out_of_memory& e) {
+		printf(e.what());
+		liw_mdebug_print_def(threadID);
+	}
+	catch (const liwexcept_memory_corruption& e) {
+		printf(e.what());
+	}
+	return liw_c_nullhdl;
 }
 
 inline void liw_free_def(liw_hdl_type handle) {
