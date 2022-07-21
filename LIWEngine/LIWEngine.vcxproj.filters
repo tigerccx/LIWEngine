@@ -139,6 +139,9 @@
     <Filter Include="Core\ECSFramework\Components">
       <UniqueIdentifier>{646fe375-d17b-46f0-86d8-3b2978058d88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Test\Render">
+      <UniqueIdentifier>{11329515-16cb-434a-8fd0-17491d293bd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.cpp">
@@ -568,6 +571,9 @@
     </ClInclude>
     <ClInclude Include="Core\Framework\LIWComponentCollection.h">
       <Filter>Core\ECSFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="test_vulkan_0.h">
+      <Filter>Framework\Test\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
