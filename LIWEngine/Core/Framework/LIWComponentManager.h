@@ -48,15 +48,15 @@ namespace LIW {
 				m_offset.m_offsetComponent = m_offset.m_offsetComponent | sc_maskActive;
 			}
 			inline void SetInactive() {
-				m_offset.m_offsetComponent = m_offset.m_offsetComponent & ~sc_maskActive;
+				m_offset.m_offsetComponent = m_offset.m_offsetComponent & (~sc_maskActive);
 			}
 			inline bool GetActive() const {
 				return m_offset.m_offsetComponent & sc_maskActive;
 			}
 			inline void SetOffsetComponent(uint32_t offset) {
 				m_offset.m_offsetComponent =
-					m_offset.m_offsetComponent & ~sc_maskOffsetComponent +
-					offset & sc_maskOffsetComponent;
+					(m_offset.m_offsetComponent & (~sc_maskOffsetComponent)) +
+					(offset & sc_maskOffsetComponent);
 			}
 			inline uint32_t GetOffsetComponent() const {
 				return m_offset.m_offsetComponent & sc_maskOffsetComponent;
@@ -107,7 +107,7 @@ namespace LIW {
 			}
 			// Set next free handle
 			m_nextFreeHandle = m_handles[handle].GetNextFreeHandle();
-			m_handles[handle].SetNextFreeHandle(curCountComponents);
+			m_handles[handle].SetOffsetComponent(curCountComponents);
 			// Init state of created component
 			m_componentsInactive[curCountComponents].SetHandle(handle);
 			m_componentsInactive[curCountComponents].UnmarkRemove();

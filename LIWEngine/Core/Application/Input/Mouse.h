@@ -20,7 +20,7 @@ _-_-_-_-_-_-_-""  ""
 
 #include "InputDevice.h"
 #include <map>
-#include "Maths/Vector2.h"
+#include "Maths/LIWMaths.h"
 
 #include "Mousecode.h"
 namespace LIW {
@@ -48,9 +48,9 @@ namespace LIW {
 			bool	DoubleClicked(MouseButtons button);
 
 			//Get how much this mouse has moved since last frame
-			Vector2	GetRelativePosition();
+			Maths::LIWVector2	GetRelativePosition();
 			//Get the window position of the mouse pointer
-			Vector2 GetAbsolutePosition();
+			Maths::LIWVector2	GetAbsolutePosition();
 
 			//Determines the maximum amount of ms that can pass between
 			//2 mouse presses while still counting as a 'double click'
@@ -105,32 +105,32 @@ namespace LIW {
 			void			SetAbsolutePositionBounds(unsigned int maxX, unsigned int maxY);
 
 			//Current mouse absolute position
-			Vector2		absolutePosition;
+			Maths::LIWVector2		absolutePosition;
 			//Current mouse absolute position maximum bounds
-			Vector2		absolutePositionBounds;
+			Maths::LIWVector2		absolutePositionBounds;
 			//How much as the mouse moved since the last raw packet?
-			Vector2		relativePosition;
+			Maths::LIWVector2		relativePosition;
 			//Current button down state for each button
-			bool		buttons[MOUSE_BUTTON_MAX];
+			bool					buttons[MOUSE_BUTTON_MAX];
 			//Current button held state for each button
-			bool		holdButtons[MOUSE_BUTTON_MAX];
+			bool					holdButtons[MOUSE_BUTTON_MAX];
 			//Current button release state for each button
-			bool		releaseButtons[MOUSE_BUTTON_MAX];
+			bool					releaseButtons[MOUSE_BUTTON_MAX];
 			//Current doubleClick counter for each button
-			bool		doubleClicks[MOUSE_BUTTON_MAX];
+			bool					doubleClicks[MOUSE_BUTTON_MAX];
 			//Counter to remember when last mouse click occured
-			float		lastClickTime[MOUSE_BUTTON_MAX];
+			float					lastClickTime[MOUSE_BUTTON_MAX];
 
 			//Current mousewheel updated position
-			Vector2			frameWheel;
+			Maths::LIWVector2		frameWheel;
 
 			//Max amount of ms between clicks count as a 'double click'
-			float		clickLimit;
+			float					clickLimit;
 
 			//Mouse pointer sensitivity. Set this negative to get a headache!
-			float		sensitivity;
+			float					sensitivity;
 
-			bool		setAbsolute;
+			bool					setAbsolute;
 		};
 	}
 }

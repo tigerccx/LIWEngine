@@ -1,6 +1,6 @@
 #pragma once
 #include "Renderers/OGLRenderer.h"
-#include "Maths/Vector4.h"
+#include "Maths/LIWMaths.h"
 #include "Threading/LIWFiber.h"
 #include "Memory/LIWMemory.h"
 #include "LIWFrame.h"
@@ -10,6 +10,7 @@
 #include "Threading/LIWMainThreadExecutor.h"
 
 using namespace LIW;
+using namespace LIW::Maths;
 
 class TestRenderer :
     public LIW::OGLRenderer

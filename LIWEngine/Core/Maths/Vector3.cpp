@@ -1,7 +1,20 @@
-#include "Vector3.h"
+/*
+Part of Newcastle University's Game Engineering source code.
 
-const Vector3 Vector3::zero = Vector3(0, 0, 0);
-const Vector3 Vector3::one = Vector3(1, 1, 1);
-const Vector3 Vector3::up = Vector3(0, 1, 0);
-const Vector3 Vector3::right = Vector3(1, 0, 0);
-const Vector3 Vector3::forward = Vector3(0, 0, 1);
+Use as you see fit!
+
+Comments and queries to: richard-gordon.davison AT ncl.ac.uk
+https://research.ncl.ac.uk/game/
+*/
+#include "Vector4.h"
+#include "Vector3.h"
+#include "Vector2.h"
+using namespace NCL;
+using namespace Maths;
+
+
+Vector3::Vector3(const Vector2& v2, float newZ) : x(v2.x), y(v2.y), z(newZ) {
+}
+
+Vector3::Vector3(const Vector4& v4) : x(v4.x), y(v4.y), z(v4.z) {
+}

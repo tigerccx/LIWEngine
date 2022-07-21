@@ -288,8 +288,8 @@
     <ClCompile Include="TestGlobal.cpp">
       <Filter>Framework\Test\TestGame</Filter>
     </ClCompile>
-    <ClCompile Include="TestComponentCollection.cpp">
-      <Filter>Framework\Test\TestGame\Component</Filter>
+    <ClCompile Include="Core\Maths\Maths.cpp">
+      <Filter>Core\Maths</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -378,9 +378,6 @@
       <Filter>Core\Maths</Filter>
     </ClInclude>
     <ClInclude Include="Core\Maths\Matrix4.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\MyMaths.h">
       <Filter>Core\Maths</Filter>
     </ClInclude>
     <ClInclude Include="Core\Maths\Quaternion.h">
@@ -551,9 +548,6 @@
     <ClInclude Include="TestGlobal.h">
       <Filter>Framework\Test\TestGame</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Framework\LIWComponentCollection.h">
-      <Filter>Core\ECSFramework\LIWComponent</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Framework\LIWECSConfiguration.h">
       <Filter>Core\ECSFramework</Filter>
     </ClInclude>
@@ -565,6 +559,15 @@
     </ClInclude>
     <ClInclude Include="Core\LIWExceptions.h">
       <Filter>Core\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\Maths.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\LIWMaths.h">
+      <Filter>Core\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWComponentCollection.h">
+      <Filter>Core\ECSFramework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

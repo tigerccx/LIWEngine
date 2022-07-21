@@ -7,71 +7,72 @@ Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
 #include "Matrix2.h"
-#include "../common.h"
+#include "Maths.h"
+
+using namespace NCL;
+using namespace NCL::Maths;
 
 Matrix2::Matrix2(void)	{
-	values[0] = 1.0f;
-	values[1] = 0.0f;
-	values[2] = 0.0f;
-	values[3] = 1.0f;
+	array[0] = 1.0f;
+	array[1] = 0.0f;
+	array[2] = 0.0f;
+	array[3] = 1.0f;
 }
 
-Matrix2::Matrix2(float elements[4]) {
-	values[0] = elements[0];
-	values[1] = elements[1];
-	values[2] = elements[2];
-	values[3] = elements[3];
+Matrix2::Matrix2(const float elements[4]) {
+	array[0] = elements[0];
+	array[1] = elements[1];
+	array[2] = elements[2];
+	array[3] = elements[3];
 }
 
-Matrix2::Matrix2(const Vector2& a, const Vector2& b) {
-	values[0] = a.x;
-	values[1] = b.x;
-	values[2] = a.y;
-	values[3] = b.y;
-}
-
-Matrix2::Matrix2(const Matrix2& other)
+Matrix2::Matrix2(const Vector2& a, const Vector2& b)
 {
-	memcpy(values, other.values, 4 * sizeof(float));
+	array[0] = a.x;
+	array[1] = b.x;
+	array[2] = a.y;
+	array[3] = b.y;
 }
 
 Matrix2::~Matrix2(void)	{
 }
 
 void Matrix2::ToZero() {
-	values[0] = 0.0f;
-	values[1] = 0.0f;
-	values[2] = 0.0f;
-	values[3] = 0.0f;
+	array[0] = 0.0f;
+	array[1] = 0.0f;
+	array[2] = 0.0f;
+	array[3] = 0.0f;
+}
+
+void Matrix2::Invert()
+{
+	float determinant = (array[0] * array[3]) - (array[1] * array[2]);
+	float invDet = 1.0f / determinant; //Turn our divides into multiplies!
+
+	array[0] = array[3] * invDet;
+	array[1] = -array[2] * invDet;
+	array[2] = -array[1] * invDet;
+	array[3] = array[0] * invDet;
+}
+
+Matrix2 Matrix2::Inverse() const
+{
+	Matrix2 newMatrix = *this;
+	newMatrix.Invert();
+	return newMatrix;
 }
 
 Matrix2 Matrix2::Rotation(float degrees)	{
 	Matrix2 mat;
 
-	float radians = (float)DegToRad(degrees);
+	float radians = LIW::Maths::DegreesToRadians(degrees);
 	float s = sin(radians);
 	float c = cos(radians);
 
-	mat.values[0] = c;
-	mat.values[1] = s;
-	mat.values[2] = -s;
-	mat.values[3] = c;
+	mat.array[0] = c;
+	mat.array[1] = s;
+	mat.array[2] = -s;
+	mat.array[3] = c;
 
 	return mat;
-}
-//This is going to assume that the matrix is actually invertable!
-void Matrix2::Invert() {
-	float determinant = (values[0] * values[3]) - (values[1] * values[2]);
-	float invDet = 1.0f / determinant; //Turn our divides into multiplies!
-
-	values[0] = values[3]  * invDet;
-	values[1] = -values[2] * invDet;
-	values[2] = -values[1] * invDet;
-	values[3] = values[0]  * invDet;
-}
-
-Matrix2 Matrix2::Inverse() const {
-	Matrix2 newMatrix = *this;
-	newMatrix.Invert();
-	return newMatrix;
 }

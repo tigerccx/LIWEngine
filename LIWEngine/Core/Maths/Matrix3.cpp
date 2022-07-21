@@ -9,58 +9,63 @@ https://research.ncl.ac.uk/game/
 #include "Matrix3.h"
 #include "Matrix2.h"
 #include "Matrix4.h"
+
+#include "Maths.h"
 #include "Vector3.h"
 #include "Quaternion.h"
 
+using namespace NCL;
+using namespace NCL::Maths;
+
 Matrix3::Matrix3(void)	{
 	for (int i = 0; i < 9; ++i) {
-		values[i] = 0.0f;
+		array[i] = 0.0f;
 	}
-	values[0] = 1.0f;
-	values[4] = 1.0f;
-	values[8] = 1.0f;
+	array[0] = 1.0f;
+	array[4] = 1.0f;
+	array[8] = 1.0f;
 }
 
-Matrix3::Matrix3(float elements[9]) {
-	values[0] = elements[0];
-	values[1] = elements[1];
-	values[2] = elements[2];
+Matrix3::Matrix3(const float elements[9]) {
+	array[0] = elements[0];
+	array[1] = elements[1];
+	array[2] = elements[2];
 
-	values[3] = elements[4];
-	values[4] = elements[5];
-	values[5] = elements[6];
+	array[3] = elements[3];
+	array[4] = elements[4];
+	array[5] = elements[5];
 
-	values[6] = elements[8];
-	values[7] = elements[9];
-	values[8] = elements[10];
+	array[6] = elements[6];
+	array[7] = elements[7];
+	array[8] = elements[8];
 }
 
 Matrix3::Matrix3(const Matrix4 &m4) {
-	values[0] = m4.values[0];
-	values[1] = m4.values[1];
-	values[2] = m4.values[2];
+	array[0] = m4.array[0];
+	array[1] = m4.array[1];
+	array[2] = m4.array[2];
 
-	values[3] = m4.values[4];
-	values[4] = m4.values[5];
-	values[5] = m4.values[6];
+	array[3] = m4.array[4];
+	array[4] = m4.array[5];
+	array[5] = m4.array[6];
 
-	values[6] = m4.values[8];
-	values[7] = m4.values[9];
-	values[8] = m4.values[10];
+	array[6] = m4.array[8];
+	array[7] = m4.array[9];
+	array[8] = m4.array[10];
 }
 
 Matrix3::Matrix3(const Matrix2 &m2) {
-	values[0] = m2.values[0];
-	values[1] = m2.values[1];
-	values[2] = 0;
+	array[0] = m2.array[0];
+	array[1] = m2.array[1];
+	array[2] = 0;
 
-	values[3] = m2.values[2];
-	values[4] = m2.values[3];
-	values[5] = 0.0f;
+	array[3] = m2.array[2];
+	array[4] = m2.array[3];
+	array[5] = 0.0f;
 
-	values[6] = 0.0f;
-	values[7] = 0.0f;
-	values[8] = 1.0f;
+	array[6] = 0.0f;
+	array[7] = 0.0f;
+	array[8] = 1.0f;
 }
 
 Matrix3::Matrix3(const Quaternion &quat) {
@@ -74,22 +79,17 @@ Matrix3::Matrix3(const Quaternion &quat) {
 	float yz = quat.y * quat.z;
 	float xw = quat.x * quat.w;
 
-	values[0] = 1 - 2 * yy - 2 * zz;
-	values[1] = 2 * xy + 2 * zw;
-	values[2] = 2 * xz - 2 * yw;
+	array[0] = 1 - 2 * yy - 2 * zz;
+	array[1] = 2 * xy + 2 * zw;
+	array[2] = 2 * xz - 2 * yw;
 
-	values[3] = 2 * xy - 2 * zw;
-	values[4] = 1 - 2 * xx - 2 * zz;
-	values[5] = 2 * yz + 2 * xw;
+	array[3] = 2 * xy - 2 * zw;
+	array[4] = 1 - 2 * xx - 2 * zz;
+	array[5] = 2 * yz + 2 * xw;
 
-	values[6] = 2 * xz + 2 * yw;
-	values[7] = 2 * yz - 2 * xw;
-	values[8] = 1 - 2 * xx - 2 * yy;
-}
-
-Matrix3::Matrix3(const Matrix3& other)
-{
-	memcpy(values, other.values, 9 * sizeof(float));
+	array[6] = 2 * xz + 2 * yw;
+	array[7] = 2 * yz - 2 * xw;
+	array[8] = 1 - 2 * xx - 2 * yy;
 }
 
 
@@ -104,20 +104,20 @@ Matrix3 Matrix3::Rotation(float degrees, const Vector3 &inaxis)	 {
 
 	axis.Normalise();
 
-	float c = cos(DegToRad(degrees));
-	float s = sin(DegToRad(degrees));
+	float c = cos(LIW::Maths::DegreesToRadians(degrees));
+	float s = sin(LIW::Maths::DegreesToRadians(degrees));
 
-	m.values[0]  = (axis.x * axis.x) * (1.0f - c) + c;
-	m.values[1]  = (axis.y * axis.x) * (1.0f - c) + (axis.z * s);
-	m.values[2]  = (axis.z * axis.x) * (1.0f - c) - (axis.y * s);
+	m.array[0]  = (axis.x * axis.x) * (1.0f - c) + c;
+	m.array[1]  = (axis.y * axis.x) * (1.0f - c) + (axis.z * s);
+	m.array[2]  = (axis.z * axis.x) * (1.0f - c) - (axis.y * s);
 
-	m.values[3]  = (axis.x * axis.y) * (1.0f - c) - (axis.z * s);
-	m.values[4]  = (axis.y * axis.y) * (1.0f - c) + c;
-	m.values[5]  = (axis.z * axis.y) * (1.0f - c) + (axis.x * s);
+	m.array[3]  = (axis.x * axis.y) * (1.0f - c) - (axis.z * s);
+	m.array[4]  = (axis.y * axis.y) * (1.0f - c) + c;
+	m.array[5]  = (axis.z * axis.y) * (1.0f - c) + (axis.x * s);
 
-	m.values[6]  = (axis.x * axis.z) * (1.0f - c) + (axis.y * s);
-	m.values[7]  = (axis.y * axis.z) * (1.0f - c) - (axis.x * s);
-	m.values[8]  = (axis.z * axis.z) * (1.0f - c) + c;
+	m.array[6]  = (axis.x * axis.z) * (1.0f - c) + (axis.y * s);
+	m.array[7]  = (axis.y * axis.z) * (1.0f - c) - (axis.x * s);
+	m.array[8]  = (axis.z * axis.z) * (1.0f - c) + c;
 
 	return m;
 }
@@ -125,37 +125,49 @@ Matrix3 Matrix3::Rotation(float degrees, const Vector3 &inaxis)	 {
 Matrix3 Matrix3::Scale( const Vector3 &scale )	{
 	Matrix3 m;
 
-	m.values[0]  = scale.x;
-	m.values[4]  = scale.y;
-	m.values[8]  = scale.z;	
+	m.array[0]  = scale.x;
+	m.array[4]  = scale.y;
+	m.array[8]  = scale.z;	
 
 	return m;
 }
 
 void	Matrix3::ToZero()	{
 	for(int i = 0; i < 9; ++i) {
-		values[0] = 0.0f;
+		array[0] = 0.0f;
 	}
 }
 
 //http://staff.city.ac.uk/~sbbh653/publications/euler.pdf
 Vector3 Matrix3::ToEuler() const {
-	float testVal = abs(values[2]) + 0.00001f;
+	//float h = (float)RadiansToDegrees(atan2(-values[6], values[0]));
+	//float b = (float)RadiansToDegrees(atan2(-values[5], values[4]));
+	//float a = (float)RadiansToDegrees(asin(values[3]));
+
+	//return Vector3(a, h, b);
+
+	//psi  = x;
+	//theta = y;
+	//phi = z
+
+
+
+	float testVal = abs(array[2]) + 0.00001f;
 
 	if (testVal < 1.0f) {
-		float theta1 = -asin(values[2]);
-		float theta2 = PI - theta1;
+		float theta1 = -asin(array[2]);
+		float theta2 = LIW::Maths::PI - theta1;
 
 		float cost1 = cos(theta1);
 		//float cost2 = cos(theta2);
 
-		float psi1 = RadToDeg(atan2(values[5] / cost1, values[8] / cost1));
+		float psi1 = LIW::Maths::RadiansToDegrees(atan2(array[5] / cost1, array[8] / cost1));
 		//float psi2 = Maths::RadiansToDegrees(atan2(array[5] / cost2, array[8] / cost2));
 
-		float phi1 = RadToDeg(atan2(values[1] / cost1, values[0] / cost1));
+		float phi1 = LIW::Maths::RadiansToDegrees(atan2(array[1] / cost1, array[0] / cost1));
 		//float phi2 = Maths::RadiansToDegrees(atan2(array[1] / cost2, array[0] / cost2));
 
-		theta1 = RadToDeg(theta1);
+		theta1 = LIW::Maths::RadiansToDegrees(theta1);
 		//theta2 = Maths::RadiansToDegrees(theta2);
 
 		return Vector3(psi1, theta1, phi1);
@@ -167,27 +179,55 @@ Vector3 Matrix3::ToEuler() const {
 		float theta = 0.0f;	//y
 		float psi	= 0.0f;	//z
 
-		float delta = atan2(values[3], values[6]);
+		float delta = atan2(array[3], array[6]);
 
-		if (values[2] < 0.0f) {
-			theta = PI / 2.0f;
+		if (array[2] < 0.0f) {
+			theta = LIW::Maths::PI / 2.0f;
 			psi = phi + delta;
 		}
 		else {
-			theta = -PI / 2.0f;
+			theta = -LIW::Maths::PI / 2.0f;
 			psi = phi + delta;
 		}
 
-		return Vector3(RadToDeg(psi), RadToDeg(theta), RadToDeg(phi));
+		return Vector3(LIW::Maths::RadiansToDegrees(psi), LIW::Maths::RadiansToDegrees(theta), LIW::Maths::RadiansToDegrees(phi));
 	}
+
+	//float sp = values[2];
+
+	//sp = clamp(sp, -1.0f, 1.0f);
+
+
+
+	//float theta = -asin(sp);
+	//float cp = cos(theta);
+
+
+	//Vector3 pyr;
+
+	//if (cp > 0.01f) {
+	//	pyr.x = RadiansToDegrees(theta);
+	//	pyr.y = RadiansToDegrees(atan2(values[1], values[0]));
+	//	pyr.z = RadiansToDegrees(atan2(values[5], values[8]));
+
+	//}
+	//else {
+	//	pyr.x = RadiansToDegrees(theta);
+
+	//	pyr.y = RadiansToDegrees(-atan2(values[3], values[4]));
+
+	//	pyr.z = 0.0f;
+	//}
+
+	//return pyr;
 }
 
 Matrix3 Matrix3::FromEuler(const Vector3 &euler) {
 	Matrix3 m;
 
-	float heading	= DegToRad(euler.y);
-	float attitude	= DegToRad(euler.x);
-	float bank		= DegToRad(euler.z);
+	float heading	= LIW::Maths::DegreesToRadians(euler.y);
+	float attitude	= LIW::Maths::DegreesToRadians(euler.x);
+	float bank		= LIW::Maths::DegreesToRadians(euler.z);
 
 	float ch = cos(heading);
 	float sh = sin(heading);
@@ -196,15 +236,15 @@ Matrix3 Matrix3::FromEuler(const Vector3 &euler) {
 	float cb = cos(bank);
 	float sb = sin(bank);
 
-	m.values[0] = ch * ca;
-	m.values[3] = sh*sb - ch*sa*cb;
-	m.values[6] = ch*sa*sb + sh*cb;
-	m.values[1] = sa;
-	m.values[4] = ca*cb;
-	m.values[7] = -ca*sb;
-	m.values[2] = -sh*ca;
-	m.values[5] = sh*sa*cb + ch*sb;
-	m.values[8] = -sh*sa*sb + ch*cb;
+	m.array[0] = ch * ca;
+	m.array[3] = sh*sb - ch*sa*cb;
+	m.array[6] = ch*sa*sb + sh*cb;
+	m.array[1] = sa;
+	m.array[4] = ca*cb;
+	m.array[7] = -ca*sb;
+	m.array[2] = -sh*ca;
+	m.array[5] = sh*sa*cb + ch*sb;
+	m.array[8] = -sh*sa*sb + ch*cb;
 
 	return m;
 }
@@ -213,56 +253,54 @@ Vector3 Matrix3::GetRow(unsigned int row) const {
 	assert(row < 3);
 	int start = row;
 	return Vector3(
-		values[start],
-		values[start + 3],
-		values[start + 6]
+		array[start],
+		array[start + 3],
+		array[start + 6]
 	);
 }
 
 void Matrix3::SetRow(unsigned int row, const Vector3 &val) {
 	assert(row < 3);
-
-	int start = 3 * row;
-
-	values[start] = val.x;
-	values[start + 3] = val.y;
-	values[start + 6] = val.z;
+	int start = row;
+	array[start] = val.x;
+	array[start + 3] = val.y;
+	array[start + 6] = val.z;
 }
 
 Vector3 Matrix3::GetColumn(unsigned int column) const {
 	assert(column < 3);
 	int start = 3 * column;
 	return Vector3(
-		values[start],
-		values[start + 1],
-		values[start + 2]
+		array[start],
+		array[start + 1],
+		array[start + 2]
 	);
 }
 
 void Matrix3::SetColumn(unsigned int column, const Vector3 &val) {
 	assert(column < 3);
 	int start = 3 * column;
-	values[start] = val.x;
-	values[start + 1] = val.y;
-	values[start + 2] = val.z;
+	array[start] = val.x;
+	array[start + 1] = val.y;
+	array[start + 2] = val.z;
 }
 
 Vector3 Matrix3::GetDiagonal() const {
-	return Vector3(values[0], values[4], values[8]);
+	return Vector3(array[0], array[4], array[8]);
 }
 
 void	Matrix3::SetDiagonal(const Vector3 &in) {
-	values[0] = in.x;
-	values[4] = in.y;
-	values[8] = in.z;
+	array[0] = in.x;
+	array[4] = in.y;
+	array[8] = in.z;
 }
 
 Vector3 Matrix3::operator*(const Vector3 &v) const {
 	Vector3 vec;
 
-	vec.x = v.x*values[0] + v.y*values[3] + v.z*values[6];
-	vec.y = v.x*values[1] + v.y*values[4] + v.z*values[7];
-	vec.z = v.x*values[2] + v.y*values[5] + v.z*values[8];
+	vec.x = v.x*array[0] + v.y*array[3] + v.z*array[6];
+	vec.y = v.x*array[1] + v.y*array[4] + v.z*array[7];
+	vec.z = v.x*array[2] + v.y*array[5] + v.z*array[8];
 
 	return vec;
 };

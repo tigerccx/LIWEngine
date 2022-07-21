@@ -173,6 +173,7 @@
     <ClCompile Include="Core\LIWCore.cpp" />
     <ClCompile Include="Core\LIWFrame.cpp" />
     <ClCompile Include="Core\LIWGlobal.cpp" />
+    <ClCompile Include="Core\Maths\Maths.cpp" />
     <ClCompile Include="Core\Maths\Matrix2.cpp" />
     <ClCompile Include="Core\Maths\Matrix3.cpp" />
     <ClCompile Include="Core\Maths\Matrix4.cpp" />
@@ -193,7 +194,6 @@
     <ClCompile Include="Editor\LIWEditorTasks.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestAromics.cpp" />
-    <ClCompile Include="TestComponentCollection.cpp" />
     <ClCompile Include="TestGame.cpp" />
     <ClCompile Include="TestGlobal.cpp" />
     <ClCompile Include="TestRenderer.cpp" />
@@ -249,10 +249,11 @@
     <ClInclude Include="Core\LIWObject.h" />
     <ClInclude Include="Core\LIWTypes.h" />
     <ClInclude Include="Core\Macros.h" />
+    <ClInclude Include="Core\Maths\LIWMaths.h" />
+    <ClInclude Include="Core\Maths\Maths.h" />
     <ClInclude Include="Core\Maths\Matrix2.h" />
     <ClInclude Include="Core\Maths\Matrix3.h" />
     <ClInclude Include="Core\Maths\Matrix4.h" />
-    <ClInclude Include="Core\Maths\MyMaths.h" />
     <ClInclude Include="Core\Maths\Quaternion.h" />
     <ClInclude Include="Core\Maths\Vector2.h" />
     <ClInclude Include="Core\Maths\Vector3.h" />

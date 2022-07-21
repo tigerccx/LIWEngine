@@ -57,7 +57,7 @@ namespace LIW {
 	private:
 		//NOTE: offset can only be using 30bits (but that should be well enough)
 		//NOTE: NOT thread-safe! 
-		inline void SetHandle(uint32_t offset) { m_state = m_state & ~sc_maskHandle + offset & sc_maskHandle; }
+		inline void SetHandle(uint32_t offset) { m_state = (m_state & (~sc_maskHandle)) + (offset & sc_maskHandle); }
 		inline void SetEntity(LIWEntity entity) { m_entity.store(entity); }
 
 	private:

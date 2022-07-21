@@ -26,7 +26,7 @@ namespace LIW {
 	0.0, 0.0, 0.5, 0.0,
 	0.5, 0.5, 0.5, 1.0
 	};
-	static const Matrix4 biasMatrix(biasValues);
+	static const Maths::LIWMatrix4 biasMatrix(biasValues);
 }
 
 

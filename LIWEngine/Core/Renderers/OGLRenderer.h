@@ -33,11 +33,7 @@ _-_-_-_-_-_-_-""  ""
 
 #include <SOIL/SOIL.h>
 
-#include "Maths/Vector4.h"
-#include "Maths/Vector3.h"
-#include "Maths/Vector2.h"
-#include "Maths/Quaternion.h"
-#include "Maths/Matrix4.h"
+#include "Maths/LIWMaths.h"
 #include "Application/Window.h"
 
 #include "Core/Macros.h"
@@ -48,7 +44,7 @@ using namespace std;
 #define OPENGL_DEBUGGING
 #endif
 
-extern const Matrix4 biasMatrix;
+extern const LIW::Maths::LIWMatrix4 biasMatrix;
 
 namespace LIW {
 	class Shader;
@@ -86,11 +82,11 @@ namespace LIW {
 			glPopDebugGroup();
 		}
 
-		Matrix4 projMatrix;		//Projection matrix
-		Matrix4 modelMatrix;	//Model matrix. NOT MODELVIEW
-		Matrix4 viewMatrix;		//View matrix
-		Matrix4 textureMatrix;	//Texture matrix
-		Matrix4 shadowMatrix;
+		Maths::LIWMatrix4 projMatrix;		//Projection matrix
+		Maths::LIWMatrix4 modelMatrix;	//Model matrix. NOT MODELVIEW
+		Maths::LIWMatrix4 viewMatrix;		//View matrix
+		Maths::LIWMatrix4 textureMatrix;	//Texture matrix
+		Maths::LIWMatrix4 shadowMatrix;
 
 		int		width;			//Render area width (not quite the same as window width)
 		int		height;			//Render area height (not quite the same as window height)

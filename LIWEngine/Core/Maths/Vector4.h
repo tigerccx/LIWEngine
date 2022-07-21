@@ -1,118 +1,190 @@
 /*
-Class:Vector4
-Implements:
-Author:Rich Davison
-Description:VERY simple Vector4 class. Students are encouraged to modify this as necessary!
+Part of Newcastle University's Game Engineering source code.
 
--_-_-_-_-_-_-_,------,   
-_-_-_-_-_-_-_-|   /\_/\   NYANYANYAN
--_-_-_-_-_-_-~|__( ^ .^) /
-_-_-_-_-_-_-_-""  ""   
+Use as you see fit!
 
+Comments and queries to: richard-gordon.davison AT ncl.ac.uk
+https://research.ncl.ac.uk/game/
 */
 #pragma once
+#include <iostream>
 
-#include "Vector3.h"
+namespace NCL {
+	namespace Maths {
+		class Vector3;
+		class Vector2;
 
-using namespace std;
+		class Vector4 {
 
-class Vector4	{
-public:
-	Vector4(void) {
-		x = y = z = w = 1.0f;
+		public:
+			union {
+				struct {
+					float x;
+					float y;
+					float z;
+					float w;
+				};
+				float array[4];
+			};
+
+		public:
+			constexpr Vector4(void) : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
+
+			constexpr Vector4(float xVal, float yVal, float zVal, float wVal) : x(xVal), y(yVal), z(zVal), w(wVal) {}
+
+			Vector4(const Vector3& v3, float w = 0.0f);
+			Vector4(const Vector2& v2, float z = 0.0f, float w = 0.0f);
+
+			~Vector4(void) {}
+
+			Vector4 Normalised() const {
+				Vector4 temp(x, y, z, w);
+				temp.Normalise();
+				return temp;
+			}
+
+			void			Normalise() {
+				float length = Length();
+
+				if (length != 0.0f) {
+					length = 1.0f / length;
+					x = x * length;
+					y = y * length;
+					z = z * length;
+					w = w * length;
+				}
+			}
+
+			float	Length() const {
+				return sqrt((x*x) + (y*y) + (z*z) + (w * w));
+			}
+
+			constexpr float	LengthSquared() const {
+				return ((x*x) + (y*y) + (z*z) + (w * w));
+			}
+
+			constexpr float		GetMaxElement() const {
+				float v = x;
+				if (y > v) {
+					v = y;
+				}
+				if (z > v) {
+					v = z;
+				}
+				if (w > v) {
+					v = w;
+				}
+				return v;
+			}
+
+			float		GetAbsMaxElement() const {
+				float v = abs(x);
+				if (abs(y) > v) {
+					v = abs(y);
+				}
+				if (abs(z) > v) {
+					v = abs(z);
+				}
+				if (abs(w) > v) {
+					v = abs(w);
+				}
+				return v;
+			}
+
+			static float	Dot(const Vector4 &a, const Vector4 &b) {
+				return (a.x*b.x) + (a.y*b.y) + (a.z*b.z) + (a.w*b.w);
+			}
+
+			inline Vector4  operator+(const Vector4  &a) const {
+				return Vector4(x + a.x, y + a.y, z + a.z, w + a.w);
+			}
+
+			inline Vector4  operator-(const Vector4  &a) const {
+				return Vector4(x - a.x, y - a.y, z - a.z, w - a.w);
+			}
+
+			inline Vector4  operator-() const {
+				return Vector4(-x, -y, -z, -w);
+			}
+
+			inline Vector4  operator*(float a)	const {
+				return Vector4(x * a, y * a, z * a, w * a);
+			}
+
+			inline Vector4  operator*(const Vector4  &a) const {
+				return Vector4(x * a.x, y * a.y, z * a.z, w * a.w);
+			}
+
+			inline Vector4  operator/(const Vector4  &a) const {
+				return Vector4(x / a.x, y / a.y, z / a.z, w / a.w);
+			};
+
+			inline Vector4  operator/(float v) const {
+				return Vector4(x / v, y / v, z / v, w / v);
+			};
+
+			inline constexpr void operator+=(const Vector4  &a) {
+				x += a.x;
+				y += a.y;
+				z += a.z;
+				w += a.w;
+			}
+
+			inline void operator-=(const Vector4  &a) {
+				x -= a.x;
+				y -= a.y;
+				z -= a.z;
+				w -= a.w;
+			}
+
+
+			inline void operator*=(const Vector4  &a) {
+				x *= a.x;
+				y *= a.y;
+				z *= a.z;
+				w *= a.w;
+			}
+
+			inline void operator/=(const Vector4  &a) {
+				x /= a.x;
+				y /= a.y;
+				z /= a.z;
+				w /= a.w;
+			}
+
+			inline void operator*=(float f) {
+				x *= f;
+				y *= f;
+				z *= f;
+				w *= f;
+			}
+
+			inline void operator/=(float f) {
+				x /= f;
+				y /= f;
+				z /= f;
+				w /= f;
+			}
+
+			inline float operator[](int i) const {
+				return array[i];
+			}
+
+			inline float& operator[](int i) {
+				return array[i];
+			}
+
+			inline bool	operator==(const Vector4 &A)const { return (A.x == x && A.y == y && A.z == z && A.w == w) ? true : false; };
+			inline bool	operator!=(const Vector4 &A)const { return (A.x == x && A.y == y && A.z == z && A.w == w) ? false : true; };
+
+			inline friend std::ostream& operator<<(std::ostream& o, const Vector4& v) {
+				o << "Vector4(" << v.x << "," << v.y << "," << v.z << "," << v.w << ")" << std::endl;
+				return o;
+			}
+		};
+
+		static Vector4 COLOUR_BLACK(0, 0, 0, 1.0f);
+		static Vector4 COLOUR_WHITE(1, 1, 1, 1.0f);
+		static Vector4 HOMOGENEOUS(0, 0, 0, 1.0f);
 	}
-	Vector4(float x, float y, float z, float w) {
-		this->x = x;
-		this->y = y;
-		this->z = z;
-		this->w = w;
-	}
-	Vector4(const Vector3& vec3, float w) {
-		this->x = vec3.x;
-		this->y = vec3.y;
-		this->z = vec3.z;
-		this->w = w;
-	}
-
-	Vector3 ToVector3() {
-		return Vector3(x, y, z);
-	}
-
-	inline Vector4 operator+(const Vector4& other) {
-		return Vector4(x + other.x,
-					y + other.y,
-					z + other.z,
-					w + other.w);
-	}
-
-	inline Vector4 operator-(const Vector4& other) {
-		return Vector4(x - other.x,
-					y - other.y,
-					z - other.z,
-					w - other.w);
-	}
-
-	inline void operator+=(const Vector4& a) {
-		x += a.x;
-		y += a.y;
-		z += a.z;
-		w += a.w;
-	}
-
-	inline void operator-=(const Vector4& a) {
-		x -= a.x;
-		y -= a.y;
-		z -= a.z;
-		w -= a.w;
-	}
-
-	Vector4 Normalised() const {
-		Vector4 n = *this;
-		n.Normalise();
-		return n;
-	}
-
-	void	Normalise() {
-		float length = Length();
-
-		if (length != 0.0f) {
-			length = 1.0f / length;
-			x = x * length;
-			y = y * length;
-			z = z * length;
-			w = w * length;
-		}
-	}
-
-	float			Length() const {
-		return sqrt((x * x) + (y * y) + (z * z) + (w * w));
-	}
-
-	static Vector4	Max(const Vector4& a, const Vector4& b) {
-		return Vector4(max(a.x, b.x), max(a.y, b.y), max(a.z, b.z), max(a.w, b.w));
-	}
-
-	static Vector4	Min(const Vector4& a, const Vector4& b) {
-		return Vector4(min(a.x, b.x), min(a.y, b.y), min(a.z, b.z), min(a.w, b.w));
-	}
-
-	inline Vector4  operator*(const float a) const {
-		return Vector4(x * a, y * a, z * a, w * a);
-	}
-	inline void operator*=(const float a) {
-		x *= a; y *= a; z *= a; w *= a;
-	}
-	/*inline Vector4  operator*(const Vector4& a) const {
-		return Vector4(x * a.x, y * a.y, z * a.z, w * a.w);
-	}*/
-
-	~Vector4(void){}
-
-	static const Vector4 zero;
-	static const Vector4 one;
-
-	float x;
-	float y;
-	float z;
-	float w;
-};
+}
