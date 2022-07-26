@@ -5,9 +5,7 @@
 #include <atomic>
 #include <chrono>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "LIWEditor.h"
 
 #include "Application/Window.h"
 #include "Application/Environment.h"
@@ -129,16 +127,17 @@ namespace LIW {
 			// Setup ImGUI
 			//
 			// Setup ImGUI context
-			IMGUI_CHECKVERSION();
-			ImGui::CreateContext();
-			ImGuiIO& io = ImGui::GetIO();
-			//Setup ImGUI Style
-			ImGui::StyleColorsDark();
-			ImGui_ImplGlfw_InitForOpenGL(ptrWindow->GetHandle(), true);
-			ImGui_ImplOpenGL3_Init("#version 130");
-			//State
-			bool show_demo_window = true;
-			bool show_another_window = true;
+			//IMGUI_CHECKVERSION();
+			//ImGui::CreateContext();
+			//ImGuiIO& io = ImGui::GetIO();
+			////Setup ImGUI Style
+			//ImGui::StyleColorsDark();
+			//ImGui_ImplGlfw_InitForOpenGL(ptrWindow->GetHandle(), true);
+			//ImGui_ImplOpenGL3_Init("#version 130");
+			////State
+			//bool show_demo_window = true;
+			//bool show_another_window = true;
+			LIWEditor::InitEditor(ptrWindow->GetHandle());
 
 
 			//

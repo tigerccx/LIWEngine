@@ -27,9 +27,7 @@ _-_-_-_-_-_-_-""  ""
 #include <vector>
 #include <memory>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include "GL/GL.h"
+#include "LIWglfw.h"
 
 #include <SOIL/SOIL.h>
 

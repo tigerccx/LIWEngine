@@ -2,9 +2,7 @@
 #include "Mouse.h"
 #include <map>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <GL/GL.h>
+#include "LIWglfw.h"
 
 namespace LIW {
 	namespace App {

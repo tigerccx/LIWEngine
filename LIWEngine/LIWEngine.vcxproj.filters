@@ -294,6 +294,9 @@
     <ClCompile Include="Core\Maths\Maths.cpp">
       <Filter>Core\Maths</Filter>
     </ClCompile>
+    <ClCompile Include="LIWEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h">
@@ -574,6 +577,12 @@
     </ClInclude>
     <ClInclude Include="test_vulkan_0.h">
       <Filter>Framework\Test\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWglfw.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="LIWEditor.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

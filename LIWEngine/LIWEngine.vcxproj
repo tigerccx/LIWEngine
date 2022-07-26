@@ -80,12 +80,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include\Vulkan;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Debug</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include\Vulkan;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Release;$(LibraryPath);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -192,6 +192,7 @@
     <ClCompile Include="Core\Time\LIWTime.cpp" />
     <ClCompile Include="Core\Utility.cpp" />
     <ClCompile Include="Editor\LIWEditorTasks.cpp" />
+    <ClCompile Include="LIWEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestAromics.cpp" />
     <ClCompile Include="TestGame.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="Core\LIWConstants.h" />
     <ClInclude Include="Core\LIWExceptions.h" />
     <ClInclude Include="Core\LIWFrame.h" />
+    <ClInclude Include="Core\LIWglfw.h" />
     <ClInclude Include="Core\LIWGlobal.h" />
     <ClInclude Include="Core\LIWObject.h" />
     <ClInclude Include="Core\LIWTypes.h" />
@@ -280,6 +282,7 @@
     <ClInclude Include="Core\Utility.h" />
     <ClInclude Include="Editor\LIWEditorTasks.h" />
     <ClInclude Include="LIWCore.h" />
+    <ClInclude Include="LIWEditor.h" />
     <ClInclude Include="MultiThreadRunner.h" />
     <ClInclude Include="SingleThreadRunner.h" />
     <ClInclude Include="TestAtomics.h" />

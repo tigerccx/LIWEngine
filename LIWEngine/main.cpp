@@ -1,9 +1,9 @@
-////#include "SingleThreadRunner.h"
-//#include "MultiThreadRunner.h"
-//
-//int main() {
-//	return run();
-//}
+//#include "SingleThreadRunner.h"
+#include "MultiThreadRunner.h"
+
+int main() {
+	return run();
+}
 
 
 
@@ -22,7 +22,7 @@
 //	test();
 //}
 
-#include "test_vulkan_0.h"
-int main() {
-	test();
-}
+//#include "test_vulkan_0.h"
+//int main() {
+//	test();
+//}
