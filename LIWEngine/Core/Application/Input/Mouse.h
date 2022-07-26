@@ -48,9 +48,9 @@ namespace LIW {
 			bool	DoubleClicked(MouseButtons button);
 
 			//Get how much this mouse has moved since last frame
-			Maths::LIWVector2	GetRelativePosition();
+			glm::vec2	GetRelativePosition();
 			//Get the window position of the mouse pointer
-			Maths::LIWVector2	GetAbsolutePosition();
+			glm::vec2	GetAbsolutePosition();
 
 			//Determines the maximum amount of ms that can pass between
 			//2 mouse presses while still counting as a 'double click'
@@ -105,11 +105,11 @@ namespace LIW {
 			void			SetAbsolutePositionBounds(unsigned int maxX, unsigned int maxY);
 
 			//Current mouse absolute position
-			Maths::LIWVector2		absolutePosition;
+			glm::vec2		absolutePosition;
 			//Current mouse absolute position maximum bounds
-			Maths::LIWVector2		absolutePositionBounds;
+			glm::vec2		absolutePositionBounds;
 			//How much as the mouse moved since the last raw packet?
-			Maths::LIWVector2		relativePosition;
+			glm::vec2		relativePosition;
 			//Current button down state for each button
 			bool					buttons[MOUSE_BUTTON_MAX];
 			//Current button held state for each button
@@ -122,7 +122,7 @@ namespace LIW {
 			float					lastClickTime[MOUSE_BUTTON_MAX];
 
 			//Current mousewheel updated position
-			Maths::LIWVector2		frameWheel;
+			glm::vec2		frameWheel;
 
 			//Max amount of ms between clicks count as a 'double click'
 			float					clickLimit;

@@ -23,11 +23,11 @@ namespace LIW {
 		virtual void RenderScene() = 0;
 		virtual void Resize(int x, int y) = 0;
 
-		Maths::LIWMatrix4 projMatrix;		//Projection matrix
-		Maths::LIWMatrix4 modelMatrix;	//Model matrix. NOT MODELVIEW
-		Maths::LIWMatrix4 viewMatrix;		//View matrix
-		Maths::LIWMatrix4 textureMatrix;	//Texture matrix
-		Maths::LIWMatrix4 shadowMatrix;
+		glm::mat4 projMatrix;		//Projection matrix
+		glm::mat4 modelMatrix;	//Model matrix. NOT MODELVIEW
+		glm::mat4 viewMatrix;		//View matrix
+		glm::mat4 textureMatrix;	//Texture matrix
+		glm::mat4 shadowMatrix;
 
 		int		width = 0;			//Render area width (not quite the same as window width)
 		int		height = 0;			//Render area height (not quite the same as window height)

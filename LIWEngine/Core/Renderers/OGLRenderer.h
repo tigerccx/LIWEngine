@@ -45,7 +45,7 @@ using namespace std;
 #define OPENGL_DEBUGGING
 #endif
 
-extern const LIW::Maths::LIWMatrix4 biasMatrix;
+extern const glm::mat4 biasMatrix;
 
 namespace LIW {
 	class Shader;

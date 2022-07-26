@@ -7,7 +7,7 @@ LIW::App::Mouse::Mouse()	{
 	memset( doubleClicks, 0,  sizeof(bool)  * MOUSE_BUTTON_MAX );
 	memset( lastClickTime, 0, sizeof(float) * MOUSE_BUTTON_MAX );
 
-	frameWheel  = Maths::LIWVector2::zero;
+	frameWheel  = glm::vec2(0, 0);
 	sensitivity = 0.07f;	//Chosen for no other reason than it's a nice value for my Deathadder ;)
 	clickLimit  = 0.2f;
 
@@ -49,7 +49,7 @@ void LIW::App::Mouse::OnUpdateButton(MouseButtons button, MouseButtonActions act
 void LIW::App::Mouse::OnUpdateMovement(double xpos, double ypos)
 {
 	if (isAwake) {
-		Maths::LIWVector2 prevAbsolute = absolutePosition;
+		glm::vec2 prevAbsolute = absolutePosition;
 		absolutePosition.x = float(xpos);
 		absolutePosition.y = float(ypos);
 
@@ -102,12 +102,12 @@ void LIW::App::Mouse::UpdateReleases()
 
 void LIW::App::Mouse::UpdateScroll()
 {
-	frameWheel.ToZero();
+	frameWheel.g *= 0;
 }
 
 void LIW::App::Mouse::UpdatePosition()
 {
-	relativePosition.ToZero();
+	relativePosition *= 0;
 }
 
 /*
@@ -167,14 +167,14 @@ bool LIW::App::Mouse::ButtonClicked(MouseButtons button)
 /*
 Returns how much the mouse has moved by since the last frame.
 */
-LIW::Maths::LIWVector2 LIW::App::Mouse::GetRelativePosition()	{
+glm::vec2 LIW::App::Mouse::GetRelativePosition() {
 	return relativePosition;
 }
 
 /*
 Returns the mouse pointer position in absolute space.
 */
-LIW::Maths::LIWVector2 LIW::App::Mouse::GetAbsolutePosition()	{
+glm::vec2 LIW::App::Mouse::GetAbsolutePosition() {
 	return absolutePosition;
 }
 

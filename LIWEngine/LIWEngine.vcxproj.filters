@@ -195,27 +195,6 @@
     <ClCompile Include="Core\Application\Input\Keyboard_GLFW.cpp">
       <Filter>Core\Application\Device\Input\Keyboard\GLFW</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Maths\Matrix2.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Maths\Matrix3.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Maths\Matrix4.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Maths\Quaternion.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Maths\Vector2.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Maths\Vector3.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Maths\Vector4.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Application\Window.cpp">
       <Filter>Core\Application\Window</Filter>
     </ClCompile>
@@ -294,9 +273,6 @@
     <ClCompile Include="TestGlobal.cpp">
       <Filter>Framework\Test\TestGame</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Maths\Maths.cpp">
-      <Filter>Core\Maths</Filter>
-    </ClCompile>
     <ClCompile Include="LIWEditor.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
@@ -305,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="Core\Utility\LIWFile.cpp">
       <Filter>Core\Utility\Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Maths\LIWMaths.cpp">
+      <Filter>Core\Maths</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -385,27 +364,6 @@
     </ClInclude>
     <ClInclude Include="Core\Application\Input\Keyboard_GLFW.h">
       <Filter>Core\Application\Device\Input\Keyboard\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\Matrix2.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\Matrix3.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\Matrix4.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\Quaternion.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\Vector2.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\Vector3.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\Vector4.h">
-      <Filter>Core\Maths</Filter>
     </ClInclude>
     <ClInclude Include="Core\Application\LIWDevice.h">
       <Filter>Core\Application\Device</Filter>
@@ -575,12 +533,6 @@
     <ClInclude Include="Core\LIWExceptions.h">
       <Filter>Core\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Maths\Maths.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Maths\LIWMaths.h">
-      <Filter>Core\Maths</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Framework\LIWComponentCollection.h">
       <Filter>Core\ECSFramework</Filter>
     </ClInclude>
@@ -598,6 +550,9 @@
     </ClInclude>
     <ClInclude Include="Core\Utility\LIWFile.h">
       <Filter>Core\Utility\Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Maths\LIWMaths.h">
+      <Filter>Core\Maths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

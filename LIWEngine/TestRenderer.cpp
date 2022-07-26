@@ -36,7 +36,7 @@ void TestRenderer::Update(float msec)
 
 void TestRenderer::RenderScene()
 {
-	LIWVector4 clear_color = LIWVector4(0.45f, 0.55f, 0.60f, 1.00f);
+	glm::vec4 clear_color = glm::vec4(0.45f, 0.55f, 0.60f, 1.00f);
 	int display_w, display_h;
 	glfwGetFramebufferSize(currentWindow->GetHandle(), &display_w, &display_h);
 	glViewport(0, 0, display_w, display_h);
