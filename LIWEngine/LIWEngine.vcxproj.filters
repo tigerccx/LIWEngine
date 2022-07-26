@@ -142,6 +142,9 @@
     <Filter Include="Framework\Test\Render">
       <UniqueIdentifier>{11329515-16cb-434a-8fd0-17491d293bd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Utility\Files">
+      <UniqueIdentifier>{e208b90e-062a-407d-ad22-ae89d83665e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.cpp">
@@ -296,6 +299,12 @@
     </ClCompile>
     <ClCompile Include="LIWEditor.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Renderers\LIWRenderer.cpp">
+      <Filter>Core\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Utility\LIWFile.cpp">
+      <Filter>Core\Utility\Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +592,12 @@
     </ClInclude>
     <ClInclude Include="LIWEditor.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Renderers\LIWRenderer.h">
+      <Filter>Core\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utility\LIWFile.h">
+      <Filter>Core\Utility\Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

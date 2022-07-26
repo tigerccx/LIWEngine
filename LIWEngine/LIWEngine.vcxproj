@@ -182,6 +182,7 @@
     <ClCompile Include="Core\Maths\Vector3.cpp" />
     <ClCompile Include="Core\Maths\Vector4.cpp" />
     <ClCompile Include="Core\Memory\LIWMemory.cpp" />
+    <ClCompile Include="Core\Renderers\LIWRenderer.cpp" />
     <ClCompile Include="Core\Renderers\OGLRenderer.cpp" />
     <ClCompile Include="Core\Threading\LIWFiberExecutor.cpp" />
     <ClCompile Include="Core\Threading\LIWFiberMain.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Core\Time\LIWGameTimer.cpp" />
     <ClCompile Include="Core\Time\LIWTime.cpp" />
     <ClCompile Include="Core\Utility.cpp" />
+    <ClCompile Include="Core\Utility\LIWFile.cpp" />
     <ClCompile Include="Editor\LIWEditorTasks.cpp" />
     <ClCompile Include="LIWEditor.cpp" />
     <ClCompile Include="main.cpp" />
@@ -265,6 +267,7 @@
     <ClInclude Include="Core\Memory\LIWLGPoolAllocator.h" />
     <ClInclude Include="Core\Memory\LIWLGStackAllocator.h" />
     <ClInclude Include="Core\Memory\LIWMemory.h" />
+    <ClInclude Include="Core\Renderers\LIWRenderer.h" />
     <ClInclude Include="Core\Renderers\OGLRenderer.h" />
     <ClInclude Include="Core\Threading\LIWFiber.h" />
     <ClInclude Include="Core\Threading\LIWFiberCommon.h" />
@@ -280,6 +283,7 @@
     <ClInclude Include="Core\Time\LIWGameTimer.h" />
     <ClInclude Include="Core\Time\LIWTime.h" />
     <ClInclude Include="Core\Utility.h" />
+    <ClInclude Include="Core\Utility\LIWFile.h" />
     <ClInclude Include="Editor\LIWEditorTasks.h" />
     <ClInclude Include="LIWCore.h" />
     <ClInclude Include="LIWEditor.h" />

@@ -163,11 +163,13 @@ namespace LIW {
 		void Shutdown() {
 			// Cleanup Game
 			LIWGlobal::s_game->CleanUp();
-			liw_delete_static(LIWGlobal::s_game);
+			liw_delete(LIWGlobal::s_game);
 
 			// Cleanup Environment
-			liw_delete_static(LIWGlobal::s_environment);
+			liw_delete(LIWGlobal::s_environment);
 			
+			// Cleanup Window
+			liw_delete(LIWGlobal::s_environment->m_window);
 
 			// Shutdown GLFW
 			glfwTerminate();

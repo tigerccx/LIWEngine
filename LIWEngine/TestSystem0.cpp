@@ -7,7 +7,7 @@ void FT_TestSystem0Update::Execute(LIWFiberWorkerPointer thisFiber)
 	using namespace LIW;
 
 	auto& testComponent0Mngr = LIW_ECS_GetComponentManager(TestComponent0);
-	int componentCount = testComponent0Mngr.GetActiveComponentCount();
+	int componentCount = (int)testComponent0Mngr.GetActiveComponentCount();
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, componentCount);
 
 	int dispatchSize = 20;

@@ -1,4 +1,6 @@
 #pragma once
+#include "LIWConfig.h"
+
 /*
 Class:OGLRenderer
 Author:Rich Davison	 <richard-gordon.davison@newcastle.ac.uk>
@@ -18,7 +20,8 @@ _-_-_-_-_-_-_-""  ""
 * Author: tigerccx
 * Description: This class is modified to integrate with GLFW context instead of Windows context. 
 */
-#include "Framework/LIWStandardSystem.h"
+
+#include "LIWRenderer.h"
 
 #include "common.h"
 
@@ -50,24 +53,22 @@ namespace LIW {
 	class Camera;
 
 	class OGLRenderer:
-		public LIWStandardSystem
+		public LIWRenderer
 	{
 	public:
 		friend class App::Window;
-		OGLRenderer(App::Window& parent);
+		OGLRenderer(App::Window& window);
 		virtual ~OGLRenderer(void);
 
 		virtual void RenderUpdate(float dt) override {
 			RenderScene();
 		}
-
-		bool			HasInitialised() const;
-
+	
 	protected:
-		virtual void	RenderScene() = 0;
+		virtual void RenderScene() = 0;
 		//void			SwapBuffers();
 		
-		virtual void	Resize(int x, int y);
+		void Resize(int x, int y) override;
 		//void			UpdateShaderMatrices();
 		//void			UpdateShaderViewProjFromCamera(shared_ptr<Shader> shaderPrePixelBump, Camera* camera);
 		//void			BindShader(shared_ptr<Shader>s);
@@ -80,19 +81,8 @@ namespace LIW {
 			glPopDebugGroup();
 		}
 
-		Maths::LIWMatrix4 projMatrix;		//Projection matrix
-		Maths::LIWMatrix4 modelMatrix;	//Model matrix. NOT MODELVIEW
-		Maths::LIWMatrix4 viewMatrix;		//View matrix
-		Maths::LIWMatrix4 textureMatrix;	//Texture matrix
-		Maths::LIWMatrix4 shadowMatrix;
-
-		int		width;			//Render area width (not quite the same as window width)
-		int		height;			//Render area height (not quite the same as window height)
-		bool	init;			//Did the renderer initialise properly?
-
 	protected:
 		shared_ptr<Shader> currentShader;
-		App::Window* currentWindow = nullptr;
 		GLFWwindow* currentWindowHandle = nullptr;	//GLFW window handle, which also represent its context?
 #ifdef _DEBUG
 		static void __stdcall DebugCallback(GLenum source, GLenum renderOrder, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);

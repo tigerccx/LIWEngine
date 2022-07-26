@@ -1,13 +1,22 @@
 #include "Window.h"
 #include "Renderers/OGLRenderer.h"
 
+std::map<GLFWwindow*, LIW::App::Window*> LIW::App::Window::windows = std::map<GLFWwindow*, LIW::App::Window*>();
+
 LIW::App::Window::Window(const std::string& name, int width, int height, bool fullScreen)
 {
 	init = false;
 
 	title = name;
-	this->width = width;
-	this->height = height;
+	this->m_width = width;
+	this->m_height = height;
+
+#ifdef LIW_RENDER_VULKAN
+	// Ask glfw to create no API
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	//TODO: MUST CHANGE LATER! Temp disable resize
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+#endif
 
 	windowHandle = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 
@@ -28,6 +37,11 @@ LIW::App::Window::Window(const std::string& name, int width, int height, bool fu
 	if (textOutput.is_null()) {
 		textOutput = liw_new_static<TextConsole>();
 	}
+
+	windows[windowHandle] = this;
+
+	/*Window resize*/
+	glfwSetFramebufferSizeCallback(windowHandle, ResizeCallback);
 
 	init = true;
 }
@@ -62,10 +76,23 @@ bool LIW::App::Window::UpdateWindow()
 	return !ShouldClose();
 }
 
-void LIW::App::Window::SetRenderer(OGLRenderer* r)
+void LIW::App::Window::SetRenderer(LIWRenderer* r)
 {
 	renderer = r;
 	if (r) {
-		renderer->Resize((int)width, (int)height);
+		renderer->Resize((int)m_width, (int)m_height);
 	}
+}
+
+void LIW::App::Window::Resize(int width, int height)
+{
+	m_width = width;
+	m_height = height;
+	if (renderer) renderer->Resize(width, height);
+}
+
+void LIW::App::Window::ResizeCallback(GLFWwindow* window, int width, int height)
+{
+	//Here we assume callback will always receive a GLFWwindow handle already registered.
+	windows[window]->Resize(width, height);
 }

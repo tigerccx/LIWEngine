@@ -32,7 +32,7 @@ class FT_TestSystem0Update_TestComponent0 final :
 public:
 	void Execute(LIWFiberWorkerPointer thisFiber) override;
 public:
-	int m_idxBeg;
-	int m_idxEnd;
-	float m_dt;
+	int m_idxBeg = 0;
+	int m_idxEnd = 0;
+	float m_dt = 0.0f;
 };

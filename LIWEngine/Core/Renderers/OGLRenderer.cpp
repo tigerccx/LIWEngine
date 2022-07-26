@@ -35,14 +35,11 @@ Creates an OpenGL 3.2 CORE PROFILE rendering context. Sets itself
 as the current renderer of the passed 'parent' Window. Not the best
 way to do it - but it kept the Tutorial code down to a minimum!
 */
-LIW::OGLRenderer::OGLRenderer(LIW::App::Window &window)	{
+LIW::OGLRenderer::OGLRenderer(LIW::App::Window &window):
+	LIW::LIWRenderer::LIWRenderer(window)
+{
 	init					= false;
 
-	//Assume that if we have a GLFW window, we have a current working context
-	if (!window.Initialised()) {
-		std::cout << "OGLRenderer::OGLRenderer(): Failed to get a working window!\n";
-		return;
-	}
 	//// Did We Get A Device Context?
 	//if (!(deviceContext=GetDC(windowHandle)))		{					
 	//	std::cout << "OGLRenderer::OGLRenderer(): Failed to create window!\n";
@@ -80,7 +77,6 @@ LIW::OGLRenderer::OGLRenderer(LIW::App::Window &window)	{
 	//	return;
 	//}
 	
-	currentWindow = &window;
 	GLFWwindow* windowHandle = window.GetHandle();
 	currentWindowHandle = windowHandle;
 
@@ -160,17 +156,8 @@ LIW::OGLRenderer::OGLRenderer(LIW::App::Window &window)	{
 Destructor. Deletes the default shaderPrePixelBump, and the OpenGL rendering context.
 */
 LIW::OGLRenderer::~OGLRenderer(void)	{
-	currentWindow = nullptr;
 	currentWindowHandle = nullptr;
 	//wglDeleteContext(renderContext);
-}
-
-/*
-Returns TRUE if everything in the constructor has gone to plan.
-Check this to end the application if necessary...
-*/
-bool LIW::OGLRenderer::HasInitialised() const{
-	return init;
 }
 
 /*

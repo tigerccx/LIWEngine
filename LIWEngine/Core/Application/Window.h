@@ -1,6 +1,9 @@
 #pragma once
+#include "LIWConfig.h"
+
 #include<iostream>
 #include<string>
+#include<map>
 
 #include "LIWglfw.h"
 
@@ -15,7 +18,7 @@
 #include "Output/TextConsole.h"
 
 namespace LIW {
-	class OGLRenderer;
+	class LIWRenderer;
 	namespace App {
 		class Window
 		{
@@ -31,7 +34,8 @@ namespace LIW {
 			inline void UnsetCurrent() { glfwMakeContextCurrent(nullptr); }
 			inline bool ShouldClose() { return glfwWindowShouldClose(windowHandle); }
 			inline void SwapBuffer() { glfwSwapBuffers(windowHandle); }
-			void SetRenderer(OGLRenderer* r);
+			void SetRenderer(LIWRenderer* r);
+			void Resize(int width, int height);
 
 			inline Keyboard* GetKeyboard() { return keyboard; }
 			inline Mouse* GetMouse() { return mouse; }
@@ -40,11 +44,11 @@ namespace LIW {
 		protected:
 
 			GLFWwindow* windowHandle = nullptr;
-			OGLRenderer* renderer = nullptr;
+			LIWRenderer* renderer = nullptr;
 
 			std::string title = "";
-			int width = 0;
-			int height = 0;
+			int m_width = 0;
+			int m_height = 0;
 
 			bool init = false;
 
@@ -54,6 +58,10 @@ namespace LIW {
 
 			/*Output*/
 			LIWPointer<TextOutputDevice, LIWMem_Static> textOutput{ liw_c_nullhdl };
+
+		protected:
+			static void ResizeCallback(GLFWwindow* window, int width, int height);
+			static std::map<GLFWwindow*, Window*> windows;
 		};
 	}
 }
