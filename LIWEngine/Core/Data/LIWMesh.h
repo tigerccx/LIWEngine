@@ -23,6 +23,8 @@ namespace LIW {
 		inline bool IsValid() const { return m_handleVAO != sc_invalidHandle; }
 		inline uint32_t GetHandleVAO() const { return m_handleVAO; }
 		inline uint32_t GetHandleBuffer() const { return m_handleBuffer; }
+		inline LIWPreimitiveType GetPrimitiveType() const { return m_primitiveType; }
+		inline const LIWDArray<LIWSubMesh>& GetSubmeshes() const { return m_submeshes; }
 
 	private:
 		uint32_t m_handleVAO{ sc_invalidHandle };

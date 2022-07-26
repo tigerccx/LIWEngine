@@ -17,6 +17,9 @@ namespace LIW {
 		void CreateTexture(int width, int height, LIWImageFormat format);
 		void CreateTexture(const LIWImage& image);
 		void DestroyTexture();
+
+		void Bind(uint32_t rawHandleShader, const char* name, uint32_t imageUnit);
+		void Unbind(uint32_t imageUnit);
 	public:
 		inline bool IsValid() const { return m_handleTexture != sc_invalidHandle; }
 		inline int GetWidth() const { return m_width; }

@@ -141,8 +141,20 @@ LIW::OGLRenderer::OGLRenderer(LIW::App::Window &window):
 	//If we get this far, everything's going well!
 
 #ifdef OPENGL_DEBUGGING
-	glDebugMessageCallbackARB(&OGLRenderer::DebugCallback, NULL);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+	GLint flags;
+	glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+	if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+	{
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(&OGLRenderer::DebugCallback, NULL);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+		puts("Debug");
+	}
+	else
+		puts("Debug for OpenGL not supported by your system!");
+	//glDebugMessageCallbackARB(&OGLRenderer::DebugCallback, NULL);
+	//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 #endif
 
 	glClearColor(0.2f,0.2f,0.2f,1.0f);			//When we clear the screen, we want it to be dark grey

@@ -419,7 +419,7 @@ namespace LIW {
 							s_handleCount--;
 #endif
 
-							// No block is left, 
+							// No seg is left, 
 							// so set block info m_freeSeg to nullptr. 
 							ptrBlockInfo->m_freeSeg = nullptr;
 							// Remove from block freelist

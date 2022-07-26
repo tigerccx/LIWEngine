@@ -55,5 +55,6 @@
 // Component Relation
 // Entity relation will happen when LIW_ECS_ApplyChangeOnComponentManager(ComponentType) is called
 #define LIW_ECS_AttachComponentToEntity(ComponentType, handle, entity) LIW_ECS_GetComponentManager(ComponentType).MarkEntity(entity, handle)
-#define LIW_ECS_DetachComponentToEntity(ComponentType, handle, entity) LIW_ECS_GetComponentManager(ComponentType).MarkRemoveEntity(entity, handle)
+#define LIW_ECS_DetachComponentFromEntity(ComponentType, handle, entity) LIW_ECS_GetComponentManager(ComponentType).MarkRemoveEntity(entity, handle)
 #define LIW_ECS_GetComponentFromEntity(ComponentType, entity) LIW_ECS_GetComponentManager(ComponentType).GetComponentFromEntity(entity)
+#define LIW_ECS_GetComponentSibling(ComponentType, ComponentTypeSibling, handle, entity) LIW_ECS_GetComponentManager(ComponentTypeSibling).GetComponentFromEntity(LIW_ECS_GetComponent(ComponentType, handle).GetEntity())

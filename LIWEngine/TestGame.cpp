@@ -5,38 +5,85 @@
 
 int TestGame::Initialise()
 {
-	TestGlobal::s_renderer = liw_new_static<TestRenderer>(*(m_currentEnvironment->m_window));
-	
-	LIWDArray<liw_objhdl_type> components;
-	LIWDArray<liw_objhdl_type> transforms;
-	LIWDArray<LIWEntity> entities;
+	TestGlobal::s_renderer = liw_new_static<OGLRendererForward>(*(m_currentEnvironment->m_window));
 
-	liw_mdebug_print_def(LIWThreadGetID());
-	//uint32_t testCount = uint32_t(1) << 15;
-	uint32_t testCount = uint32_t(1) << 5;
-	LIW_ECS_FetchEntities(entities, testCount);
-	liw_mdebug_print_def(LIWThreadGetID());
-	LIW_ECS_CreateComponents(TestComponent0, components, testCount);
-	liw_mdebug_print_def(LIWThreadGetID());
-	LIW_ECS_CreateComponents(LIWComponent_Transform, transforms, testCount);
-	liw_mdebug_print_def(LIWThreadGetID());
+	auto& assetManager = *LIWGlobal::GetAssetManager();
 
-	for (uint32_t i = 0; i < testCount; i++) {
-		auto& component = LIW_ECS_GetComponent(TestComponent0, components[i]);
-		component.m_float0 = i + 0.7f;
-		LIW_ECS_AttachComponentToEntity(TestComponent0, components[i], entities[i]);
-		LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, transforms[i], entities[i]);
-	}
+	// Texture
+	m_image = assetManager.CreateImage("image0");
+	auto& image = assetManager.GetImage(m_image);
+	image.LoadImg("../../Resources/Textures/viking_room.png", LIWImageFormat_RGBA);
+	m_tex2D = assetManager.CreateTexture2D("tex0");
+	auto& tex2D = assetManager.GetTexture2D(m_tex2D);
+	tex2D.CreateTexture(image);
+	image.UnloadImg();
+	assetManager.DestroyImage("image0");
 
-	auto& manager = LIW_ECS_GetComponentManager(LIWComponent_Transform);
+	// Mesh
+	m_meshData = assetManager.CreateMeshData("meshData0");
+	auto& meshData = assetManager.GetMeshData(m_meshData);
+	meshData.LoadMeshData_Obj("../../Resources/Meshes/viking_room.obj");
+	m_mesh = assetManager.CreateMesh("mesh0");
+	auto& mesh = assetManager.GetMesh(m_mesh);
+	mesh.CreateMesh(meshData);
+	meshData.UnloadMeshData();
+	assetManager.DestroyMeshData("meshData0");
+
+	// Shader
+	m_shader_vert = assetManager.CreateShader("shaderVert0");
+	auto& shaderVert = assetManager.GetShader(m_shader_vert);
+	shaderVert.LoadShader("./Shaders/OGL/Test_Vert.glsl", LIWShaderType_Vertex);
+	m_shader_frag = assetManager.CreateShader("shaderFrag0");
+	auto& shaderFrag = assetManager.GetShader(m_shader_frag);
+	shaderFrag.LoadShader("./Shaders/OGL/Test_Frag.glsl", LIWShaderType_Fragment);
+	m_shaderProgram = assetManager.CreateShaderProgram("shaderProgram0");
+	auto& shaderProgram = assetManager.GetShaderProgram(m_shaderProgram);
+	shaderProgram.CreateShader({ shaderVert ,shaderFrag });
+	assetManager.DestroyShader("shaderVert0");
+	assetManager.DestroyShader("shaderFrag0");
+
+	// Material
+	m_material = assetManager.CreateMaterial("material0");
+	auto& material = assetManager.GetMaterial(m_material);
+	material.AddParam_Tex2D("mainTex", m_tex2D);
+	material.m_handleShaderProgram = m_shaderProgram;
+
+	LIW_ECS_FetchEntities(m_entities, 2);
+	LIW_ECS_CreateComponents(LIWComponent_Transform, m_transforms, 2);
+	LIW_ECS_CreateComponents(LIWComponent_MeshRenderer, m_meshRenderers, 1);
+	m_camera = LIW_ECS_CreateComponent(LIWComponent_Camera);
+
+	// Camera
+	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[0], m_entities[0]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_Camera, m_camera, m_entities[0]);
+	auto& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[0]);
+	transCam.m_location = glm::vec3(0, 0, -10);
+
+	// Object
+	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[1], m_entities[1]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[0], m_entities[1]);
+	auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[1]);
+	transObj.m_location = glm::vec3(0, 0, 5);
+	auto& meshRenderer = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[0]);
+	meshRenderer.m_handleMaterial = m_material;
+	meshRenderer.m_handleMesh = m_mesh;
+
+	// Apply changes
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Transform);
-	LIW_ECS_ApplyChangeOnComponentManager(TestComponent0);
+	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_MeshRenderer);
+	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Camera);
 
 	return 0;
 }
 
 int TestGame::CleanUp()
 {
+	auto& assetManager = *LIWGlobal::GetAssetManager();
+	assetManager.DestroyMaterial("material0");
+	assetManager.DestroyShaderProgram("shaderProgram0");
+	assetManager.DestroyMesh("mesh0");
+	assetManager.DestroyTexture2D("tex0");
+
 	liw_delete(TestGlobal::s_renderer);
 	return 0;
 }
@@ -55,15 +102,22 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 	LIWFiberExecutor::m_executor.Submit(taskUpdateTestSys0);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
 
-	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
-	auto ptrFT_TestRendererRender = liw_new_def<FT_TestRenderRender>();
-	LIWFiberExecutor::m_executor.Submit(ptrFT_TestRendererRender);
-	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
+	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
+	auto ptrTT_OGLForwardRender = new LIW_TT_OGLForwardRender();
+	ptrTT_OGLForwardRender->m_renderer = TestGlobal::s_renderer;
+	LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLForwardRender);
+	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, thisFiber);
 
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Transform);
+	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_MeshRenderer);
+	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Camera);
 	LIW_ECS_ApplyChangeOnComponentManager(TestComponent0);
 
 	auto ptrFT_EdtrUIDrawBeg = liw_new_def<Editor::LIW_FT_EDTR_UIDrawBeg>();
 	ptrFT_EdtrUIDrawBeg->ptrFrameData = m_ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_EdtrUIDrawBeg);
+
+	//auto ptrFT_FrameEnd = liw_new_def<LIW_FT_FrameEnd>();
+	//ptrFT_FrameEnd->ptrFrameData = m_ptrFrameData;
+	//LIWFiberExecutor::m_executor.Submit(ptrFT_FrameEnd);
 }

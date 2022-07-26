@@ -7,16 +7,16 @@
 #include "LIWConstants.h"
 #include "Memory/LIWMemory.h"
 
-enum LIWDArrayExpandType {
-	LIWDArrayExpand_Double,		// 2x capacity
-	LIWDArrayExpand_Half,		// 1.5x capacity
-	LIWDArrayExpand_Quater,		// 1.25x capacity
-	LIWDArrayExpand_Constant,	// by a constant number
-	LIWDArrayExpand_Max
+enum LIWDynamicExpandType {
+	LIWDynamicExpand_Double,		// 2x capacity
+	LIWDynamicExpand_Half,		// 1.5x capacity
+	LIWDynamicExpand_Quater,		// 1.25x capacity
+	LIWDynamicExpand_Constant,	// by a constant number
+	LIWDynamicExpand_Max
 };
 
 template<class T, LIWMemAllocation AllocType = LIWMem_Default, 
-	LIWDArrayExpandType ExpandType = LIWDArrayExpand_Half>
+	LIWDynamicExpandType ExpandType = LIWDynamicExpand_Half>
 class LIWDArray {
 public:
 	typedef LIWDArray<T, AllocType, ExpandType> this_type;
@@ -259,18 +259,18 @@ public:
 	//	set_capacity(capacity);
 	//}
 	inline void expand() {
-		static_assert(ExpandType < LIWDArrayExpand_Max, "Must use a valid LIWDArrayExpandType enum. ");
+		static_assert(ExpandType < LIWDynamicExpand_Max, "Must use a valid LIWDynamicExpandType enum. ");
 		size_t capacityNew = m_capacity;
 		switch (ExpandType)
 		{
-		case LIWDArrayExpand_Double:
+		case LIWDynamicExpand_Double:
 			capacityNew = max(size_t(2 * m_capacity), m_capacity + 1); break;
-		case LIWDArrayExpand_Half:
+		case LIWDynamicExpand_Half:
 			capacityNew = max(size_t(1.5 * m_capacity), m_capacity + 1); break;
-		case LIWDArrayExpand_Quater:
+		case LIWDynamicExpand_Quater:
 			capacityNew = max(size_t(1.25 * m_capacity), m_capacity + 1); break;
-		case LIWDArrayExpand_Constant: {
-			assert(m_sizeExpand != 0); // When ExpandType is LIWDArrayExpand_Constant, m_sizeExpand must be set to non-zero
+		case LIWDynamicExpand_Constant: {
+			assert(m_sizeExpand != 0); // When ExpandType is LIWDynamicExpand_Constant, m_sizeExpand must be set to non-zero
 			capacityNew = m_capacity + m_sizeExpand;
 		} break;
 		}

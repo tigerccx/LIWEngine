@@ -17,6 +17,6 @@ namespace LIW {
 		void PrintLinkLog();
 	private:
 		uint32_t m_handleShaderProgram;
-		LIWDArray<uint32_t> m_handleShaders{ 2 };
+		uint32_t m_handleShaders[5]; //5 Max: Vert, Hull, Domain, Geo, Frag (or one Compute)
 	};
 }

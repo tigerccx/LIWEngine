@@ -10,34 +10,32 @@ namespace LIW {
 		glm::quat m_rotation;
 		glm::vec3 m_scale;
 	public:
-		static inline glm::mat4 GetMatrix(const LIWComponent_Transform& transform) {
-			const glm::mat4 translate = glm::translate(glm::identity<glm::mat4>(), transform.m_location);
-			const glm::mat4 rotation = glm::toMat4(transform.m_rotation);
-			const glm::mat4 scale = glm::scale(glm::identity<glm::mat4>(), transform.m_scale);
+		inline glm::mat4 GetMatrix() {
+			const glm::mat4 translate = glm::translate(glm::identity<glm::mat4>(), m_location);
+			const glm::mat4 rotation = glm::toMat4(m_rotation);
+			const glm::mat4 scale = glm::scale(glm::identity<glm::mat4>(), m_scale);
 			return translate * rotation * scale;
 		}
-		static inline glm::vec3 GetForward(const LIWComponent_Transform& transform) {
-			return (glm::mat4(transform.m_rotation) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
+		inline glm::vec3 GetForward() {
+			return (glm::mat4(m_rotation) * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
 		}
-		static inline glm::vec3 GetRight(const LIWComponent_Transform& transform) {
-			return (glm::mat4(transform.m_rotation) * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
+		inline glm::vec3 GetRight() {
+			return (glm::mat4(m_rotation) * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
 		}
-		static inline glm::vec3 GetUp(const LIWComponent_Transform& transform) {
-			return (glm::mat4(transform.m_rotation) * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+		inline glm::vec3 GetUp() {
+			return (glm::mat4(m_rotation) * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
 		}
-		static LIWComponent_Transform& Translate(LIWComponent_Transform& transform, const glm::vec3& offset) {
-			transform.m_location += offset;
-			return transform;
+		LIWComponent_Transform& Translate(const glm::vec3& offset) {
+			m_location += offset;
+			return *this;
 		}
-
-		static LIWComponent_Transform& Rotate(LIWComponent_Transform& transform, const glm::quat& rotation) {
-			transform.m_rotation = rotation * transform.m_rotation;
-			return transform;
+		LIWComponent_Transform& Rotate(const glm::quat& rotation) {
+			m_rotation = rotation * m_rotation;
+			return *this;
 		}
-
-		static LIWComponent_Transform& Scale(LIWComponent_Transform& transform, const glm::vec3& scale) {
-			transform.m_scale *= scale;
-			return transform;
+		LIWComponent_Transform& Scale(const glm::vec3& scale) {
+			m_scale *= scale;
+			return *this;
 		}
 	};
 }

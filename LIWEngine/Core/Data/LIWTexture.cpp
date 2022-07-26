@@ -54,7 +54,7 @@ namespace LIW {
 		GLint glFormat = LIWImageFormat_2_GLInternalFormat.at(m_format);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, glFormat, m_width, m_height, 0, glFormat, GL_UNSIGNED_BYTE, nullptr);
-		glGenerateMipmap(m_handleTexture);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -67,5 +67,19 @@ namespace LIW {
 		m_handleTexture = sc_invalidHandle;
 		m_width = m_height = -1;
 		m_format = LIWImageFormat_Max;
+	}
+	void LIWTexture2D::Bind(uint32_t rawHandleShader, const char* name, uint32_t imageUnit)
+	{
+		if(!IsValid())
+			throw std::runtime_error("texture not created. ");
+		const uint32_t texUnit = imageUnit;
+		glUniform1i(glGetUniformLocation(rawHandleShader, name), texUnit);	//Setting sampler in shaderPrePixelBump
+		glActiveTexture(GL_TEXTURE0 + texUnit);	//Activating textureTest0 slot on GPU
+		glBindTexture(GL_TEXTURE_2D, m_handleTexture);
+	}
+	void LIWTexture2D::Unbind(uint32_t imageUnit)
+	{
+		glActiveTexture(GL_TEXTURE0 + imageUnit);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

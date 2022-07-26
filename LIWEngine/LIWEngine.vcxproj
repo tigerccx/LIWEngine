@@ -123,6 +123,7 @@
       <ConformanceMode>true</ConformanceMode>
       <OmitFramePointers>false</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,7 +164,9 @@
     <ClCompile Include="Core\Application\LIWApplicationTasks.cpp" />
     <ClCompile Include="Core\Application\Output\TextConsole.cpp" />
     <ClCompile Include="Core\Application\Window.cpp" />
+    <ClCompile Include="Core\Data\LIWAssetManager.cpp" />
     <ClCompile Include="Core\Data\LIWImage.cpp" />
+    <ClCompile Include="Core\Data\LIWMaterial.cpp" />
     <ClCompile Include="Core\Data\LIWMesh.cpp" />
     <ClCompile Include="Core\Data\LIWMeshData.cpp" />
     <ClCompile Include="Core\Data\LIWShader.cpp" />
@@ -183,6 +187,7 @@
     <ClCompile Include="Core\Memory\LIWMemory.cpp" />
     <ClCompile Include="Core\Renderers\LIWRenderer.cpp" />
     <ClCompile Include="Core\Renderers\OGLRenderer.cpp" />
+    <ClCompile Include="Core\Renderers\OGLRenderer_Forward.cpp" />
     <ClCompile Include="Core\Threading\LIWFiberExecutor.cpp" />
     <ClCompile Include="Core\Threading\LIWFiberMain.cpp" />
     <ClCompile Include="Core\Threading\LIWFiberWorker.cpp" />
@@ -230,7 +235,9 @@
     <ClInclude Include="Core\Containers\LIWDArray.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
+    <ClInclude Include="Core\Data\LIWAssetManager.h" />
     <ClInclude Include="Core\Data\LIWImage.h" />
+    <ClInclude Include="Core\Data\LIWMaterial.h" />
     <ClInclude Include="Core\Data\LIWMesh.h" />
     <ClInclude Include="Core\Data\LIWMeshData.h" />
     <ClInclude Include="Core\Data\LIWShader.h" />
@@ -267,6 +274,7 @@
     <ClInclude Include="Core\Memory\LIWMemory.h" />
     <ClInclude Include="Core\Renderers\LIWRenderer.h" />
     <ClInclude Include="Core\Renderers\OGLRenderer.h" />
+    <ClInclude Include="Core\Renderers\OGLRenderer_Forward.h" />
     <ClInclude Include="Core\Threading\LIWFiber.h" />
     <ClInclude Include="Core\Threading\LIWFiberCommon.h" />
     <ClInclude Include="Core\Threading\LIWFiberExecutor.h" />

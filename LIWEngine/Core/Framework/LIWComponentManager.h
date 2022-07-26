@@ -367,10 +367,10 @@ namespace LIW {
 			}
 		}
 
-		LIWDArray<T, LIWMem_Default, LIWDArrayExpand_Constant> m_components;
-		LIWDArray<T, LIWMem_Default, LIWDArrayExpand_Constant> m_componentsInactive;
-		LIWDArray<T, LIWMem_Default, LIWDArrayExpand_Constant> m_componentsAdd;
-		LIWDArray<HandleData, LIWMem_Default, LIWDArrayExpand_Constant> m_handles;
+		LIWDArray<T, LIWMem_Default, LIWDynamicExpand_Constant> m_components;
+		LIWDArray<T, LIWMem_Default, LIWDynamicExpand_Constant> m_componentsInactive;
+		LIWDArray<T, LIWMem_Default, LIWDynamicExpand_Constant> m_componentsAdd;
+		LIWDArray<HandleData, LIWMem_Default, LIWDynamicExpand_Constant> m_handles;
 		// Only allow one entity to have one in one type of components. 
 		std::unordered_map<LIWEntity, liw_objhdl_type> m_entityComponent; //TODO: Build my own container and use that.
 		std::queue<std::pair<LIWEntity, liw_objhdl_type>> m_entityComponentChanges;

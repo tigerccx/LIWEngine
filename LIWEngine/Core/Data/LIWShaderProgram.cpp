@@ -10,14 +10,17 @@ namespace LIW {
 			printf("  %s\n", shaders[i].GetName());
 		}
 
-		// Create program
+		// Create program and attach shaders
 		m_handleShaderProgram = glCreateProgram();
 		// Attach shaders
-		for (int i = 0; i < shaders.size(); i++) {
-			const uint32_t handleShader = shaders[i].GetRawHandle();
+		int idxShader = 0;
+		for (idxShader = 0; idxShader < shaders.size(); idxShader++) {
+			const uint32_t handleShader = shaders[idxShader].GetRawHandle();
 			glAttachShader(m_handleShaderProgram, handleShader);
-			m_handleShaders.push_back(m_handleShaderProgram);
+			m_handleShaders[idxShader] = m_handleShaderProgram;
 		}
+		if (idxShader < 5)
+			m_handleShaders[idxShader] = sc_invalidHandle;
 		// Link
 		glLinkProgram(m_handleShaderProgram);
 		int programState = 0;
@@ -36,12 +39,14 @@ namespace LIW {
 	{
 		if (!IsValid())
 			throw std::runtime_error("shader program not created. ");
-		for (int i = 0; i < m_handleShaders.get_size(); i++) {
-			glDetachShader(m_handleShaderProgram, m_handleShaders[i]);
+		for (int i = 0; i < 5; i++) {
+			if (m_handleShaders[i] != sc_invalidHandle)
+				glDetachShader(m_handleShaderProgram, m_handleShaders[i]);
+			else
+				break;
 		}
 		glDeleteProgram(m_handleShaderProgram);
-		m_handleShaderProgram = sc_invalidHandle;
-		m_handleShaders.clear();
+		m_handleShaderProgram = m_handleShaders[0] = sc_invalidHandle;
 	}
 	void LIWShaderProgram::PrintLinkLog()
 	{

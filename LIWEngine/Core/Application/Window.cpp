@@ -11,12 +11,17 @@ LIW::App::Window::Window(const std::string& name, int width, int height, bool fu
 	this->m_width = width;
 	this->m_height = height;
 
-#ifdef LIW_RENDER_VULKAN
-	// Ask glfw to create no API
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	//TODO: MUST CHANGE LATER! Temp disable resize
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-#endif
+//#ifdef LIW_RENDER_VULKAN
+//	// Ask glfw to create no API
+//	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+//	//TODO: MUST CHANGE LATER! Temp disable resize
+//	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+//#endif
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
 	windowHandle = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 

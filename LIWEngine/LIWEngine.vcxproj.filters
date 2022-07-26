@@ -306,6 +306,15 @@
     <ClCompile Include="Core\Data\LIWTexture.cpp">
       <Filter>Core\Data</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Data\LIWAssetManager.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWMaterial.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Renderers\OGLRenderer_Forward.cpp">
+      <Filter>Core\Renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h">
@@ -598,6 +607,15 @@
     </ClInclude>
     <ClInclude Include="Core\Data\LIWTexture.h">
       <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWAssetManager.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWMaterial.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Renderers\OGLRenderer_Forward.h">
+      <Filter>Core\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

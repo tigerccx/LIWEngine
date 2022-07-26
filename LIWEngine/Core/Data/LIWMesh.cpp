@@ -60,27 +60,28 @@ namespace LIW {
 		sizeBuffer = 0;
 		// Position
 		glBufferSubData(GL_ARRAY_BUFFER, sizeBuffer, sizePositions, positions.get_data());
-		glVertexAttribPointer(LIW_SHADER_VA_LOCATION_POSITION, sizeof(glm::vec3), GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
+		size_t size = sizeof(glm::vec3);
+		glVertexAttribPointer(LIW_SHADER_VA_LOCATION_POSITION, 3, GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
 		glEnableVertexAttribArray(LIW_SHADER_VA_LOCATION_POSITION);
 		sizeBuffer += sizePositions;
 		// Normal
 		if (useNormal) {
 			glBufferSubData(GL_ARRAY_BUFFER, sizeBuffer, sizeNormals, normals.get_data());
-			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_NORMAL, sizeof(glm::vec3), GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
+			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
 			glEnableVertexAttribArray(LIW_SHADER_VA_LOCATION_NORMAL);
 			sizeBuffer += sizeNormals;
 		}
 		// Texcoord
 		if (useTexcoord) {
 			glBufferSubData(GL_ARRAY_BUFFER, sizeBuffer, sizeTexcoords, texcoords.get_data());
-			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_TEXCOORD, sizeof(glm::vec2), GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
+			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_TEXCOORD, 2, GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
 			glEnableVertexAttribArray(LIW_SHADER_VA_LOCATION_TEXCOORD);
 			sizeBuffer += sizeTexcoords;
 		}
 		// Colour
 		if (useColour) {
 			glBufferSubData(GL_ARRAY_BUFFER, sizeBuffer, sizeColours, colours.get_data());
-			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_COLOUR, sizeof(glm::vec3), GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
+			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_COLOUR, 3, GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
 			glEnableVertexAttribArray(LIW_SHADER_VA_LOCATION_COLOUR);
 			sizeBuffer += sizeColours;
 		}
@@ -95,9 +96,9 @@ namespace LIW {
 #endif
 
 		// Unbind buffers
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	void LIWMesh::DestroyMesh()

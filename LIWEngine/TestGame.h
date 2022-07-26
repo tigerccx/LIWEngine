@@ -2,7 +2,8 @@
 
 #include "Framework/LIWGame.h"
 
-#include "TestRenderer.h"
+//#include "TestRenderer.h"
+#include "Renderers/OGLRenderer_Forward.h"
 
 //#include "Framework/LIWEntityManager.h"
 #include "Framework/LIWComponentManager.h"
@@ -28,6 +29,21 @@ public:
     }
     int Initialise() override;
     int CleanUp() override;
+
+    LIWDArray<liw_objhdl_type> m_testComponent0s;
+    LIWDArray<liw_objhdl_type> m_transforms;
+    LIWDArray<liw_objhdl_type> m_meshRenderers;
+    LIWDArray<LIWEntity> m_entities;
+    liw_objhdl_type m_camera;
+
+    liw_objhdl_type m_mesh;
+    liw_objhdl_type m_meshData;
+    liw_objhdl_type m_image;
+    liw_objhdl_type m_tex2D;
+    liw_objhdl_type m_shader_vert;
+    liw_objhdl_type m_shader_frag;
+    liw_objhdl_type m_shaderProgram;
+    liw_objhdl_type m_material;
 };
 
 class FT_TestGameUpdate final:

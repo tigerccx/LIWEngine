@@ -115,6 +115,9 @@ namespace LIW {
 				return -1;
 			}
 
+			// Init AssetManager
+			LIWGlobal::s_assetManager = liw_new_static<LIWAssetManager>();
+
 			// Init game
 			auto ptrGame = liw_new_static<TestGame>();
 			LIWGlobal::s_game = ptrGame;
@@ -165,11 +168,14 @@ namespace LIW {
 			LIWGlobal::s_game->CleanUp();
 			liw_delete(LIWGlobal::s_game);
 
-			// Cleanup Environment
-			liw_delete(LIWGlobal::s_environment);
+			// Cleanup AssetManager
+			liw_delete(LIWGlobal::s_assetManager);
 			
 			// Cleanup Window
 			liw_delete(LIWGlobal::s_environment->m_window);
+
+			// Cleanup Environment
+			liw_delete(LIWGlobal::s_environment);
 
 			// Shutdown GLFW
 			glfwTerminate();
