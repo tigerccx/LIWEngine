@@ -36,6 +36,7 @@ namespace LIW {
 		typedef std::lock_guard<mtx_type> lkgd_type;
 	private:
 		static const uint32_t sc_maskActive; //Mask of active bit
+		static const uint32_t sc_maskAdding; //Mask of is-adding bit
 		static const uint32_t sc_maskOffsetComponent; //Mask of component offset bits
 		struct HandleData {
 			union HandleOffset {
@@ -53,6 +54,15 @@ namespace LIW {
 			inline bool GetActive() const {
 				return m_offset.m_offsetComponent & sc_maskActive;
 			}
+			inline void SetAdding() {
+				m_offset.m_offsetComponent = m_offset.m_offsetComponent | sc_maskAdding;
+			}
+			inline void UnsetAdding() {
+				m_offset.m_offsetComponent = m_offset.m_offsetComponent & (~sc_maskAdding);
+			}
+			inline bool GetAdding() const {
+				return m_offset.m_offsetComponent & sc_maskAdding;
+			}
 			inline void SetOffsetComponent(uint32_t offset) {
 				m_offset.m_offsetComponent =
 					(m_offset.m_offsetComponent & (~sc_maskOffsetComponent)) +
@@ -65,11 +75,13 @@ namespace LIW {
 
 	public:
 		LIWComponentManager(size_t initCapability, size_t expandCount) :
-			m_components{ initCapability }, m_componentsInactive{ initCapability }, m_handles{ initCapability }
+			m_components{ initCapability }, m_componentsInactive{ initCapability }, m_componentsAdd{ expandCount }, m_handles{ initCapability }
 		{
 			m_components.init_expand_size(expandCount);
-			m_handles.init_expand_size(expandCount);
 			m_componentsInactive.init_expand_size(expandCount);
+			m_componentsAdd.init_expand_size(expandCount);
+			
+			m_handles.init_expand_size(expandCount);
 
 			for (uint32_t i = 0; i < initCapability; i++) {
 				m_handles.push_back(HandleData{ i + 1 });
@@ -88,12 +100,12 @@ namespace LIW {
 
 		/// <summary>
 		/// Create component. 
-		/// NOTE: Created component will be appended to the end of m_componentsInactive, which should not affect iteration. 
+		/// NOTE: Created component will be appended to the end of m_componentsAdd, which should not affect iteration. 
 		/// </summary>
 		/// <returns> handle of created component </returns>
 		liw_objhdl_type CreateComponent() {
-			const uint32_t curCountComponents = (uint32_t)m_componentsInactive.get_size();
-			m_componentsInactive.push_back(T{});
+			const uint32_t curCountComponents = (uint32_t)m_componentsAdd.get_size();
+			m_componentsAdd.push_back(T{});
 			liw_objhdl_type handle = m_nextFreeHandle;
 			if (handle == liw_c_nullobjhdl) { // If there is no free handle
 				m_handles.expand(); // Expand to get more
@@ -108,10 +120,11 @@ namespace LIW {
 			// Set next free handle
 			m_nextFreeHandle = m_handles[handle].GetNextFreeHandle();
 			m_handles[handle].SetOffsetComponent(curCountComponents);
+			m_handles[handle].SetAdding();
 			// Init state of created component
-			m_componentsInactive[curCountComponents].SetHandle(handle);
-			m_componentsInactive[curCountComponents].UnmarkRemove();
-			m_componentsInactive[curCountComponents].MarkActive(); // So that ApplyChange will pick this up and add to active list. 
+			m_componentsAdd[curCountComponents].SetHandle(handle);
+			m_componentsAdd[curCountComponents].UnmarkRemove();
+			m_componentsAdd[curCountComponents].MarkActive(); // So that ApplyChange will pick this up and add to active list. 
 			return handle;
 		}
 		// Thread-safe version
@@ -195,7 +208,7 @@ namespace LIW {
 
 		/// <summary>
 		/// Apply marked changes, 
-		/// including entity assigning, removal, deactivation, activation
+		/// including entity assigning, removal, adding, deactivation, activation
 		/// NOTE: Not threadsafe!!! Only need to be done in one thread once per frame
 		/// </summary>
 		void ApplyChange() {
@@ -247,6 +260,22 @@ namespace LIW {
 					itr++;
 				}
 			}
+			
+			//
+			// Add Component (to active list)
+			//
+			while (!m_componentsAdd.is_empty()) {
+				T component = m_componentsAdd[m_componentsAdd.get_size() - 1];
+				// Mark handle
+				const uint32_t handle = component.GetHandle();
+				m_handles[handle].UnsetAdding();
+				m_handles[handle].SetActive();
+				m_handles[handle].SetOffsetComponent((uint32_t)m_components.get_size());
+				// Remove component
+				m_componentsAdd.pop_back();
+				m_components.push_back(std::move(component));
+			}
+
 
 			uint32_t curActiveSize = (uint32_t)m_components.get_size();
 			uint32_t curDeactiveSize = (uint32_t)m_componentsInactive.get_size();
@@ -325,16 +354,22 @@ namespace LIW {
 		inline T& GetComponent(liw_objhdl_type handle) {
 			HandleData& data = m_handles[handle];
 			uint32_t offset = data.GetOffsetComponent();
-			if (data.GetActive()) {
-				return m_components[offset];
+			if (!data.GetAdding()) {
+				if (data.GetActive()) {
+					return m_components[offset];
+				}
+				else {
+					return m_componentsInactive[offset];
+				}
 			}
 			else {
-				return m_componentsInactive[offset];
+				return m_componentsAdd[offset];
 			}
 		}
 
 		LIWDArray<T, LIWMem_Default, LIWDArrayExpand_Constant> m_components;
 		LIWDArray<T, LIWMem_Default, LIWDArrayExpand_Constant> m_componentsInactive;
+		LIWDArray<T, LIWMem_Default, LIWDArrayExpand_Constant> m_componentsAdd;
 		LIWDArray<HandleData, LIWMem_Default, LIWDArrayExpand_Constant> m_handles;
 		// Only allow one entity to have one in one type of components. 
 		std::unordered_map<LIWEntity, liw_objhdl_type> m_entityComponent; //TODO: Build my own container and use that.
@@ -347,5 +382,7 @@ namespace LIW {
 	template<class T>
 	const uint32_t LIWComponentManager<T>::sc_maskActive = 1 << 31;
 	template<class T>
-	const uint32_t LIWComponentManager<T>::sc_maskOffsetComponent = (uint32_t(1) << 31) - 1;
+	const uint32_t LIWComponentManager<T>::sc_maskAdding = 1 << 30;
+	template<class T>
+	const uint32_t LIWComponentManager<T>::sc_maskOffsetComponent = (uint32_t(1) << 30) - 1;
 }

@@ -554,6 +554,9 @@
     <ClInclude Include="Core\Maths\LIWMaths.h">
       <Filter>Core\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="Core\LIWConfig.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

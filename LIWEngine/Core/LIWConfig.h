@@ -7,8 +7,8 @@
 // Render
 // 
 // Render Pipeline
-//#define LIW_RENDER_OPENGL
-#define LIW_RENDER_VULKAN
+#define LIW_RENDER_OPENGL
+//#define LIW_RENDER_VULKAN
 
 //
 // Memory

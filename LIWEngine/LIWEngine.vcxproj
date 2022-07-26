@@ -238,6 +238,7 @@
     <ClInclude Include="Core\Framework\LIWGame.h" />
     <ClInclude Include="Core\Framework\LIWStandardSystem.h" />
     <ClInclude Include="Core\Framework\LIWSystem.h" />
+    <ClInclude Include="Core\LIWConfig.h" />
     <ClInclude Include="Core\LIWConstants.h" />
     <ClInclude Include="Core\LIWExceptions.h" />
     <ClInclude Include="Core\LIWFrame.h" />

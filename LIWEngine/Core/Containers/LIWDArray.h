@@ -300,7 +300,7 @@ public:
 		assert(m_size != 0); // Cannot pop from an empty DArray. 
 		const size_t sizeNew = m_size - 1;
 		T* ptr = get_data();
-		ptr[m_size].~T();
+		ptr[sizeNew].~T();
 		m_size = sizeNew;
 	}
 	//inline void pop_back_thds() {
