@@ -133,9 +133,6 @@
     <Filter Include="Framework\Test\Debug">
       <UniqueIdentifier>{d98bdb2b-85f7-4adb-99a4-ee505112572f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Test\Framework">
-      <UniqueIdentifier>{2daa7ad6-5bab-4258-be03-acd1885ade4e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\ECSFramework\Components">
       <UniqueIdentifier>{646fe375-d17b-46f0-86d8-3b2978058d88}</UniqueIdentifier>
     </Filter>
@@ -144,6 +141,12 @@
     </Filter>
     <Filter Include="Core\Utility\Files">
       <UniqueIdentifier>{e208b90e-062a-407d-ad22-ae89d83665e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Test\Tests">
+      <UniqueIdentifier>{2daa7ad6-5bab-4258-be03-acd1885ade4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Data">
+      <UniqueIdentifier>{a279fe33-5e41-4cb6-b46c-b3ffa8c04c7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +287,24 @@
     </ClCompile>
     <ClCompile Include="Core\Maths\LIWMaths.cpp">
       <Filter>Core\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWImage.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWMesh.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWMeshData.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWShader.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWShaderProgram.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWTexture.cpp">
+      <Filter>Core\Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -507,7 +528,7 @@
       <Filter>Core\ECSFramework\LIWEntity</Filter>
     </ClInclude>
     <ClInclude Include="test_ecs_0.h">
-      <Filter>Framework\Test\Framework</Filter>
+      <Filter>Framework\Test\Tests</Filter>
     </ClInclude>
     <ClInclude Include="Core\Debug\LIWDebugTasks.h">
       <Filter>Core\Debug</Filter>
@@ -556,6 +577,27 @@
     </ClInclude>
     <ClInclude Include="Core\LIWConfig.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="test_anything_0.h">
+      <Filter>Framework\Test\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWImage.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWMesh.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWMeshData.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWShader.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWShaderProgram.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWTexture.h">
+      <Filter>Core\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

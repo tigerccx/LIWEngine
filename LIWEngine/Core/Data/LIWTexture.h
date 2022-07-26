@@ -1,24 +1,32 @@
 #pragma once
-
 #include <stdexcept>
 #include <cassert>
+
+#include "LIWglfw.h"
+
 #include "Maths/LIWMaths.h"
+#include "LIWImage.h"
 
 namespace LIW {
-	class LIWTexture {
+	extern const std::unordered_map<LIWImageFormat, GLint> LIWImageFormat_2_GLInternalFormat;
+
+	class LIWTexture2D {
 	public:
-		void LoadImage(const char* imagePath);
-		void UnloadImage();
+		static const uint32_t sc_invalidHandle = UINT32_MAX;
 	public:
-		inline bool HasImage() const { return m_rawData; }
+		void CreateTexture(int width, int height, LIWImageFormat format);
+		void CreateTexture(const LIWImage& image);
+		void DestroyTexture();
+	public:
+		inline bool IsValid() const { return m_handleTexture != sc_invalidHandle; }
 		inline int GetWidth() const { return m_width; }
 		inline int GetHeight() const { return m_height; }
-		inline int GetChannels() const { return m_channels; }
-		inline void* GetRawData() const { return m_rawData; }
+		inline LIWImageFormat GetFormat() const { return m_format; }
+		inline uint32_t GetRawHandle() const { return m_handleTexture; }
 	private:
+		uint32_t m_handleTexture{ sc_invalidHandle };
 		int m_width{ -1 };
 		int m_height{ -1 };
-		int m_channels{ -1 };
-		void* m_rawData{ nullptr };
+		LIWImageFormat m_format{ LIWImageFormat_Max };
 	};
 };

@@ -24,4 +24,7 @@
 */
 #ifdef LIW_RENDER_OPENGL
 #define LIW_USE_GLEW
+#ifdef _DEBUG
+#define OPENGL_DEBUGGING
+#endif
 #endif

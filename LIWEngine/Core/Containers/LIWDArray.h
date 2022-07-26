@@ -1,6 +1,7 @@
 #pragma once
 #include <mutex>
 #include <cassert>
+#include <minmax.h>
 
 #include "LIWTypes.h"
 #include "LIWConstants.h"
@@ -130,13 +131,13 @@ public:
 
 public:
 	LIWDArray(size_t capacity = 4): m_capacity(capacity), m_size(0) {
-		assert(capacity != 0); // Cannot allocate a DArray with 0 capacity. 
-		m_dataBuffer = liw_malloc<AllocType>(m_capacity * sizeof(T));
+		if (capacity != 0)
+			m_dataBuffer = liw_malloc<AllocType>(m_capacity * sizeof(T));
 	}
 	template<class ... Args>
 	LIWDArray(size_t capacity, size_t size, Args&&... args): m_capacity(capacity), m_size(size) {
-		assert(capacity != 0); // Cannot allocate a DArray with 0 capacity. 
-
+		assert(capacity != 0); // Cannot allocate with 0 capacity. 
+		assert(size <= capacity); // Cannot allocate a bigger size than capacity. 
 		m_dataBuffer = liw_malloc<AllocType>(m_capacity * sizeof(T));
 		T* ptr = get_data();
 		for (size_t i = 0; i < m_size; i++) {
@@ -168,8 +169,10 @@ public:
 	}
 
 	~LIWDArray() {
-		destroy_elements();
-		liw_free<AllocType>(m_dataBuffer);
+		if (m_dataBuffer != liw_c_nullhdl) {
+			destroy_elements();
+			liw_free<AllocType>(m_dataBuffer);
+		}
 	}
 
 	//
@@ -238,11 +241,16 @@ public:
 		assert(capacity >= m_size); // Cannot set capacity smaller than size. 
 		if (capacity == m_capacity)
 			return;
-		liw_hdl_type handleNew = liw_malloc<AllocType>(capacity * sizeof(T));
-		void* ptrDst = liw_maddr<AllocType>(handleNew);
-		void* ptrOrg = get_data();
-		memcpy_s(ptrDst, capacity * sizeof(T), ptrOrg, m_size * sizeof(T));
-		liw_free<AllocType>(m_dataBuffer);
+		liw_hdl_type handleNew = liw_c_nullhdl;
+		if (capacity != 0) {
+			handleNew = liw_malloc<AllocType>(capacity * sizeof(T));
+			void* ptrDst = liw_maddr<AllocType>(handleNew);
+			if (m_dataBuffer != liw_c_nullhdl) {
+				void* ptrOrg = get_data();
+				memcpy_s(ptrDst, capacity * sizeof(T), ptrOrg, m_size * sizeof(T));
+				liw_free<AllocType>(m_dataBuffer);
+			}
+		}
 		m_dataBuffer = handleNew;
 		m_capacity = capacity;
 	}
@@ -256,11 +264,11 @@ public:
 		switch (ExpandType)
 		{
 		case LIWDArrayExpand_Double:
-			capacityNew = size_t(2 * m_capacity); break;
+			capacityNew = max(size_t(2 * m_capacity), m_capacity + 1); break;
 		case LIWDArrayExpand_Half:
-			capacityNew = size_t(1.5 * m_capacity); break;
+			capacityNew = max(size_t(1.5 * m_capacity), m_capacity + 1); break;
 		case LIWDArrayExpand_Quater:
-			capacityNew = size_t(1.25 * m_capacity); break;
+			capacityNew = max(size_t(1.25 * m_capacity), m_capacity + 1); break;
 		case LIWDArrayExpand_Constant: {
 			assert(m_sizeExpand != 0); // When ExpandType is LIWDArrayExpand_Constant, m_sizeExpand must be set to non-zero
 			capacityNew = m_capacity + m_sizeExpand;

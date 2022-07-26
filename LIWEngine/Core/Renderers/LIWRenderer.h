@@ -4,6 +4,8 @@
 #include "Maths/LIWMaths.h"
 #include "Application/Window.h"
 
+#include "Data/LIWTexture.h"
+
 namespace LIW {
 	class LIWRenderer :
 		public LIWStandardSystem
@@ -23,11 +25,11 @@ namespace LIW {
 		virtual void RenderScene() = 0;
 		virtual void Resize(int x, int y) = 0;
 
-		glm::mat4 projMatrix;		//Projection matrix
-		glm::mat4 modelMatrix;	//Model matrix. NOT MODELVIEW
-		glm::mat4 viewMatrix;		//View matrix
-		glm::mat4 textureMatrix;	//Texture matrix
-		glm::mat4 shadowMatrix;
+		glm::mat4 projMatrix{};		//Projection matrix
+		glm::mat4 modelMatrix{};	//Model matrix. NOT MODELVIEW
+		glm::mat4 viewMatrix{};		//View matrix
+		glm::mat4 textureMatrix{};	//Texture matrix
+		glm::mat4 shadowMatrix{};
 
 		int		width = 0;			//Render area width (not quite the same as window width)
 		int		height = 0;			//Render area height (not quite the same as window height)

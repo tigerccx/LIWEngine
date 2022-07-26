@@ -162,6 +162,12 @@
     <ClCompile Include="Core\Application\LIWApplicationTasks.cpp" />
     <ClCompile Include="Core\Application\Output\TextConsole.cpp" />
     <ClCompile Include="Core\Application\Window.cpp" />
+    <ClCompile Include="Core\Data\LIWImage.cpp" />
+    <ClCompile Include="Core\Data\LIWMesh.cpp" />
+    <ClCompile Include="Core\Data\LIWMeshData.cpp" />
+    <ClCompile Include="Core\Data\LIWShader.cpp" />
+    <ClCompile Include="Core\Data\LIWShaderProgram.cpp" />
+    <ClCompile Include="Core\Data\LIWTexture.cpp" />
     <ClCompile Include="Core\Debug\LIWDebug.cpp" />
     <ClCompile Include="Core\Debug\LIWDebugTasks.cpp" />
     <ClCompile Include="Core\Framework\LIWComponent.cpp" />
@@ -224,6 +230,12 @@
     <ClInclude Include="Core\Containers\LIWDArray.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
+    <ClInclude Include="Core\Data\LIWImage.h" />
+    <ClInclude Include="Core\Data\LIWMesh.h" />
+    <ClInclude Include="Core\Data\LIWMeshData.h" />
+    <ClInclude Include="Core\Data\LIWShader.h" />
+    <ClInclude Include="Core\Data\LIWShaderProgram.h" />
+    <ClInclude Include="Core\Data\LIWTexture.h" />
     <ClInclude Include="Core\Debug\LIWDebug.h" />
     <ClInclude Include="Core\Debug\LIWDebugTasks.h" />
     <ClInclude Include="Core\Exceptions.h" />
@@ -283,6 +295,7 @@
     <ClInclude Include="TestGlobal.h" />
     <ClInclude Include="TestRenderer.h" />
     <ClInclude Include="TestSystem0.h" />
+    <ClInclude Include="test_anything_0.h" />
     <ClInclude Include="test_ecs_0.h" />
     <ClInclude Include="test_mem_0.h" />
     <ClInclude Include="test_vulkan_0.h" />

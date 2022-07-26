@@ -41,10 +41,6 @@ _-_-_-_-_-_-_-""  ""
 
 using namespace std;
 
-#ifdef _DEBUG
-#define OPENGL_DEBUGGING
-#endif
-
 extern const glm::mat4 biasMatrix;
 
 namespace LIW {
