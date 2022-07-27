@@ -148,6 +148,9 @@
     <Filter Include="Core\Data">
       <UniqueIdentifier>{a279fe33-5e41-4cb6-b46c-b3ffa8c04c7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ECSFramework\LIWSystem\Systems">
+      <UniqueIdentifier>{1fb3f8d7-c87b-4f07-9275-5e6a176865c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.cpp">
@@ -276,9 +279,6 @@
     <ClCompile Include="TestGlobal.cpp">
       <Filter>Framework\Test\TestGame</Filter>
     </ClCompile>
-    <ClCompile Include="LIWEditor.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Renderers\LIWRenderer.cpp">
       <Filter>Core\Renderers</Filter>
     </ClCompile>
@@ -314,6 +314,12 @@
     </ClCompile>
     <ClCompile Include="Core\Renderers\OGLRenderer_Forward.cpp">
       <Filter>Core\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\LIWEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Framework\Systems\LIWSystem_CameraControl.cpp">
+      <Filter>Core\ECSFramework\LIWSystem\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -572,9 +578,6 @@
     <ClInclude Include="Core\LIWglfw.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="LIWEditor.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Renderers\LIWRenderer.h">
       <Filter>Core\Renderers</Filter>
     </ClInclude>
@@ -619,6 +622,21 @@
     </ClInclude>
     <ClInclude Include="test_maths.h">
       <Filter>Framework\Test\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\LIWEditor.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Components\LIWComponent_Camera.h">
+      <Filter>Core\ECSFramework\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Components\LIWComponent_MeshRenderer.h">
+      <Filter>Core\ECSFramework\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Components\LIWComponent_CameraController.h">
+      <Filter>Core\ECSFramework\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Systems\LIWSystem_CameraControl.h">
+      <Filter>Core\ECSFramework\LIWSystem\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -92,7 +92,7 @@ namespace LIW {
 			//UpdateFrame the relativePosition...call this each frame!
 			virtual void	UpdatePosition();
 			//Sends the mouse to sleep (i.e window has been alt-tabbed away etc)
-			virtual void	Sleep();
+			virtual void	Sleep() override;
 
 			//Updates the doubleclicks array. Call once per frame!
 			void			UpdateDoubleClick(float dt);

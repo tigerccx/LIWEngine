@@ -4,6 +4,8 @@
 
 #include "LIWEditorTasks.h"
 
+#include "TestGlobal.h"
+
 void LIW::Editor::LIW_FT_EDTR_UIDrawBeg::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
@@ -60,6 +62,23 @@ void LIW::Editor::LIW_TT_ImguiDrawEndAndPresent::Execute()
 void LIW::Editor::LIWTEST_TT_TestDrawUI::Execute()
 {
 	ImGui::Begin("Test");
+
+	if (TestGlobal::cam != liw_c_nullobjhdl) {
+		auto& trans = LIW_ECS_GetComponent(LIWComponent_Transform, TestGlobal::cam);
+		glm::vec3 rot = Maths::QuatToEulerXZY(trans.m_rotation);
+		ImGui::Text("Cam Angles: %.5f, %.5f, %.5f", Maths::RadToDeg(rot.x), Maths::RadToDeg(rot.y), Maths::RadToDeg(rot.z));
+		ImGui::Text("Cam Pos: %.5f, %.5f, %.5f", trans.m_location.x , trans.m_location.y, trans.m_location.z);
+	}
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::Text("WantCaptureMouse: %d", io.WantCaptureMouse);
+	ImGui::Text("WantCaptureMouseUnlessPopupClose: %d", io.WantCaptureMouseUnlessPopupClose);
+	ImGui::Text("WantCaptureKeyboard: %d", io.WantCaptureKeyboard);
+	ImGui::Text("WantTextInput: %d", io.WantTextInput);
+	ImGui::Text("WantSetMousePos: %d", io.WantSetMousePos);
+	ImGui::Text("NavActive: %d, NavVisible: %d", io.NavActive, io.NavVisible);
+
 	ImGui::End();
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
 }

@@ -31,6 +31,8 @@ LIW::App::Mouse_GLFW::Mouse_GLFW(GLFWwindow* window):
 	glfwSetCursorPosCallback(window, MouseMovementCallback);
 	glfwSetScrollCallback(window, MouseScrollCallback);
 	mouses[window] = this;
+
+	Wake();
 }
 
 LIW::MouseButtons LIW::App::Mouse_GLFW::ToMouseCode(int mousebtnGLFW)

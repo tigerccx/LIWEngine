@@ -52,23 +52,29 @@ int TestGame::Initialise()
 	LIW_ECS_CreateComponents(LIWComponent_Transform, m_transforms, 2);
 	LIW_ECS_CreateComponents(LIWComponent_MeshRenderer, m_meshRenderers, 1);
 	m_camera = LIW_ECS_CreateComponent(LIWComponent_Camera);
+	m_cameraController = LIW_ECS_CreateComponent(LIWComponent_CameraController);
 
 	// Camera
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[0], m_entities[0]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Camera, m_camera, m_entities[0]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_CameraController, m_cameraController, m_entities[0]);
 	auto& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[0]);
-	transCam.m_location = glm::vec3(0, 0, 5);
+	transCam.m_location = glm::vec3(0.0f, 0.0f, 5.0f);
 	auto& cam = LIW_ECS_GetComponent(LIWComponent_Camera, m_camera);
 	float w = TestGlobal::s_renderer->GetWidth();
 	float h = TestGlobal::s_renderer->GetHeight();
 	LIWCameraParam_Perspective camParam{ 30.0f, w / h };
 	cam.SetPerspective(camParam);
+	auto& camCtrl = LIW_ECS_GetComponent(LIWComponent_CameraController, m_cameraController);
+	camCtrl.m_isSelected = true;
+	TestGlobal::cam = m_transforms[0];
 
 	// Object
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[1], m_entities[1]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[0], m_entities[1]);
 	auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[1]);
-	transObj.m_location = glm::vec3(0, 0, -5);
+	transObj.m_location = glm::vec3(0.0f, 0.0f, 0.0f);
+	transObj.m_rotation = glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(0.0f), glm::radians(0.0f)));
 	auto& meshRenderer = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[0]);
 	meshRenderer.m_handleMaterial = m_material;
 	meshRenderer.m_handleMesh = m_mesh;
@@ -101,22 +107,47 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 
-	LIWFiberExecutor::m_executor.IncreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
+	//
+	// System updates
+	//
+
+	// Update LIWCameraControl
+	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_SYSTEM_UPDATE, 1);
+	auto taskUpdateCamCtrl = liw_new_def<LIW_FT_LIWSystem_CameraControl_Update>();
+	LIWFiberExecutor::m_executor.Submit(taskUpdateCamCtrl);
+	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_SYSTEM_UPDATE, thisFiber);
+
+	// Update TestSystem0
+	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_SYSTEM_UPDATE, 1);
 	auto taskUpdateTestSys0 = liw_new_def<FT_TestSystem0Update>();
 	taskUpdateTestSys0->m_ptrFrameData = m_ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(taskUpdateTestSys0);
-	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_SYSTEM, thisFiber);
+	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_SYSTEM_UPDATE, thisFiber);
 
+
+	//
+	// Render
+	//
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
 	auto ptrTT_OGLForwardRender = new LIW_TT_OGLForwardRender();
 	ptrTT_OGLForwardRender->m_renderer = TestGlobal::s_renderer;
 	LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLForwardRender);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, thisFiber);
 
+
+	//
+	// Component update
+	//
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Transform);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_MeshRenderer);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Camera);
+	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_CameraController);
 	LIW_ECS_ApplyChangeOnComponentManager(TestComponent0);
+
+	
+	//
+	// Kick off editor
+	//
 
 	auto ptrFT_EdtrUIDrawBeg = liw_new_def<Editor::LIW_FT_EDTR_UIDrawBeg>();
 	ptrFT_EdtrUIDrawBeg->ptrFrameData = m_ptrFrameData;

@@ -180,6 +180,7 @@
     <ClCompile Include="Core\Framework\LIWEntityManager.cpp" />
     <ClCompile Include="Core\Framework\LIWGame.cpp" />
     <ClCompile Include="Core\Framework\LIWStandardSystem.cpp" />
+    <ClCompile Include="Core\Framework\Systems\LIWSystem_CameraControl.cpp" />
     <ClCompile Include="Core\LIWCore.cpp" />
     <ClCompile Include="Core\LIWFrame.cpp" />
     <ClCompile Include="Core\LIWGlobal.cpp" />
@@ -197,8 +198,8 @@
     <ClCompile Include="Core\Time\LIWTime.cpp" />
     <ClCompile Include="Core\Utility.cpp" />
     <ClCompile Include="Core\Utility\LIWFile.cpp" />
+    <ClCompile Include="Editor\LIWEditor.cpp" />
     <ClCompile Include="Editor\LIWEditorTasks.cpp" />
-    <ClCompile Include="LIWEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestAromics.cpp" />
     <ClCompile Include="TestGame.cpp" />
@@ -246,6 +247,9 @@
     <ClInclude Include="Core\Debug\LIWDebug.h" />
     <ClInclude Include="Core\Debug\LIWDebugTasks.h" />
     <ClInclude Include="Core\Exceptions.h" />
+    <ClInclude Include="Core\Framework\Components\LIWComponent_Camera.h" />
+    <ClInclude Include="Core\Framework\Components\LIWComponent_CameraController.h" />
+    <ClInclude Include="Core\Framework\Components\LIWComponent_MeshRenderer.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_Transform.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
     <ClInclude Include="Core\Framework\LIWComponentCollection.h" />
@@ -257,6 +261,7 @@
     <ClInclude Include="Core\Framework\LIWGame.h" />
     <ClInclude Include="Core\Framework\LIWStandardSystem.h" />
     <ClInclude Include="Core\Framework\LIWSystem.h" />
+    <ClInclude Include="Core\Framework\Systems\LIWSystem_CameraControl.h" />
     <ClInclude Include="Core\LIWConfig.h" />
     <ClInclude Include="Core\LIWConstants.h" />
     <ClInclude Include="Core\LIWExceptions.h" />
@@ -290,9 +295,9 @@
     <ClInclude Include="Core\Time\LIWTime.h" />
     <ClInclude Include="Core\Utility.h" />
     <ClInclude Include="Core\Utility\LIWFile.h" />
+    <ClInclude Include="Editor\LIWEditor.h" />
     <ClInclude Include="Editor\LIWEditorTasks.h" />
     <ClInclude Include="LIWCore.h" />
-    <ClInclude Include="LIWEditor.h" />
     <ClInclude Include="MultiThreadRunner.h" />
     <ClInclude Include="SingleThreadRunner.h" />
     <ClInclude Include="TestAtomics.h" />

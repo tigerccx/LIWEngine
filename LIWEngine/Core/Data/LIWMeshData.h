@@ -23,7 +23,7 @@ namespace LIW {
 	//NOTE: Assumes there will be index
 	class LIWMeshData {
 	public:
-		void LoadMeshData_Obj(const char* objPath);
+		void LoadMeshData_Obj(const char* objPath, bool flipTexcoord = true);
 		void UnloadMeshData();
 	public:
 		inline bool IsValid() const { return m_primitiveType != LIWPreimitiveType_Max; }

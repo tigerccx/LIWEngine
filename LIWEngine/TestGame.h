@@ -7,6 +7,7 @@
 
 //#include "Framework/LIWEntityManager.h"
 #include "Framework/LIWComponentManager.h"
+#include "Framework/Systems/LIWSystem_CameraControl.h"
 #include "TestComponent0.h"
 #include "TestSystem0.h"
 #include "Threading/LIWFiberCommon.h"
@@ -35,6 +36,7 @@ public:
     LIWDArray<liw_objhdl_type> m_meshRenderers;
     LIWDArray<LIWEntity> m_entities;
     liw_objhdl_type m_camera;
+    liw_objhdl_type m_cameraController;
 
     liw_objhdl_type m_mesh;
     liw_objhdl_type m_meshData;

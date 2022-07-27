@@ -21,7 +21,7 @@ namespace LIW {
 		float aspectRatio = 0; // W/H
 	};
 
-	class LIWComponent_Camera :public LIWComponent {
+	class LIWComponent_Camera final: public LIWComponent {
 	public:
 		union CameraParameter {
 			LIWCameraParam_Perspective m_perspective;

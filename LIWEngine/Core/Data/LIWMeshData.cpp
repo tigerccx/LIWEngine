@@ -4,7 +4,7 @@
 #include "LIWMeshData.h"
 
 namespace LIW {
-	void LIWMeshData::LoadMeshData_Obj(const char* objPath)
+	void LIWMeshData::LoadMeshData_Obj(const char* objPath, bool flipTexcoord)
 	{
 		//TODO: for now the loading is taking up more space than required (repeated vertex...)
 
@@ -61,7 +61,7 @@ namespace LIW {
 				if (useTexcoord) {
 					m_texcoords.push_back(glm::vec2(
 						attrib.texcoords[(size_t)index.texcoord_index * 2],
-						attrib.texcoords[(size_t)index.texcoord_index * 2 + 1]
+						flipTexcoord ? 1.0f - attrib.texcoords[(size_t)index.texcoord_index * 2 + 1] : attrib.texcoords[(size_t)index.texcoord_index * 2 + 1]
 					));
 				}
 				// Colour

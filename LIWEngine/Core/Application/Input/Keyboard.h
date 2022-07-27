@@ -69,7 +69,7 @@ namespace LIW {
 			//OnUpdate the keyStates array etc...input callback!
 			virtual void OnUpdateKey(KeyboardKeys key, KeyboardActions action);
 			//Sends the keyboard to sleep
-			virtual void Sleep();
+			virtual void Sleep() override;
 
 			bool keyStates[KEYBOARD_MAX];		//Is the key down?
 			bool releaseStates[KEYBOARD_MAX];		//Is the key released in this update?

@@ -5,7 +5,7 @@
 #include <atomic>
 #include <chrono>
 
-#include "LIWEditor.h"
+#include "Editor/LIWEditor.h"
 
 #include "Application/Window.h"
 #include "Application/Environment.h"

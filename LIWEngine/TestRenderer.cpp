@@ -61,7 +61,7 @@ void FT_TestRenderUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 
 	TestGlobal::s_renderer->Update(m_ptrFrameData->m_timeDelta);
 
-	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_UPDATE, 1);
+	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_SYSTEM_UPDATE, 1);
 }
 
 void FT_TestRenderRender::Execute(LIWFiberWorkerPointer thisFiber)

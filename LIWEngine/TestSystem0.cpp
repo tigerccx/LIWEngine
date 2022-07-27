@@ -22,7 +22,7 @@ void FT_TestSystem0Update::Execute(LIWFiberWorkerPointer thisFiber)
 
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(TEST_SYNC_COUNTER_TESTSYSTEM0, thisFiber);
 
-	LIWFiberExecutor::m_executor.DecreaseSyncCounter(TEST_SYNC_COUNTER_SYSTEM, 1);
+	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_SYSTEM_UPDATE, 1);
 }
 
 void FT_TestSystem0Update_TestComponent0::Execute(LIWFiberWorkerPointer thisFiber)
