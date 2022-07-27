@@ -23,7 +23,8 @@ LIW::App::Window::Window(const std::string& name, int width, int height, bool fu
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-	windowHandle = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
+	GLFWmonitor* screen = fullScreen ? glfwGetPrimaryMonitor() : nullptr;
+	windowHandle = glfwCreateWindow(width, height, name.c_str(), screen, nullptr);
 
 	if (!windowHandle) {
 		std::cout << "GLFW window init failed!" << std::endl;

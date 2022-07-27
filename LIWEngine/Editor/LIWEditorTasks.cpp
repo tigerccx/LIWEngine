@@ -22,6 +22,7 @@ void LIW::Editor::LIW_FT_EDTR_UIDraw::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
 	auto ptrTT_TestDrawUI = new LIWTEST_TT_TestDrawUI();
+	ptrTT_TestDrawUI->ptrFrameData = ptrFrameData;
 	LIWMainThreadExecutor::m_executor.Submit(ptrTT_TestDrawUI);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, thisFiber);
 
@@ -63,12 +64,19 @@ void LIW::Editor::LIWTEST_TT_TestDrawUI::Execute()
 {
 	ImGui::Begin("Test");
 
+	ImGui::Text("Framerate: %.2f", 1.0f / ptrFrameData->m_timeDelta);
+
+
+	ImGui::Separator();
+
 	if (TestGlobal::cam != liw_c_nullobjhdl) {
 		auto& trans = LIW_ECS_GetComponent(LIWComponent_Transform, TestGlobal::cam);
 		glm::vec3 rot = Maths::QuatToEulerXZY(trans.m_rotation);
 		ImGui::Text("Cam Angles: %.5f, %.5f, %.5f", Maths::RadToDeg(rot.x), Maths::RadToDeg(rot.y), Maths::RadToDeg(rot.z));
 		ImGui::Text("Cam Pos: %.5f, %.5f, %.5f", trans.m_location.x , trans.m_location.y, trans.m_location.z);
 	}
+
+	ImGui::Separator();
 
 	ImGuiIO& io = ImGui::GetIO();
 

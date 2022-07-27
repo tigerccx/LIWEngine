@@ -143,7 +143,7 @@ inline void liw_minit_def_thd(int idxThread) {
 }
 
 inline void liw_mupdate_def_thd(int idxThread) {
-	printf("RunGC %d\n", idxThread);
+	//printf("RunGC %d\n", idxThread);
 	DefaultMemBuffer::s_defaultBufferLAllocators[idxThread].GC_P1();
 }
 

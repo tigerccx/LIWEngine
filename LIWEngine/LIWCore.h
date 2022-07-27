@@ -95,7 +95,8 @@ namespace LIW {
 			// Init Environment
 			LIWGlobal::s_environment = liw_new_static<App::Environment>();
 			/* Window */
-			auto ptrWindow = liw_new_static<LIW::App::Window>("My First GLFW Window", 1280, 720, false);
+			//auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1280, 720, false);
+			auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1960, 1080, true);
 			LIWGlobal::s_environment->m_window = ptrWindow;
 			if (!ptrWindow->Initialised()) {
 				return -1;

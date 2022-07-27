@@ -72,6 +72,7 @@ namespace LIW {
 		{
 		public:
 			void Execute() override;
+			LIWPointer<LIWFrameData, LIWMem_Frame> ptrFrameData;
 		};
 	}
 }
