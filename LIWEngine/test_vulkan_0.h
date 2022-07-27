@@ -1,14 +1,26 @@
 #pragma once
+#include "LIWConfig.h"
+
 #include <cstdio>
 
 #define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-#include <glm/mat4x4.hpp>
+#include <Maths/LIWMaths.h>
 
 #include "Memory/LIWMemory.h"
 #include "Threading/LIWThread.h"
+
+#include "LIWglfw.h"
+
+#include "Application/Window.h"
+#include "Renderers/VulkanRenderer.h"
+
+using namespace LIW;
+
+void glfw_error_callback(int error, const char* description)
+{
+	fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+}
 
 void test() {
 	printf("%llu\n", sizeof(LIWPointer<int, LIWMem_Default>));
@@ -32,21 +44,69 @@ void test() {
 
 
 	{
-		glfwInit();
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		GLFWwindow* window = glfwCreateWindow(1024, 720, "Vulkan", nullptr, nullptr);
-		uint32_t extCount = 0;
-		vkEnumerateInstanceExtensionProperties(nullptr, &extCount, nullptr);
-		printf("Extension count: %i\n", extCount);
-		glm::mat4 testMatrix(1.0f);
-		glm::vec4 testVec(1.0f);
-		auto testRes = testMatrix * testVec;
+		//glfwInit();
+		//glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		//GLFWwindow* window = glfwCreateWindow(1024, 720, "Vulkan", nullptr, nullptr);
+		//uint32_t extCount = 0;
+		//vkEnumerateInstanceExtensionProperties(nullptr, &extCount, nullptr);
+		//printf("Extension count: %i\n", extCount);
+		//glm::mat4 testMatrix(1.0f);
+		//glm::vec4 testVec(1.0f);
+		//auto testRes = testMatrix * testVec;
 
-		while (!glfwWindowShouldClose(window)) {
-			glfwPollEvents();
+		//while (!glfwWindowShouldClose(window)) {
+		//	glfwPollEvents();
+		//}
+
+		//glfwDestroyWindow(window);
+
+		//glfwTerminate();
+	}
+
+	{
+		//
+		// Setup
+		//
+		glfwSetErrorCallback(glfw_error_callback);
+		if (!glfwInit()) {
+			std::cout << "GLFW init failed!" << std::endl;
+			glfwTerminate();
+			throw "GLFW init failed. ";
 		}
 
-		glfwDestroyWindow(window);
+		/* Window */
+		auto ptrWindow = liw_new_static<LIW::App::Window>("My First GLFW Window", 1280, 720, false);
+		if (!ptrWindow->Initialised()) {
+			glfwTerminate();
+			throw "Window creation failed. ";
+		}
+		/* Make the window's context current */
+		ptrWindow->SetCurrent();
+		/* Create environment */
+
+
+
+		/*BEG*/
+		{
+			VulkanRenderer test(*ptrWindow);
+			bool running = true;
+			while (running) {
+				glfwPollEvents();
+				running = !glfwWindowShouldClose(ptrWindow->GetHandle());
+
+				test.RendererUpdate(0);
+			}
+
+			test.WaitUntilIdle();
+		}
+		/*END*/
+
+
+
+		//
+		// Cleanup
+		//
+		liw_delete(ptrWindow);
 
 		glfwTerminate();
 	}
@@ -65,3 +125,4 @@ void test() {
 	liw_mclnup_static();
 	liw_mclnup_def();
 }
+

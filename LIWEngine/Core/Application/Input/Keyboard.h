@@ -29,8 +29,6 @@ _-_-_-_-_-_-_-""  ""
 
 #include "InputDevice.h"
 
-#include "LIWglfw.h"
-
 #include "Keycode.h"
 
 namespace LIW {
