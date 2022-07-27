@@ -122,7 +122,7 @@ namespace LIW {
 		template<class T>
 		inline liw_objhdl_type CreateAsset(const char* name, T& assets, LIWAssetType type) {
 			if (assets.is_empty()) {
-				uint32_t capacity = assets.get_capacity();
+				uint32_t capacity = (uint32_t)assets.get_capacity();
 				assets.set_capacity(uint32_t(capacity * 1.5f));
 			}
 			liw_objhdl_type handle = assets.fetch_object();

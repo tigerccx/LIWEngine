@@ -2,6 +2,8 @@
 /*
 * Freelist Allocator with Handle
 */
+#include "LIWConfig.h"
+
 #include <cstdio>
 #include <iostream>
 #include <atomic>
@@ -268,7 +270,7 @@ namespace LIW {
 					for (size_t idx = 0; idx < c_blockCount; idx++, ptr = ptrNext, ptrNext += c_blockSize) { // Set element availabilities
 						m_availability[idx] = true; // Mark as free
 
-#ifdef _DEBUG
+#ifdef LIW_DEBUG_DEFAULT_ALLOCATOR_MEMSET
 						memset(ptr, 0xfafafafa, c_blockSize);
 #endif
 					}
@@ -554,7 +556,7 @@ namespace LIW {
 								m_idxBlocksFree = idxCursor;
 							}
 
-#ifdef _DEBUG
+#ifdef LIW_DEBUG_DEFAULT_ALLOCATOR_MEMSET
 							memset(OffsetFromSegInfo(segDefragTo), 0xfafafafa, segDefragTo->m_size);
 #endif
 						}

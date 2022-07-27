@@ -28,13 +28,14 @@ namespace LIW {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		// Set clear
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
+		glClearColor(0.5f, 0.1f, 0.2f, 1.0f);
 		//Enable z-test
 		glEnable(GL_DEPTH_TEST);
 
 		//Enable back culling
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		//glEnable(GL_CULL_FACE);
+		glDisable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
 
 		//Enable blending
 		glEnable(GL_BLEND);
@@ -99,7 +100,7 @@ namespace LIW {
 				size_t size = submeshes[i].m_idxEnd - submeshes[i].m_idxBeg;
 				const GLvoid* offset = (const GLvoid*)(submeshes[i].m_idxBeg * sizeof(unsigned int));
 				glDrawElements(mode,
-					size,
+					(int)size,
 					GL_UNSIGNED_INT,
 					offset);
 			}

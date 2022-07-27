@@ -21,6 +21,9 @@ namespace LIW {
 
 		inline bool HasInitialised() const { return init; }
 
+		inline int GetWidth() const { return width; }
+		inline int GetHeight() const { return height; }
+
 	protected:
 		virtual void RenderScene() = 0;
 		virtual void Resize(int x, int y) = 0;

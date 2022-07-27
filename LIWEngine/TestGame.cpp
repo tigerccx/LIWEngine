@@ -57,13 +57,18 @@ int TestGame::Initialise()
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[0], m_entities[0]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Camera, m_camera, m_entities[0]);
 	auto& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[0]);
-	transCam.m_location = glm::vec3(0, 0, -10);
+	transCam.m_location = glm::vec3(0, 0, 5);
+	auto& cam = LIW_ECS_GetComponent(LIWComponent_Camera, m_camera);
+	float w = TestGlobal::s_renderer->GetWidth();
+	float h = TestGlobal::s_renderer->GetHeight();
+	LIWCameraParam_Perspective camParam{ 30.0f, w / h };
+	cam.SetPerspective(camParam);
 
 	// Object
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[1], m_entities[1]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[0], m_entities[1]);
 	auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[1]);
-	transObj.m_location = glm::vec3(0, 0, 5);
+	transObj.m_location = glm::vec3(0, 0, -5);
 	auto& meshRenderer = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[0]);
 	meshRenderer.m_handleMaterial = m_material;
 	meshRenderer.m_handleMesh = m_mesh;

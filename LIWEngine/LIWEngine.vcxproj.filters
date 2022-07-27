@@ -617,6 +617,9 @@
     <ClInclude Include="Core\Renderers\OGLRenderer_Forward.h">
       <Filter>Core\Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="test_maths.h">
+      <Filter>Framework\Test\Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

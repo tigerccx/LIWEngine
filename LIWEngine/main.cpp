@@ -22,6 +22,11 @@ int main() {
 //	test();
 //}
 
+//#include "test_maths.h"
+//int main() {
+//	test();
+//}
+
 //#include "test_vulkan_0.h"
 //int main() {
 //	test();

@@ -6,9 +6,9 @@
 namespace LIW {
 	class LIWComponent_Transform : public LIWComponent {
 	public:
-		glm::vec3 m_location;
-		glm::quat m_rotation;
-		glm::vec3 m_scale;
+		glm::vec3 m_location{ 0,0,0 };
+		glm::quat m_rotation{ 1,0,0,0 };
+		glm::vec3 m_scale{ 1,1,1 };
 	public:
 		inline glm::mat4 GetMatrix() {
 			const glm::mat4 translate = glm::translate(glm::identity<glm::mat4>(), m_location);

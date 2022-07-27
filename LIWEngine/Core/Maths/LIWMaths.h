@@ -1,5 +1,8 @@
 #pragma once
 
+//TODO: Make GLM use SIMD
+//#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
+//#define GLM_FORCE_SIMD_AVX2
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>

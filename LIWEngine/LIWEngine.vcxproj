@@ -119,7 +119,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>DEBUG_PRINT_MEMORY_INFO;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <OmitFramePointers>false</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
@@ -305,6 +305,7 @@
     <ClInclude Include="TestSystem0.h" />
     <ClInclude Include="test_anything_0.h" />
     <ClInclude Include="test_ecs_0.h" />
+    <ClInclude Include="test_maths.h" />
     <ClInclude Include="test_mem_0.h" />
     <ClInclude Include="test_vulkan_0.h" />
   </ItemGroup>

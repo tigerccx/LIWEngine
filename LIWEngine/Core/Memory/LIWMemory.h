@@ -1,4 +1,6 @@
 #pragma once
+#include "LIWConfig.h"
+
 #include <memory>
 #include <vector>
 #include <array>

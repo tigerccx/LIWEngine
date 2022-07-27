@@ -17,6 +17,9 @@
 #define DEBUG_PRINT_MEMORY_INFO
 #endif
 
+// Enable memset for debugging
+//#define LIW_DEBUG_DEFAULT_ALLOCATOR_MEMSET
+
 
 
 /*
