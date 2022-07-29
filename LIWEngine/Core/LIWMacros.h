@@ -1,9 +1,20 @@
 #pragma once
 
 ////
+//Paths
+////
+//Default Asset Paths
+#define LIW_PATH_DIR_DEFAULT_SHADERS		"./Assets/Shaders/"
+#define LIW_PATH_DIR_DEFAULT_MESHES			"./Assets/Meshes/"
+#define LIW_PATH_DIR_DEFAULT_TEXTURES		"./Assets/Textures/"
+//Resource Asset Paths
+#define LIW_PATH_DIR_RESOURCE_SHADERS		"../../Resources/Shaders/"
+#define LIW_PATH_DIR_RESOURCE_MESHES		"../../Resources/Meshes/"
+#define LIW_PATH_DIR_RESOURCE_TEXTURES		"../../Resources/Textures/"
+
+////
 //Shader variable names
 ////
-//
 //Vertex Assembly
 #define LIW_SHADER_VA_LOCATION_POSITION 0
 #define LIW_SHADER_VA_LOCATION_NORMAL 1
@@ -11,8 +22,13 @@
 #define LIW_SHADER_VA_LOCATION_COLOUR 3
 //Uniform Buffer Names
 #define LIW_SHADER_UB_NAME_CAMERADATA "CameraBlock"
-//UBO Bind Point
+#define LIW_SHADER_UB_NAME_FORWARD_PERPIX_LIGHTDATA "ForwardLightBlockPerPixel"
+//Uniform Buffer Bind Point (GPU side)
+#define LIW_SHADER_UB_BIND_CAMERADATA 0
+#define LIW_SHADER_UB_BIND_FORWARD_PERPIX_LIGHTDATA 1
+//UBO Bind Point (CPU side)
 #define LIW_SHADER_UBO_BIND_CAMERADATA 0
+#define LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA 1
 //Common Matrix
 #define LIW_SHADER_MODEL_MATRIX "modelMatrix"
 #define LIW_SHADER_VIEW_MATRIX "viewMatrix"
@@ -64,3 +80,16 @@
 //Texture
 #define LIW_CUBETEX_UNIT_BEGIN 10
 #define LIW_CUBETEX_UNIT_LOAD 31
+
+
+////
+//Mesh
+////
+//MeshData Names
+#define LIW_MESHDATA_SPHERE		"liw_meshdata_sphere"
+#define LIW_MESHDATA_CUBE		"liw_meshdata_cube"
+#define LIW_MESHDATA_PLANE		"liw_meshdata_plane"
+//Mesh Names
+#define LIW_MESH_SPHERE			"liw_mesh_sphere"
+#define LIW_MESH_CUBE			"liw_meshd_cube"
+#define LIW_MESH_PLANE			"liw_mesh_plane"

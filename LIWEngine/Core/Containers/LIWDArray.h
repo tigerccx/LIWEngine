@@ -8,15 +8,15 @@
 #include "Memory/LIWMemory.h"
 
 enum LIWDynamicExpandType {
-	LIWDynamicExpand_Double,		// 2x capacity
-	LIWDynamicExpand_Half,		// 1.5x capacity
-	LIWDynamicExpand_Quater,		// 1.25x capacity
-	LIWDynamicExpand_Constant,	// by a constant number
-	LIWDynamicExpand_Max
+	LIWDynamicExpandType_Double,		// 2x capacity
+	LIWDynamicExpandType_Half,		// 1.5x capacity
+	LIWDynamicExpandType_Quater,		// 1.25x capacity
+	LIWDynamicExpandType_Constant,	// by a constant number
+	LIWDynamicExpandType_Max
 };
 
 template<class T, LIWMemAllocation AllocType = LIWMem_Default, 
-	LIWDynamicExpandType ExpandType = LIWDynamicExpand_Half>
+	LIWDynamicExpandType ExpandType = LIWDynamicExpandType_Half>
 class LIWDArray {
 public:
 	typedef LIWDArray<T, AllocType, ExpandType> this_type;
@@ -153,13 +153,21 @@ public:
 			destroy_elements();
 			liw_free<AllocType>(m_dataBuffer);
 		}
-		assert(other.m_capacity != 0); // Cannot copy a DArray with 0 capacity. NOTE: This shouldn't be possible
-		m_dataBuffer = liw_malloc<AllocType>(other.m_capacity * sizeof(T));
-		m_capacity = other.m_capacity;
-		void* ptrDst = get_data();
-		const void* ptrOther = other.get_data();
-		memcpy_s(ptrDst, m_capacity * sizeof(T), ptrOther, other.m_capacity * sizeof(T));
+		if (other.m_dataBuffer != liw_c_nullhdl) {
+			assert(other.m_capacity != 0); // Cannot copy a DArray with 0 capacity. NOTE: This shouldn't be possible
+			m_dataBuffer = liw_malloc<AllocType>(other.m_capacity * sizeof(T));
+			m_capacity = other.m_capacity;
+			void* ptrDst = get_data();
+			const void* ptrOther = other.get_data();
+			memcpy_s(ptrDst, m_capacity * sizeof(T), ptrOther, other.m_capacity * sizeof(T));
+		}
+		else {
+			assert(other.m_capacity == 0); //NOTE: This shouldn't be possible
+			m_dataBuffer = liw_c_nullhdl;
+			m_capacity = other.m_capacity;
+		}
 		m_size = other.m_size;
+		m_sizeExpand = other.m_sizeExpand;
 		return *this;
 	}
 	LIWDArray& operator=(LIWDArray&& other) = default;
@@ -259,22 +267,36 @@ public:
 	//	set_capacity(capacity);
 	//}
 	inline void expand() {
-		static_assert(ExpandType < LIWDynamicExpand_Max, "Must use a valid LIWDynamicExpandType enum. ");
+		static_assert(ExpandType < LIWDynamicExpandType_Max, "Must use a valid LIWDynamicExpandType enum. ");
 		size_t capacityNew = m_capacity;
 		switch (ExpandType)
 		{
-		case LIWDynamicExpand_Double:
+		case LIWDynamicExpandType_Double:
 			capacityNew = max(size_t(2 * m_capacity), m_capacity + 1); break;
-		case LIWDynamicExpand_Half:
+		case LIWDynamicExpandType_Half:
 			capacityNew = max(size_t(1.5 * m_capacity), m_capacity + 1); break;
-		case LIWDynamicExpand_Quater:
+		case LIWDynamicExpandType_Quater:
 			capacityNew = max(size_t(1.25 * m_capacity), m_capacity + 1); break;
-		case LIWDynamicExpand_Constant: {
+		case LIWDynamicExpandType_Constant: {
 			assert(m_sizeExpand != 0); // When ExpandType is LIWDynamicExpand_Constant, m_sizeExpand must be set to non-zero
 			capacityNew = m_capacity + m_sizeExpand;
 		} break;
 		}
 		set_capacity(capacityNew);
+	}
+
+	//NOTE: only allow size to be larger than current size
+	template<class ... Args>
+	void expand_size(size_t size, Args&&... args) {
+		assert(size > m_size); // Cannot set size smaller than current size. 
+		if (size > m_capacity)
+			set_capacity(size);
+		const size_t sizeCur = m_size;
+		T* ptr = get_data();
+		for (size_t i = sizeCur; i < size; i++) {
+			new (&ptr[i]) T(std::forward<Args>(args)...);
+		}
+		m_size = size;
 	}
 
 	inline void push_back(const T& val) {
@@ -440,8 +462,10 @@ public:
 	//}
 
 	inline void clear() {
-		destroy_elements();
-		m_size = 0;
+		if (m_dataBuffer != liw_c_nullhdl) {
+			destroy_elements();
+			m_size = 0;
+		}
 	}
 	//inline void clear_thds() {
 	//	lkgd_type lk(m_mtx);

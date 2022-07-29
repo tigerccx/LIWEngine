@@ -78,8 +78,8 @@ void test() {
 		LIWShader shaderFrag;
 		LIWShaderProgram shaderProgram;
 
-		shaderVert.LoadShader("./Shaders/OGL/PerPixel_AllInOne_Vertex.glsl", LIWShaderType_Vertex);
-		shaderFrag.LoadShader("./Shaders/OGL/PerPixel_AllInOne_Fragment.glsl", LIWShaderType_Fragment);
+		shaderVert.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/PerPixel_AllInOne_Vertex.glsl", LIWShaderType_Vertex);
+		shaderFrag.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/PerPixel_AllInOne_Fragment.glsl", LIWShaderType_Fragment);
 
 		shaderProgram.CreateShader({ shaderVert ,shaderFrag });
 		
@@ -92,7 +92,7 @@ void test() {
 		LIWImage image;
 		LIWTexture2D tex2D;
 
-		image.LoadImg("../../Resources/Textures/LIS.jpg", LIWImageFormat_RGB);
+		image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"LIS.jpg", LIWImageFormat_RGB);
 		tex2D.CreateTexture(image);
 
 		image.UnloadImg();
@@ -102,7 +102,7 @@ void test() {
 		LIWMeshData meshdata;
 		LIWMesh mesh;
 
-		meshdata.LoadMeshData_Obj("../../Resources/Meshes/viking_room.obj");
+		meshdata.LoadMeshData_Obj(LIW_PATH_DIR_RESOURCE_MESHES"viking_room.obj");
 		mesh.CreateMesh(meshdata);
 
 		meshdata.UnloadMeshData();

@@ -9,6 +9,7 @@
 
 #include "LIWImage.h"
 #include "LIWTexture.h"
+#include "LIWFrameBuffer.h"
 
 #include "LIWMeshData.h"
 #include "LIWMesh.h"
@@ -20,134 +21,199 @@
 
 namespace LIW {
 	enum LIWAssetType {
-		LIWAsset_Image,
-		LIWAsset_Texture2D,
-		LIWAsset_MeshData,
-		LIWAsset_Mesh,
-		LIWAsset_Shader,
-		LIWAsset_ShaderProgram,
-		LIWAsset_Material,
-		LIWAsset_Max
+		// Image and Texture
+		LIWAssetType_Image,
+		LIWAssetType_Texture2D,
+		//LIWAsset_RenderTexture2D,
+
+		// FrameBuffer
+		LIWAssetType_FrameBuffer,
+
+		// Mesh
+		LIWAssetType_MeshData,
+		LIWAssetType_Mesh,
+
+		// Shader
+		LIWAssetType_Shader,
+		LIWAssetType_ShaderProgram,
+
+		// Material
+		LIWAssetType_Material,
+
+		LIWAssetType_Max
 	};
 
 	class LIWAssetManager {
 	private:
 		struct AssetEntry {
-			LIWAssetType m_assetType{ LIWAsset_Max };
+			LIWAssetType m_assetType{ LIWAssetType_Max };
 			liw_objhdl_type m_handle{ liw_c_nullobjhdl };
 		};
 	public:
+		void Init();
+		void Cleanup();
+
+	public:
+		//
 		// Image and Texture
+		//
+		// Image
 		inline liw_objhdl_type CreateImage(const char* name) {
-			return CreateAsset(name, m_images, LIWAsset_Image);
+			return CreateAsset(name, m_images, LIWAssetType_Image);
 		}
 		inline liw_objhdl_type GetImageHandle(const char* name) {
-			return GetHandle(name, LIWAsset_Image);
+			return GetHandle(name, LIWAssetType_Image);
 		}
 		inline LIWImage& GetImage(liw_objhdl_type handle) {
 			return m_images.get_object(handle);
 		}
 		inline LIWImage& GetImage(const char* name) {
-			return GetAsset(name, m_images, LIWAsset_Image);
+			return GetAsset(name, m_images, LIWAssetType_Image);
 		}
 		inline void DestroyImage(const char* name) {
-			DestroyAsset(name, m_images, LIWAsset_Image);
+			DestroyAsset(name, m_images, LIWAssetType_Image);
 		}
+		// Texture2D
 		inline liw_objhdl_type CreateTexture2D(const char* name) {
-			return CreateAsset(name, m_tex2Ds, LIWAsset_Texture2D);
+			return CreateAsset(name, m_tex2Ds, LIWAssetType_Texture2D);
 		}
 		inline liw_objhdl_type GetTexture2DHandle(const char* name) {
-			return GetHandle(name, LIWAsset_Texture2D);
+			return GetHandle(name, LIWAssetType_Texture2D);
 		}
 		inline LIWTexture2D& GetTexture2D(liw_objhdl_type handle) {
 			return m_tex2Ds.get_object(handle);
 		}
 		inline LIWTexture2D& GetTexture2D(const char* name) {
-			return GetAsset(name, m_tex2Ds, LIWAsset_Texture2D);
+			return GetAsset(name, m_tex2Ds, LIWAssetType_Texture2D);
 		}
 		inline void DestroyTexture2D(const char* name) {
-			DestroyAsset(name, m_tex2Ds, LIWAsset_Texture2D);
+			DestroyAsset(name, m_tex2Ds, LIWAssetType_Texture2D);
+		}
+		//// RenderTexture2D
+		//inline liw_objhdl_type CreateRenderTexture2D(const char* name) {
+		//	return CreateAsset(name, m_renderTex2Ds, LIWAsset_RenderTexture2D);
+		//}
+		//inline liw_objhdl_type GetRenderTexture2DHandle(const char* name) {
+		//	return GetHandle(name, LIWAsset_RenderTexture2D);
+		//}
+		//inline LIWRenderTexture2D& GetRenderTexture2D(liw_objhdl_type handle) {
+		//	return m_renderTex2Ds.get_object(handle);
+		//}
+		//inline LIWRenderTexture2D& GetRenderTexture2D(const char* name) {
+		//	return GetAsset(name, m_renderTex2Ds, LIWAsset_RenderTexture2D);
+		//}
+		//inline void DestroyRenderTexture2D(const char* name) {
+		//	DestroyAsset(name, m_renderTex2Ds, LIWAsset_RenderTexture2D);
+		//}
+
+		//
+		// FrameBuffer
+		//
+		inline liw_objhdl_type CreateFrameBuffer(const char* name) {
+			return CreateAsset(name, m_frameBuffers, LIWAssetType_FrameBuffer);
+		}
+		inline liw_objhdl_type GetFrameBufferHandle(const char* name) {
+			return GetHandle(name, LIWAssetType_FrameBuffer);
+		}
+		inline LIWFrameBuffer& GetFrameBuffer(liw_objhdl_type handle) {
+			return m_frameBuffers.get_object(handle);
+		}
+		inline LIWFrameBuffer& GetFrameBuffer(const char* name) {
+			return GetAsset(name, m_frameBuffers, LIWAssetType_FrameBuffer);
+		}
+		inline void DestroyFrameBuffer(const char* name) {
+			DestroyAsset(name, m_frameBuffers, LIWAssetType_FrameBuffer);
 		}
 
+		//
 		// Mesh
+		//
+		// MeshData
 		inline liw_objhdl_type CreateMeshData(const char* name) {
-			return CreateAsset(name, m_meshdatas, LIWAsset_MeshData);
+			return CreateAsset(name, m_meshdatas, LIWAssetType_MeshData);
 		}
 		inline liw_objhdl_type GetMeshDataHandle(const char* name) {
-			return GetHandle(name, LIWAsset_MeshData);
+			return GetHandle(name, LIWAssetType_MeshData);
 		}
 		inline LIWMeshData& GetMeshData(liw_objhdl_type handle) {
 			return m_meshdatas.get_object(handle);
 		}
 		inline LIWMeshData& GetMeshData(const char* name) {
-			return GetAsset(name, m_meshdatas, LIWAsset_MeshData);
+			return GetAsset(name, m_meshdatas, LIWAssetType_MeshData);
 		}
 		inline void DestroyMeshData(const char* name) {
-			DestroyAsset(name, m_meshdatas, LIWAsset_MeshData);
+			DestroyAsset(name, m_meshdatas, LIWAssetType_MeshData);
 		}
+		// Mesh
 		liw_objhdl_type CreateMesh(const char* name) {
-			return CreateAsset(name, m_meshes, LIWAsset_Mesh);
+			return CreateAsset(name, m_meshes, LIWAssetType_Mesh);
 		}
 		inline liw_objhdl_type GetMeshHandle(const char* name) {
-			return GetHandle(name, LIWAsset_Mesh);
+			return GetHandle(name, LIWAssetType_Mesh);
 		}
 		inline LIWMesh& GetMesh(liw_objhdl_type handle) {
 			return m_meshes.get_object(handle);
 		}
 		inline LIWMesh& GetMesh(const char* name) {
-			return GetAsset(name, m_meshes, LIWAsset_Mesh);
+			return GetAsset(name, m_meshes, LIWAssetType_Mesh);
 		}
 		inline void DestroyMesh(const char* name) {
-			DestroyAsset(name, m_meshes, LIWAsset_Mesh);
+			DestroyAsset(name, m_meshes, LIWAssetType_Mesh);
 		}
 
+		//
+		// Shader
+		//
 		// Shader
 		inline liw_objhdl_type CreateShader(const char* name) {
-			return CreateAsset(name, m_shaders, LIWAsset_Shader);
+			return CreateAsset(name, m_shaders, LIWAssetType_Shader);
 		}
 		inline liw_objhdl_type GetShaderHandle(const char* name) {
-			return GetHandle(name, LIWAsset_Shader);
+			return GetHandle(name, LIWAssetType_Shader);
 		}
 		inline LIWShader& GetShader(liw_objhdl_type handle) {
 			return m_shaders.get_object(handle);
 		}
 		inline LIWShader& GetShader(const char* name) {
-			return GetAsset(name, m_shaders, LIWAsset_Shader);
+			return GetAsset(name, m_shaders, LIWAssetType_Shader);
 		}
 		inline void DestroyShader(const char* name) {
-			DestroyAsset(name, m_shaders, LIWAsset_Shader);
+			DestroyAsset(name, m_shaders, LIWAssetType_Shader);
 		}
+		// ShaderProgram
 		inline liw_objhdl_type CreateShaderProgram(const char* name) {
-			return CreateAsset(name, m_shaderPrograms, LIWAsset_ShaderProgram);
+			return CreateAsset(name, m_shaderPrograms, LIWAssetType_ShaderProgram);
 		}
 		inline liw_objhdl_type GetShaderProgramHandle(const char* name) {
-			return GetHandle(name, LIWAsset_ShaderProgram);
+			return GetHandle(name, LIWAssetType_ShaderProgram);
 		}
 		inline LIWShaderProgram& GetShaderProgram(liw_objhdl_type handle) {
 			return m_shaderPrograms.get_object(handle);
 		}
 		inline LIWShaderProgram& GetShaderProgram(const char* name) {
-			return GetAsset(name, m_shaderPrograms, LIWAsset_ShaderProgram);
+			return GetAsset(name, m_shaderPrograms, LIWAssetType_ShaderProgram);
 		}
 		inline void DestroyShaderProgram(const char* name) {
-			DestroyAsset(name, m_shaderPrograms, LIWAsset_ShaderProgram);
+			DestroyAsset(name, m_shaderPrograms, LIWAssetType_ShaderProgram);
 		}
 
+		//
 		// Material
+		//
 		inline liw_objhdl_type CreateMaterial(const char* name) {
-			return CreateAsset(name, m_materials, LIWAsset_Material);
+			return CreateAsset(name, m_materials, LIWAssetType_Material);
 		}
 		inline liw_objhdl_type GetMaterialHandle(const char* name) {
-			return GetHandle(name, LIWAsset_Material);
+			return GetHandle(name, LIWAssetType_Material);
 		}
 		inline LIWMaterial& GetMaterial(liw_objhdl_type handle) {
 			return m_materials.get_object(handle);
 		}
 		inline LIWMaterial& GetMaterial(const char* name) {
-			return GetAsset(name, m_materials, LIWAsset_Material);
+			return GetAsset(name, m_materials, LIWAssetType_Material);
 		}
 		inline void DestroyMaterial(const char* name) {
-			DestroyAsset(name, m_materials, LIWAsset_Material);
+			DestroyAsset(name, m_materials, LIWAssetType_Material);
 		}
 
 	private:
@@ -202,18 +268,22 @@ namespace LIW {
 		std::unordered_map<std::string, AssetEntry>	m_assetMap;
 
 		// Image and Texture
-		LIWDObjectPool<LIWImage, LIWMem_Default>			m_images{ 64 };
-		LIWDObjectPool<LIWTexture2D, LIWMem_Default>		m_tex2Ds{ 64 };
+		LIWDObjectPool<LIWImage, LIWMem_Default>				m_images{ 64 };
+		LIWDObjectPool<LIWTexture2D, LIWMem_Default>			m_tex2Ds{ 64 };
+		//LIWDObjectPool<LIWRenderTexture2D, LIWMem_Default>		m_renderTex2Ds{ 64 };
+		
+		// FrameBuffer
+		LIWDObjectPool<LIWFrameBuffer, LIWMem_Default>			m_frameBuffers{ 8 };
 
 		// Mesh
-		LIWDObjectPool<LIWMeshData, LIWMem_Default>			m_meshdatas{ 64 };
-		LIWDObjectPool<LIWMesh, LIWMem_Default>				m_meshes{ 64 };
+		LIWDObjectPool<LIWMeshData, LIWMem_Default>				m_meshdatas{ 64 };
+		LIWDObjectPool<LIWMesh, LIWMem_Default>					m_meshes{ 64 };
 
 		// Shader
-		LIWDObjectPool<LIWShader, LIWMem_Default>			m_shaders{ 64 };
-		LIWDObjectPool<LIWShaderProgram, LIWMem_Default>	m_shaderPrograms{ 64 };
+		LIWDObjectPool<LIWShader, LIWMem_Default>				m_shaders{ 64 };
+		LIWDObjectPool<LIWShaderProgram, LIWMem_Default>		m_shaderPrograms{ 64 };
 
 		// Material
-		LIWDObjectPool<LIWMaterial, LIWMem_Default>			m_materials{ 64 };
+		LIWDObjectPool<LIWMaterial, LIWMem_Default>				m_materials{ 64 };
 	};
 }

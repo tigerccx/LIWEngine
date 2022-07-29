@@ -7,6 +7,7 @@
 #include "Components/LIWComponent_MeshRenderer.h"
 #include "Components/LIWComponent_Camera.h"
 #include "Components/LIWComponent_CameraController.h"
+#include "Components/LIWComponent_Light.h"
 
 #define LIW__COMPONENT_MANAGER_NAME(ComponentType) m__componentManager_##ComponentType
 #define LIW_INJECT_COMPONENT_MANAGER(ComponentType, initCapacity, expandCount) LIWComponentManager<ComponentType> LIW__COMPONENT_MANAGER_NAME(ComponentType){initCapacity, expandCount};
@@ -21,5 +22,6 @@ namespace LIW {
 		LIW_INJECT_COMPONENT_MANAGER(LIWComponent_MeshRenderer, 1 << 12, 1 << 12);
 		LIW_INJECT_COMPONENT_MANAGER(LIWComponent_Camera, 4, 2);
 		LIW_INJECT_COMPONENT_MANAGER(LIWComponent_CameraController, 4, 2);
+		LIW_INJECT_COMPONENT_MANAGER(LIWComponent_Light, 16, 8);
 	};
 }

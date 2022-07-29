@@ -14,7 +14,7 @@
 // Memory
 //
 #ifdef _DEBUG
-#define DEBUG_PRINT_MEMORY_INFO
+//#define DEBUG_PRINT_MEMORY_INFO
 #endif
 
 // Enable memset for debugging

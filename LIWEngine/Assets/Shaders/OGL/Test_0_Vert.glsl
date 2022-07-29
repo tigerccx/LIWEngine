@@ -1,8 +1,9 @@
 #version 330 core
 uniform mat4 modelMatrix;
-layout(std140) uniform CameraBlock{
+layout(std140, binding=0) uniform CameraBlock{
 	mat4 viewMatrix;
 	mat4 projMatrix;
+	vec4 posCamera;
 } cameraBlk;
 
 layout(location=0) in vec3 position;

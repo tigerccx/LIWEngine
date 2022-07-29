@@ -40,7 +40,7 @@ void LIW_FT_LIWSystem_CameraControl_Update::Execute(LIW::LIWFiberWorkerPointer t
 				float yaw = eulars.y;
 				const float mouseRelX = mouse.GetRelativePosition().x;
 				const float mouseRelY = mouse.GetRelativePosition().y;
-				printf("MosueX: %f MouseY: %f", mouseRelX, mouseRelY);
+				//printf("MosueX: %f MouseY: %f", mouseRelX, mouseRelY);
 				pitch -= mouseRelY * cameraController.m_rotateScale;
 				yaw -= mouseRelX * cameraController.m_rotateScale;
 
@@ -83,22 +83,22 @@ void LIW_FT_LIWSystem_CameraControl_Update::Execute(LIW::LIWFiberWorkerPointer t
 			}
 
 			if (LIWGlobal::GetEnvironment()->m_window->GetKeyboard()->KeyHeld(LIW::KEYBOARD_W)) {
-				transform.m_location += forward * speed;
+				transform.m_position += forward * speed;
 			}
 			if (LIWGlobal::GetEnvironment()->m_window->GetKeyboard()->KeyHeld(LIW::KEYBOARD_S)) {
-				transform.m_location -= forward * speed;
+				transform.m_position -= forward * speed;
 			}
 			if (LIWGlobal::GetEnvironment()->m_window->GetKeyboard()->KeyHeld(LIW::KEYBOARD_A)) {
-				transform.m_location -= right * speed;
+				transform.m_position -= right * speed;
 			}
 			if (LIWGlobal::GetEnvironment()->m_window->GetKeyboard()->KeyHeld(LIW::KEYBOARD_D)) {
-				transform.m_location += right * speed;
+				transform.m_position += right * speed;
 			}
 			if (LIWGlobal::GetEnvironment()->m_window->GetKeyboard()->KeyHeld(LIW::KEYBOARD_Q)) {
-				transform.m_location -= up * speed;
+				transform.m_position -= up * speed;
 			}
 			if (LIWGlobal::GetEnvironment()->m_window->GetKeyboard()->KeyHeld(LIW::KEYBOARD_E)) {
-				transform.m_location += up * speed;
+				transform.m_position += up * speed;
 			}
 		}
 

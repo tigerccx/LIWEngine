@@ -4,9 +4,9 @@
 
 namespace LIW {
 	enum LIWCameraType {
-		LIWCamera_Orthographic,
-		LIWCamera_Perspective,
-		LIWCamera_Max
+		LIWCameraType_Orthographic,
+		LIWCameraType_Perspective,
+		LIWCameraType_Max
 	};
 
 	struct LIWCameraParam_Orthographic {
@@ -27,16 +27,16 @@ namespace LIW {
 			LIWCameraParam_Perspective m_perspective;
 			LIWCameraParam_Orthographic m_orthographic;
 		} m_param = { 0,0 };
-		LIWCameraType m_cameraType{ LIWCamera_Perspective };
+		LIWCameraType m_cameraType{ LIWCameraType_Perspective };
 		float m_near = 0.1f;
 		float m_far = 1000.0f;
 	public:
 		void SetPerspective(LIWCameraParam_Perspective param) {
-			m_cameraType = LIWCamera_Perspective;
+			m_cameraType = LIWCameraType_Perspective;
 			m_param.m_perspective = param;
 		}
 		void SetOrthographic(LIWCameraParam_Orthographic param) {
-			m_cameraType = LIWCamera_Orthographic;
+			m_cameraType = LIWCameraType_Orthographic;
 			m_param.m_orthographic = param;
 		}
 	};

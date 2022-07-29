@@ -23,12 +23,11 @@ _-_-_-_-_-_-_-""  ""
 
 #include "LIWRenderer.h"
 
-#include "common.h"
-
 #include <string>
 #include <fstream>
 #include <vector>
 #include <memory>
+#include <stdexcept>
 
 #include "LIWglfw.h"
 
@@ -37,7 +36,9 @@ _-_-_-_-_-_-_-""  ""
 #include "Maths/LIWMaths.h"
 #include "Application/Window.h"
 
-#include "Core/Macros.h"
+#include "LIWMacros.h"
+
+#include "Data/LIWFrameBuffer.h"
 
 using namespace std;
 
@@ -59,6 +60,9 @@ namespace LIW {
 		virtual void RenderUpdate(float dt) override {
 			RenderScene();
 		}
+
+		void BindFrameBuffer(LIWFrameBuffer& frameBuffer);
+		void BindDefaultFrameBuffer();
 	
 	protected:
 		virtual void RenderScene() = 0;

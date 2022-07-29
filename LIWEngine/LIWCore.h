@@ -41,7 +41,7 @@ namespace LIW {
 			if (countWorkerThreads == 0)
 				countWorkerThreads = 16;
 			
-			//countWorkerThreads = 16;
+			countWorkerThreads = 8;
 
 			int countThreads = countWorkerThreads + 1;
 
@@ -95,8 +95,8 @@ namespace LIW {
 			// Init Environment
 			LIWGlobal::s_environment = liw_new_static<App::Environment>();
 			/* Window */
-			//auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1280, 720, false);
-			auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1960, 1080, true);
+			auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1280, 720, false);
+			//auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1960, 1080, true);
 			LIWGlobal::s_environment->m_window = ptrWindow;
 			if (!ptrWindow->Initialised()) {
 				return -1;
@@ -118,6 +118,7 @@ namespace LIW {
 
 			// Init AssetManager
 			LIWGlobal::s_assetManager = liw_new_static<LIWAssetManager>();
+			LIWGlobal::s_assetManager->Init();
 
 			// Init game
 			auto ptrGame = liw_new_static<TestGame>();
@@ -170,6 +171,7 @@ namespace LIW {
 			liw_delete(LIWGlobal::s_game);
 
 			// Cleanup AssetManager
+			LIWGlobal::s_assetManager->Cleanup();
 			liw_delete(LIWGlobal::s_assetManager);
 			
 			// Cleanup Window

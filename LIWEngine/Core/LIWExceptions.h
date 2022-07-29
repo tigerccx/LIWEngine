@@ -15,3 +15,13 @@ public:
 private:
 	char m_info[50];
 };
+
+class liwexcept_not_implemented : public std::exception {
+public:
+	liwexcept_not_implemented(const char* word = "Not yet implemented. \n") {
+		strcpy_s(m_info, 128, word);
+	}
+	const char* what() const override { return m_info; }
+private:
+	char m_info[128];
+};

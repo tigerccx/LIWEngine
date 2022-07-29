@@ -172,6 +172,23 @@ LIW::OGLRenderer::~OGLRenderer(void)	{
 	//wglDeleteContext(renderContext);
 }
 
+void LIW::OGLRenderer::BindFrameBuffer(LIWFrameBuffer& frameBuffer)
+{
+	bool completeness = frameBuffer.IsComplete();
+	if (!frameBuffer.IsValid())
+		throw std::runtime_error("framebuffer invlid. ");
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.GetRawHandle());
+	glViewport(0, 0, frameBuffer.GetWidth(), frameBuffer.GetHeight());
+	if (!frameBuffer.IsComplete())
+		throw std::runtime_error("framebuffer invlid. ");
+}
+
+void LIW::OGLRenderer::BindDefaultFrameBuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, width, height);
+}
+
 /*
 Resizes the rendering area. Should only be called by the Window class!
 Does lower bounds checking on input values, so should be reasonably safe

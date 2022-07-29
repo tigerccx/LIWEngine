@@ -66,7 +66,7 @@ namespace LIW {
 		void UnbindData();
 
 	public:
-		liw_objhdl_type m_handleShaderProgram;
+		liw_objhdl_type m_handleShaderProgram{ liw_c_nullobjhdl };
 		LIWDArray<LIWMaterialParam_Int>		m_paramsInt{ 0 };
 		LIWDArray<LIWMaterialParam_Float>	m_paramsFloat{ 0 };
 		LIWDArray<LIWMaterialParam_IVec4>	m_paramsIVec4{ 0 };

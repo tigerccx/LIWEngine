@@ -73,7 +73,7 @@ void LIW::Editor::LIWTEST_TT_TestDrawUI::Execute()
 		auto& trans = LIW_ECS_GetComponent(LIWComponent_Transform, TestGlobal::cam);
 		glm::vec3 rot = Maths::QuatToEulerXZY(trans.m_rotation);
 		ImGui::Text("Cam Angles: %.5f, %.5f, %.5f", Maths::RadToDeg(rot.x), Maths::RadToDeg(rot.y), Maths::RadToDeg(rot.z));
-		ImGui::Text("Cam Pos: %.5f, %.5f, %.5f", trans.m_location.x , trans.m_location.y, trans.m_location.z);
+		ImGui::Text("Cam Pos: %.5f, %.5f, %.5f", trans.m_position.x , trans.m_position.y, trans.m_position.z);
 	}
 
 	ImGui::Separator();

@@ -321,6 +321,15 @@
     <ClCompile Include="Core\Framework\Systems\LIWSystem_CameraControl.cpp">
       <Filter>Core\ECSFramework\LIWSystem\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Data\LIWFrameBuffer.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWRenderBuffer.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWRenderAttachmentFormat.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h">
@@ -410,13 +419,10 @@
     <ClInclude Include="Core\Application\Window.h">
       <Filter>Core\Application\Window</Filter>
     </ClInclude>
-    <ClInclude Include="Core\common.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Exceptions.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Macros.h">
+    <ClInclude Include="Core\LIWMacros.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Utility.h">
@@ -637,6 +643,21 @@
     </ClInclude>
     <ClInclude Include="Core\Framework\Systems\LIWSystem_CameraControl.h">
       <Filter>Core\ECSFramework\LIWSystem\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWFrameBuffer.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWRenderBuffer.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWRenderAttachmentFormat.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Components\LIWComponent_Light.h">
+      <Filter>Core\ECSFramework\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ThirdParty\include\msh_loader.hpp">
+      <Filter>ThirdParty</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

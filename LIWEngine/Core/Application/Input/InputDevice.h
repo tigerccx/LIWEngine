@@ -24,7 +24,6 @@ _-_-_-_-_-_-_-""  ""
 */
 
 #pragma once
-//#include "..\common.h"
 //#include <algorithm>
 #include "..\LIWDevice.h"
 

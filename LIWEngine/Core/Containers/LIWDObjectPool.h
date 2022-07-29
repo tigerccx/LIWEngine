@@ -34,7 +34,7 @@ namespace LIW {
 		~LIWDObjectPool() {
 #ifdef _DEBUG
 			if (m_size != (uint32_t)m_objects.get_capacity())
-				printf("WARNING: not all objects has been returned to pool. ");
+				printf("WARNING: not all objects has been returned to pool. \n");
 #endif
 		}
 

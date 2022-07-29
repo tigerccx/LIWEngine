@@ -61,7 +61,7 @@ namespace LIW {
 		if (logLength) {
 			char* tempData = new char[logLength];
 			glGetShaderInfoLog(m_handleShader, logLength, NULL, tempData);
-			printf("Compile Log: \n %s \n", tempData);
+			printf("Compile Log: \n%s\n", tempData);
 			delete[] tempData;
 		}
 	}
