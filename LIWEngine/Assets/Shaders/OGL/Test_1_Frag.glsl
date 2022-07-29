@@ -1,4 +1,5 @@
 #version 420 core
+#include "Common/LIWShaderCommon.glsl"
 
 //Old Lighting
 const float thresAtRadius = 0.0001f;
@@ -117,16 +118,14 @@ void CalculateSpotLight( vec3 toEye, vec3 worldPos, vec3 normal,
 }
 
 //Camera
-layout(std140, binding=0) uniform CameraBlock{
+layout(std140, binding=LIW_SHADER_UBO_BIND_CAMERADATA) uniform CameraBlock{
 	mat4 viewMatrix;
 	mat4 projMatrix;
 	vec3 posCamera;
 } cameraBlk;
 
-//Lighting
-const int LIW_LIGHT_MAX_PERPIXEL = 8;
-
-layout(std140, binding=1) uniform ForwardLightBlockPerPixel{ //Separate Light Types to reduce branching
+//Light
+layout(std140, binding=LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA) uniform ForwardLightBlockPerPixel{ //Separate Light Types to reduce branching
 	vec4 lightColours_Directional[LIW_LIGHT_MAX_PERPIXEL];
 	vec4 lightColours_Point[LIW_LIGHT_MAX_PERPIXEL];
 	vec4 lightColours_Spot[LIW_LIGHT_MAX_PERPIXEL];

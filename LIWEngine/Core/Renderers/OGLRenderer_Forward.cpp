@@ -119,15 +119,17 @@ namespace LIW {
 			// Use program
 			glUseProgram(rawHandleshaderProgram);
 
-			// Bind camera data
-			glUniformBlockBinding(rawHandleshaderProgram, LIW_SHADER_UB_BIND_CAMERADATA, LIW_SHADER_UBO_BIND_CAMERADATA);
+			//NOTE: the commented code is replaced by shader-side binding (supported by GLSL 420)
+			//// Bind camera data
+			//uint32_t cameraDataIdx = glGetUniformBlockIndex(rawHandleshaderProgram, LIW_SHADER_UB_CAMERADATA_NAME);
+			//glUniformBlockBinding(rawHandleshaderProgram, cameraDataIdx, LIW_SHADER_UBO_BIND_CAMERADATA);
 
 			// Bind material data
 			material.BindData();
 
 			// Upload transform
 			glm::mat4 matModel = transform.GetMatrix();
-			glUniformMatrix4fv(glGetUniformLocation(rawHandleshaderProgram, LIW_SHADER_MODEL_MATRIX), 1, false, glm::value_ptr(matModel));
+			glUniformMatrix4fv(glGetUniformLocation(rawHandleshaderProgram, LIW_SHADER_MODEL_MATRIX_NAME), 1, false, glm::value_ptr(matModel));
 
 			// Draw
 			auto& submeshes = mesh.GetSubmeshes();

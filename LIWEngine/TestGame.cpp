@@ -124,7 +124,7 @@ int TestGame::Initialise()
 	transObj1.m_rotation = glm::identity<glm::quat>();//glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
 	auto& meshRenderer1 = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[1]);
 	meshRenderer1.m_handleMaterial = m_material1;
-	liw_objhdl_type hdlMeshSphere = assetManager.GetMeshHandle(LIW_MESH_SPHERE);
+	liw_objhdl_type hdlMeshSphere = assetManager.GetMeshHandle(LIW_MESH_SPHERE_NAME);
 	meshRenderer1.m_handleMesh = hdlMeshSphere;
 
 	// Light

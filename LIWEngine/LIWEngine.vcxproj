@@ -276,6 +276,7 @@
     <ClInclude Include="Core\LIWglfw.h" />
     <ClInclude Include="Core\LIWGlobal.h" />
     <ClInclude Include="Core\LIWObject.h" />
+    <ClInclude Include="Core\LIWShaderMacros.h" />
     <ClInclude Include="Core\LIWTypes.h" />
     <ClInclude Include="Core\LIWMacros.h" />
     <ClInclude Include="Core\Maths\LIWMaths.h" />

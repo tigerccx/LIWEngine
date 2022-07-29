@@ -659,6 +659,9 @@
     <ClInclude Include="..\ThirdParty\include\msh_loader.hpp">
       <Filter>ThirdParty</Filter>
     </ClInclude>
+    <ClInclude Include="Core\LIWShaderMacros.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
