@@ -209,4 +209,6 @@ void main() {
 	vec4 ambientLightingClr = vec4(ambientColour.xyz*diffuseColour.rgb*ambientComponent, 0);
 	fragColour += ambientLightingClr;
 	fragColour.a = 1.0f;
+	
+	//fragColour = vec4(normalWorld*0.5f+0.5f, 1.0f);
 }

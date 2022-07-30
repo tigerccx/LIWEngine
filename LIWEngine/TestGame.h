@@ -33,6 +33,7 @@ public:
 
     LIWDArray<liw_objhdl_type> m_testComponent0s;
     LIWDArray<liw_objhdl_type> m_transforms;
+    LIWDArray<liw_objhdl_type> m_sceneNodes;
     LIWDArray<liw_objhdl_type> m_meshRenderers;
     LIWDArray<LIWEntity> m_entities;
     liw_objhdl_type m_camera;

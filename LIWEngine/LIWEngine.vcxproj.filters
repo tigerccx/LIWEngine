@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Framework">
-      <UniqueIdentifier>{64c7f34b-16b0-4e91-8b98-4ea2d4cfd239}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Test">
-      <UniqueIdentifier>{3b1a745d-8a44-40cb-840a-d769411f2bee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Editor">
       <UniqueIdentifier>{8f03c892-270a-4fa7-9167-af6485dc865a}</UniqueIdentifier>
     </Filter>
@@ -94,20 +88,8 @@
     <Filter Include="Core\Renderers">
       <UniqueIdentifier>{1732d455-ff80-41f1-8ae6-077fd80143c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Test\Memory">
-      <UniqueIdentifier>{13d12786-f8f7-4e9b-8268-b08f7fdb34fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\ECSFramework\LIWComponent">
       <UniqueIdentifier>{c4fb6f91-787a-48dd-a457-7bfdf6dac105}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Test\TestGame">
-      <UniqueIdentifier>{574f2879-8d7e-4be7-b768-90e14aa4f8c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Test\TestGame\Component">
-      <UniqueIdentifier>{f13d7621-8520-42d2-9685-58224b95c312}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Test\TestGame\Renderers">
-      <UniqueIdentifier>{c0746866-4389-45d7-8487-f203f02bbdd3}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{f0c87509-bde4-44ff-8826-48897e12fe88}</UniqueIdentifier>
@@ -118,9 +100,6 @@
     <Filter Include="ThirdParty\imgui\backends">
       <UniqueIdentifier>{a8223a97-8776-400c-9cf4-345f1484ab5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Test\TestGame\System">
-      <UniqueIdentifier>{4e2c50dd-467b-4d16-920e-fd786d1786dd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Threading">
       <UniqueIdentifier>{b93c57f3-9bca-471f-9d4a-6ac36b115c05}</UniqueIdentifier>
     </Filter>
@@ -130,26 +109,44 @@
     <Filter Include="Core\Threading\Executors">
       <UniqueIdentifier>{901a21ed-2726-428d-bd5f-e9282928d718}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Test\Debug">
-      <UniqueIdentifier>{d98bdb2b-85f7-4adb-99a4-ee505112572f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\ECSFramework\Components">
       <UniqueIdentifier>{646fe375-d17b-46f0-86d8-3b2978058d88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Test\Render">
-      <UniqueIdentifier>{11329515-16cb-434a-8fd0-17491d293bd2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Utility\Files">
       <UniqueIdentifier>{e208b90e-062a-407d-ad22-ae89d83665e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Test\Tests">
-      <UniqueIdentifier>{2daa7ad6-5bab-4258-be03-acd1885ade4e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Data">
       <UniqueIdentifier>{a279fe33-5e41-4cb6-b46c-b3ffa8c04c7c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\ECSFramework\LIWSystem\Systems">
       <UniqueIdentifier>{1fb3f8d7-c87b-4f07-9275-5e6a176865c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{64c7f34b-16b0-4e91-8b98-4ea2d4cfd239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Test">
+      <UniqueIdentifier>{3b1a745d-8a44-40cb-840a-d769411f2bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Memory">
+      <UniqueIdentifier>{13d12786-f8f7-4e9b-8268-b08f7fdb34fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\Render">
+      <UniqueIdentifier>{11329515-16cb-434a-8fd0-17491d293bd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\TestGame">
+      <UniqueIdentifier>{574f2879-8d7e-4be7-b768-90e14aa4f8c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\TestGame\Renderers">
+      <UniqueIdentifier>{c0746866-4389-45d7-8487-f203f02bbdd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\TestGame\System">
+      <UniqueIdentifier>{4e2c50dd-467b-4d16-920e-fd786d1786dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\TestGame\Component">
+      <UniqueIdentifier>{f13d7621-8520-42d2-9685-58224b95c312}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test\TestGame\Debug">
+      <UniqueIdentifier>{d98bdb2b-85f7-4adb-99a4-ee505112572f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -178,7 +175,7 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TestRenderer.cpp">
-      <Filter>Framework\Test\TestGame\Renderers</Filter>
+      <Filter>Test\TestGame\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="Core\Debug\LIWDebug.cpp">
       <Filter>Core\Debug</Filter>
@@ -222,11 +219,8 @@
     <ClCompile Include="Core\Framework\LIWGame.cpp">
       <Filter>Core\ECSFramework\LIWGame</Filter>
     </ClCompile>
-    <ClCompile Include="TestGame.cpp">
-      <Filter>Framework\Test\TestGame</Filter>
-    </ClCompile>
     <ClCompile Include="TestSystem0.cpp">
-      <Filter>Framework\Test\TestGame\System</Filter>
+      <Filter>Test\TestGame\System</Filter>
     </ClCompile>
     <ClCompile Include="Core\LIWFrame.cpp">
       <Filter>Core\Utility</Filter>
@@ -256,7 +250,7 @@
       <Filter>Core\Threading\Utils</Filter>
     </ClCompile>
     <ClCompile Include="TestAromics.cpp">
-      <Filter>Framework\Test\Debug</Filter>
+      <Filter>Test\TestGame\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Core\Framework\LIWEntity.cpp">
       <Filter>Core\ECSFramework\LIWEntity</Filter>
@@ -275,9 +269,6 @@
     </ClCompile>
     <ClCompile Include="Core\LIWGlobal.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="TestGlobal.cpp">
-      <Filter>Framework\Test\TestGame</Filter>
     </ClCompile>
     <ClCompile Include="Core\Renderers\LIWRenderer.cpp">
       <Filter>Core\Renderers</Filter>
@@ -330,6 +321,15 @@
     <ClCompile Include="Core\Data\LIWRenderAttachmentFormat.cpp">
       <Filter>Core\Data</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Framework\LIWSceneGraph.cpp">
+      <Filter>Core\ECSFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGame.cpp">
+      <Filter>Test\TestGame</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGlobal.cpp">
+      <Filter>Test\TestGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h">
@@ -360,7 +360,7 @@
       <Filter>ThirdParty\imgui</Filter>
     </ClInclude>
     <ClInclude Include="TestRenderer.h">
-      <Filter>Framework\Test\TestGame\Renderers</Filter>
+      <Filter>Test\TestGame\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\LIWSystem.h">
       <Filter>Core\ECSFramework\LIWSystem</Filter>
@@ -471,7 +471,7 @@
       <Filter>Core\Utility</Filter>
     </ClInclude>
     <ClInclude Include="test_mem_0.h">
-      <Filter>Framework\Test\Memory</Filter>
+      <Filter>Test\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\LIWStandardSystem.h">
       <Filter>Core\ECSFramework\LIWSystem</Filter>
@@ -485,17 +485,11 @@
     <ClInclude Include="Core\Framework\LIWGame.h">
       <Filter>Core\ECSFramework\LIWGame</Filter>
     </ClInclude>
-    <ClInclude Include="TestGame.h">
-      <Filter>Framework\Test\TestGame</Filter>
-    </ClInclude>
     <ClInclude Include="TestComponent0.h">
-      <Filter>Framework\Test\TestGame\Component</Filter>
+      <Filter>Test\TestGame\Component</Filter>
     </ClInclude>
     <ClInclude Include="TestSystem0.h">
-      <Filter>Framework\Test\TestGame\System</Filter>
-    </ClInclude>
-    <ClInclude Include="TestFiberTaskIds.h">
-      <Filter>Framework\Test</Filter>
+      <Filter>Test\TestGame\System</Filter>
     </ClInclude>
     <ClInclude Include="Core\Time\LIWTime.h">
       <Filter>Core\Time</Filter>
@@ -540,16 +534,13 @@
       <Filter>Core\Threading\Utils</Filter>
     </ClInclude>
     <ClInclude Include="TestAtomics.h">
-      <Filter>Framework\Test\Debug</Filter>
+      <Filter>Test\TestGame\Debug</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\LIWEntity.h">
       <Filter>Core\ECSFramework\LIWEntity</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\LIWEntityManager.h">
       <Filter>Core\ECSFramework\LIWEntity</Filter>
-    </ClInclude>
-    <ClInclude Include="test_ecs_0.h">
-      <Filter>Framework\Test\Tests</Filter>
     </ClInclude>
     <ClInclude Include="Core\Debug\LIWDebugTasks.h">
       <Filter>Core\Debug</Filter>
@@ -560,14 +551,11 @@
     <ClInclude Include="Core\LIWGlobal.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="TestGlobal.h">
-      <Filter>Framework\Test\TestGame</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Framework\LIWECSConfiguration.h">
       <Filter>Core\ECSFramework</Filter>
     </ClInclude>
     <ClInclude Include="TestComponentCollection.h">
-      <Filter>Framework\Test\TestGame\Component</Filter>
+      <Filter>Test\TestGame\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Components\LIWComponent_Transform.h">
       <Filter>Core\ECSFramework\Components</Filter>
@@ -579,7 +567,7 @@
       <Filter>Core\ECSFramework</Filter>
     </ClInclude>
     <ClInclude Include="test_vulkan_0.h">
-      <Filter>Framework\Test\Render</Filter>
+      <Filter>Test\Render</Filter>
     </ClInclude>
     <ClInclude Include="Core\LIWglfw.h">
       <Filter>Core</Filter>
@@ -595,9 +583,6 @@
     </ClInclude>
     <ClInclude Include="Core\LIWConfig.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="test_anything_0.h">
-      <Filter>Framework\Test\Tests</Filter>
     </ClInclude>
     <ClInclude Include="Core\Data\LIWImage.h">
       <Filter>Core\Data</Filter>
@@ -625,9 +610,6 @@
     </ClInclude>
     <ClInclude Include="Core\Renderers\OGLRenderer_Forward.h">
       <Filter>Core\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="test_maths.h">
-      <Filter>Framework\Test\Tests</Filter>
     </ClInclude>
     <ClInclude Include="Editor\LIWEditor.h">
       <Filter>Editor</Filter>
@@ -661,6 +643,36 @@
     </ClInclude>
     <ClInclude Include="Core\LIWShaderMacros.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Containers\LIWDObjectPool.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\LIWSceneGraph.h">
+      <Filter>Core\ECSFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Components\LIWComponent_SceneNode.h">
+      <Filter>Core\ECSFramework\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="test_anything_0.h">
+      <Filter>Test\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="test_maths.h">
+      <Filter>Test\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="test_ecs_0.h">
+      <Filter>Test\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFiberTaskIds.h">
+      <Filter>Test\TestGame</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGame.h">
+      <Filter>Test\TestGame</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGlobal.h">
+      <Filter>Test\TestGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\LIWIEditorDraw.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,8 @@
 #include "Threading/LIWThreadWorkerTask.h"
 #include "Threading/LIWMainThreadExecutor.h"
 
+#include "Framework/LIWECSFunctional.h"
+
 namespace LIW {
 	namespace Editor {
 		/// <summary>
@@ -66,6 +68,8 @@ namespace LIW {
 			void Execute() override;
 		};
 
+
+		void DrawSceneGraphUI();
 
 		class LIWTEST_TT_TestDrawUI final :
 			public LIWThreadWorkerTask

@@ -5,7 +5,7 @@
 #include "LIWTypes.h"
 #include "LIWConstants.h"
 #include "LIWEntity.h"
-
+#include "Editor/LIWIEditorDraw.h"
 
 /*
 * class: LIWComponent
@@ -16,7 +16,7 @@
 */
 namespace LIW {
 	class LIWComponent :
-		public LIW::LIWObject
+		public LIW::LIWObject, Editor::LIWIEditorDraw
 	{
 		template<class T> friend class LIWComponentManager;
 	public:

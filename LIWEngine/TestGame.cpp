@@ -86,6 +86,7 @@ int TestGame::Initialise()
 
 	LIW_ECS_FetchEntities(m_entities, 4);
 	LIW_ECS_CreateComponents(LIWComponent_Transform, m_transforms, 4);
+	LIW_ECS_CreateComponents(LIWComponent_SceneNode, m_sceneNodes, 4);
 	LIW_ECS_CreateComponents(LIWComponent_MeshRenderer, m_meshRenderers, 2);
 	m_camera = LIW_ECS_CreateComponent(LIWComponent_Camera);
 	m_cameraController = LIW_ECS_CreateComponent(LIWComponent_CameraController);
@@ -93,6 +94,7 @@ int TestGame::Initialise()
 
 	// Camera
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[0], m_entities[0]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[0], m_entities[0]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Camera, m_camera, m_entities[0]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_CameraController, m_cameraController, m_entities[0]);
 	auto& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[0]);
@@ -108,6 +110,7 @@ int TestGame::Initialise()
 
 	// Object0: Model
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[1], m_entities[1]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[1], m_entities[1]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[0], m_entities[1]);
 	auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[1]);
 	transObj.m_position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -118,6 +121,7 @@ int TestGame::Initialise()
 
 	// Object1: Sphere
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[2], m_entities[2]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[2], m_entities[2]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[1], m_entities[2]);
 	auto& transObj1 = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[2]);
 	transObj1.m_position = glm::vec3(-10.0f, 0.0f, 0.0f);
@@ -129,6 +133,7 @@ int TestGame::Initialise()
 
 	// Light
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[3], m_entities[3]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[3], m_entities[3]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Light, m_light, m_entities[3]);
 	auto& transLight = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[3]);
 	transLight.m_position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -139,6 +144,7 @@ int TestGame::Initialise()
 
 	// Apply changes
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Transform);
+	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_SceneNode);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_MeshRenderer);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Camera);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_CameraController);
@@ -216,6 +222,7 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 	// Component update
 	//
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Transform);
+	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_SceneNode);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_MeshRenderer);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_Camera);
 	LIW_ECS_ApplyChangeOnComponentManager(LIWComponent_CameraController);

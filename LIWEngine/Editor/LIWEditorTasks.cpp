@@ -88,5 +88,53 @@ void LIW::Editor::LIWTEST_TT_TestDrawUI::Execute()
 	ImGui::Text("NavActive: %d, NavVisible: %d", io.NavActive, io.NavVisible);
 
 	ImGui::End();
+
+	DrawSceneGraphUI();
+
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
+}
+
+void LIW::Editor::DrawSceneGraphUI()
+{
+	ImGui::Begin("Scene");
+
+	auto& entityManager = LIW_ECS_GetEntityManager();
+	auto& entities = entityManager.GetOccupiedEntities();
+
+	const size_t entityCount = entities.size();
+
+	LIWDArray<std::string, LIWMem_Default> items{ entityCount };
+	int i = 0;
+	for (auto itr = entities.begin(); itr!=entities.end(); itr++, i++) {
+		items.push_back(std::string(32, '\0'));
+		items[i].resize(32);
+		sprintf_s((char*)items[i].data(), 32, "Entity %u", *itr);
+	}
+
+	static liw_objhdl_type selectedEntity = liw_c_nullobjhdl;
+	if (ImGui::BeginListBox("Scene Entities"))
+	{
+		int n = 0;
+		for (auto itr = entities.begin(); itr != entities.end(); itr++, n++)
+		{
+			const liw_objhdl_type hdlEntity = *itr;
+			const bool is_selected = (hdlEntity == selectedEntity);
+			if (ImGui::Selectable(items[n].c_str(), is_selected))
+				selectedEntity = hdlEntity;
+
+			if (is_selected) {
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	if (selectedEntity != liw_c_nullobjhdl) {
+		ImGui::Separator();
+		liw_objhdl_type hdlTrans = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, selectedEntity);
+		auto& trans = LIW_ECS_GetComponent(LIWComponent_Transform, hdlTrans);
+		trans.EditorDrawUI();
+	}
+
+	ImGui::End();
 }

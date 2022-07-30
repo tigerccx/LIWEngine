@@ -26,6 +26,7 @@ void main() {
 	
 	vec4 posWorld = LIW_SHADER_MODEL_MATRIX * vec4(position, 1);
 	OUT.posWorld = posWorld.xyz;
-	OUT.normalWorld = (LIW_SHADER_MODEL_MATRIX * vec4(normal, 1)).xyz;
+	mat3 normalMatrix = transpose(inverse(mat3(LIW_SHADER_MODEL_MATRIX)));
+	OUT.normalWorld = normalize(normalMatrix * normalize(normal));
 	gl_Position = (cameraBlk.projMatrix * cameraBlk.viewMatrix) * posWorld;
 }

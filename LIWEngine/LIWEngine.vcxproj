@@ -182,6 +182,7 @@
     <ClCompile Include="Core\Framework\LIWEntity.cpp" />
     <ClCompile Include="Core\Framework\LIWEntityManager.cpp" />
     <ClCompile Include="Core\Framework\LIWGame.cpp" />
+    <ClCompile Include="Core\Framework\LIWSceneGraph.cpp" />
     <ClCompile Include="Core\Framework\LIWStandardSystem.cpp" />
     <ClCompile Include="Core\Framework\Systems\LIWSystem_CameraControl.cpp" />
     <ClCompile Include="Core\LIWCore.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="Core\Application\Window.h" />
     <ClInclude Include="Core\Containers\LIWArray.h" />
     <ClInclude Include="Core\Containers\LIWDArray.h" />
+    <ClInclude Include="Core\Containers\LIWDObjectPool.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
     <ClInclude Include="Core\Data\LIWAssetManager.h" />
@@ -257,6 +259,7 @@
     <ClInclude Include="Core\Framework\Components\LIWComponent_CameraController.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_Light.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_MeshRenderer.h" />
+    <ClInclude Include="Core\Framework\Components\LIWComponent_SceneNode.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_Transform.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
     <ClInclude Include="Core\Framework\LIWComponentCollection.h" />
@@ -266,6 +269,7 @@
     <ClInclude Include="Core\Framework\LIWEntity.h" />
     <ClInclude Include="Core\Framework\LIWEntityManager.h" />
     <ClInclude Include="Core\Framework\LIWGame.h" />
+    <ClInclude Include="Core\Framework\LIWSceneGraph.h" />
     <ClInclude Include="Core\Framework\LIWStandardSystem.h" />
     <ClInclude Include="Core\Framework\LIWSystem.h" />
     <ClInclude Include="Core\Framework\Systems\LIWSystem_CameraControl.h" />
@@ -305,6 +309,7 @@
     <ClInclude Include="Core\Utility\LIWFile.h" />
     <ClInclude Include="Editor\LIWEditor.h" />
     <ClInclude Include="Editor\LIWEditorTasks.h" />
+    <ClInclude Include="Editor\LIWIEditorDraw.h" />
     <ClInclude Include="LIWCore.h" />
     <ClInclude Include="MultiThreadRunner.h" />
     <ClInclude Include="SingleThreadRunner.h" />

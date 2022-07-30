@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <list>
+#include <unordered_set>
 #include <mutex>
 
 #include "LIWEntity.h"
@@ -8,8 +9,9 @@
 
 #define LIW_ENTITY_COUNT uint32_t(1) << 20 // 1M entities
 
-namespace LIW {
-	//TODO: Create container and use inhouse mem management
+//TODO: Create container and use inhouse mem management
+
+namespace LIW {	
 	class LIWEntityManager final{
 	public:
 		typedef std::mutex mtx_type;
@@ -22,6 +24,7 @@ namespace LIW {
 			if (m_entitiesAvailable.empty())
 				throw "Entities exhausted. ";
 			LIWEntity entity = m_entitiesAvailable.front();
+			m_entitiesOccupied.insert(entity);
 			m_entitiesAvailable.pop_front();
 			return entity;
 		}
@@ -34,7 +37,9 @@ namespace LIW {
 				throw "Entities exhausted. ";
 			entities.set_capacity(count);
 			for (uint32_t i = 0; i < count; i++) {
-				entities.push_back(m_entitiesAvailable.front());
+				LIWEntity entity = m_entitiesAvailable.front();
+				entities.push_back(entity);
+				m_entitiesOccupied.insert(entity);
 				m_entitiesAvailable.pop_front();
 			}
 		}
@@ -43,15 +48,19 @@ namespace LIW {
 			FetchEntities(entities, count);
 		}
 		inline void ReturnEntity(LIWEntity entity) {
+			m_entitiesOccupied.erase(m_entitiesOccupied.find(entity));
 			m_entitiesAvailable.push_front(entity);
 		}
 		inline void ReturnEntity_thdsf(LIWEntity entity) {
 			lkgd_type lk(m_mtx);
 			ReturnEntity(entity);
 		}
+
+		inline const std::unordered_set<LIWEntity> GetOccupiedEntities() const { return m_entitiesOccupied; }
 	private:
 		mtx_type m_mtx;
 		uint32_t m_entityCapacity{ 0 };
 		std::list<LIWEntity> m_entitiesAvailable;
+		std::unordered_set<LIWEntity> m_entitiesOccupied;
 	};
 }
