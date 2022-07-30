@@ -11,6 +11,13 @@
 #define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_DEPTH			uint32_t(1)<<2
 #define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_STENCIL			uint32_t(1)<<3
 #define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_DEPTHSTENCIL	uint32_t(1)<<4
+#define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1		uint32_t(1)<<5
+#define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_1	uint32_t(1)<<6
+#define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_2		uint32_t(1)<<7
+#define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_2	uint32_t(1)<<8
+#define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_3		uint32_t(1)<<9
+#define LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_3	uint32_t(1)<<10
+
 
 namespace LIW {
 	//enum LIWFrameBufferAttachmentType {
@@ -27,6 +34,9 @@ namespace LIW {
 	class LIWFrameBuffer {
 	public:
 		static const uint32_t sc_invalidHandle = UINT32_MAX;
+		static const uint32_t sc_maxColorAttachmentCount = 4;
+	public:
+		LIWFrameBuffer();
 	public:
 		void CreateFrameBuffer(int width, int height, liw_flag_type attachmentFlag);
 		void DestroyFrameBuffer();
@@ -43,8 +53,8 @@ namespace LIW {
 		inline uint32_t GetRawHandle() const { return m_handleFrameBuffer; }
 		
 
-		inline uint32_t GetColorAttachmentRawHandle() const { return m_handleColorAttachment; }
-		inline LIWRenderAttachmentFormat GetColorAttachmentFormat() const { return m_formatColorAttachment; }
+		inline uint32_t GetColorAttachmentRawHandle(uint32_t idx = 0) const { return m_handleColorAttachments[idx]; }
+		inline LIWRenderAttachmentFormat GetColorAttachmentFormat(uint32_t idx = 0) const { return m_formatColorAttachments[idx]; }
 		
 		inline uint32_t GetDepthAttachmentRawHandle() const { 
 			if (m_formatDepthAttachment == LIWRenderAttachmentFormat_Depth)
@@ -69,8 +79,8 @@ namespace LIW {
 		uint32_t m_handleFrameBuffer{ sc_invalidHandle };
 		int m_width{ -1 };
 		int m_height{ -1 };
-		uint32_t					m_handleColorAttachment{ sc_invalidHandle };
-		LIWRenderAttachmentFormat	m_formatColorAttachment{ LIWRenderAttachmentFormat_Max };
+		uint32_t					m_handleColorAttachments[sc_maxColorAttachmentCount];
+		LIWRenderAttachmentFormat	m_formatColorAttachments[sc_maxColorAttachmentCount];
 		uint32_t					m_handleDepthAttachment{ sc_invalidHandle }; //Also used to store depth&stencil if LIWRenderAttachmentFormat_DepthStencil
 		LIWRenderAttachmentFormat	m_formatDepthAttachment{ LIWRenderAttachmentFormat_Max };
 		uint32_t					m_handleStencilAttachment{ sc_invalidHandle };

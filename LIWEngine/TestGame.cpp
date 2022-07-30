@@ -96,10 +96,10 @@ int TestGame::Initialise()
 
 	int countSpheres = 9;
 
-	LIW_ECS_FetchEntities(m_entities, 3 + countSpheres);
-	LIW_ECS_CreateComponents(LIWComponent_Transform, m_transforms, 3 + countSpheres);
-	LIW_ECS_CreateComponents(LIWComponent_SceneNode, m_sceneNodes, 3 + countSpheres);
-	LIW_ECS_CreateComponents(LIWComponent_MeshRenderer, m_meshRenderers, 1 + countSpheres);
+	LIW_ECS_FetchEntities(m_entities, 4 + countSpheres);
+	LIW_ECS_CreateComponents(LIWComponent_Transform, m_transforms, 4 + countSpheres);
+	LIW_ECS_CreateComponents(LIWComponent_SceneNode, m_sceneNodes, 4 + countSpheres);
+	LIW_ECS_CreateComponents(LIWComponent_MeshRenderer, m_meshRenderers, 2 + countSpheres);
 	m_camera = LIW_ECS_CreateComponent(LIWComponent_Camera);
 	m_cameraController = LIW_ECS_CreateComponent(LIWComponent_CameraController);
 	m_light = LIW_ECS_CreateComponent(LIWComponent_Light);
@@ -127,21 +127,6 @@ int TestGame::Initialise()
 
 	idxEntity++; idxTransform++; idxSceneNode++;
 
-
-	// Object0: Model
-	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
-	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
-	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer], m_entities[idxEntity]);
-	auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
-	transObj.m_position = glm::vec3(0.0f, -10.0f, 0.0f);
-	transObj.m_rotation = glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
-	auto& meshRenderer = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer]);
-	meshRenderer.m_handleMaterial = m_material;
-	meshRenderer.m_handleMesh = m_mesh;
-
-	idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
-
-
 	// Light
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
@@ -162,18 +147,44 @@ int TestGame::Initialise()
 
 	idxEntity++; idxTransform++; idxSceneNode++; 
 
+	// Object0: Model
+	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer], m_entities[idxEntity]);
+	auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
+	transObj.m_position = glm::vec3(0.0f, -10.0f, 0.0f);
+	transObj.m_rotation = glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
+	auto& meshRenderer = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer]);
+	meshRenderer.m_handleMaterial = m_material;
+	meshRenderer.m_handleMesh = m_mesh;
 
+	idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
+
+	// Object1: Plane
+	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
+	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer], m_entities[idxEntity]);
+	auto& transObj1 = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
+	transObj1.m_position = glm::vec3(0.0f, -3.0f, 0.0f);
+	transObj1.m_rotation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
+	transObj1.m_scale = glm::vec3(100.0f, 1.0f, 100.0f);
+	auto& meshRenderer1 = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer]);
+	meshRenderer1.m_handleMaterial = m_material1;
+	meshRenderer1.m_handleMesh = assetManager.GetMeshHandle(LIW_MESH_PLANE_NAME);
+
+	idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
+
+	// Objects: Sphere
+	liw_objhdl_type hdlMeshSphere = assetManager.GetMeshHandle(LIW_MESH_SPHERE_NAME);
 	for (size_t i = 0; i < countSpheres; i++) {
-		// Object1: Sphere
 		LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
 		LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
 		LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer], m_entities[idxEntity]);
-		auto& transObj1 = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
-		transObj1.m_position = glm::vec3(-3.0f + (i/3) % 3 * 3.0f, 0.0f, -3.0f + i % 3 * 3.0f);
-		transObj1.m_rotation = glm::identity<glm::quat>();//glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
+		auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
+		transObj.m_position = glm::vec3(-3.0f + (i/3) % 3 * 3.0f, 0.0f, -3.0f + i % 3 * 3.0f);
+		transObj.m_rotation = glm::identity<glm::quat>();//glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
 		auto& meshRenderer1 = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer]);
 		meshRenderer1.m_handleMaterial = m_material1;
-		liw_objhdl_type hdlMeshSphere = assetManager.GetMeshHandle(LIW_MESH_SPHERE_NAME);
 		meshRenderer1.m_handleMesh = hdlMeshSphere;
 
 		idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;

@@ -1,6 +1,13 @@
 #include "LIWFrameBuffer.h"
 
 namespace LIW {
+	LIWFrameBuffer::LIWFrameBuffer()
+	{
+		for (uint32_t i = 0; i < sc_maxColorAttachmentCount; i++) {
+			m_handleColorAttachments[i] = sc_invalidHandle;
+			m_formatColorAttachments[i] = LIWRenderAttachmentFormat_Max;
+		}
+	}
 	void LIWFrameBuffer::CreateFrameBuffer(int width, int height, liw_flag_type attachmentFlag)
 	{
 		if (IsValid())
@@ -11,14 +18,43 @@ namespace LIW {
 		glBindFramebuffer(GL_FRAMEBUFFER, m_handleFrameBuffer);
 
 		// Color
+		//0
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachment);
-			m_formatColorAttachment = LIWRenderAttachmentFormat_ColorRGBA;
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[0]);
+			m_formatColorAttachments[0] = LIWRenderAttachmentFormat_ColorRGBA;
 		}
 		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachment);
-			m_formatColorAttachment = LIWRenderAttachmentFormat_ColorRGB;
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[0]);
+			m_formatColorAttachments[0] = LIWRenderAttachmentFormat_ColorRGB;
 		}
+		//1
+		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_1) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[1]);
+			m_formatColorAttachments[1] = LIWRenderAttachmentFormat_ColorRGBA;
+		}
+		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[1]);
+			m_formatColorAttachments[1] = LIWRenderAttachmentFormat_ColorRGB;
+		}
+		//2
+		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_2) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[2]);
+			m_formatColorAttachments[2] = LIWRenderAttachmentFormat_ColorRGBA;
+		}
+		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_2) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[2]);
+			m_formatColorAttachments[2] = LIWRenderAttachmentFormat_ColorRGB;
+		}
+		//3
+		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_3) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[3]);
+			m_formatColorAttachments[3] = LIWRenderAttachmentFormat_ColorRGBA;
+		}
+		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_3) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[3]);
+			m_formatColorAttachments[3] = LIWRenderAttachmentFormat_ColorRGB;
+		}
+
 
 		// Depth Stencil
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_DEPTHSTENCIL) {
@@ -36,6 +72,7 @@ namespace LIW {
 			}
 		}
 
+
 		GLenum completeness = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 		if (completeness != GL_FRAMEBUFFER_COMPLETE) {
@@ -52,8 +89,11 @@ namespace LIW {
 		glDeleteFramebuffers(1, &m_handleFrameBuffer);
 		m_handleFrameBuffer = sc_invalidHandle;
 		m_width = m_height = -1;
-		if (m_handleColorAttachment != sc_invalidHandle) {
-			glDeleteTextures(1, &m_handleColorAttachment);
+		for (uint32_t i = 0; i < sc_maxColorAttachmentCount; i++) {
+			if (m_handleColorAttachments[i] != sc_invalidHandle) {
+				glDeleteTextures(1, &m_handleColorAttachments[i]);
+			}
+			m_formatColorAttachments[i] = LIWRenderAttachmentFormat_Max;
 		}
 		if (m_handleDepthAttachment != sc_invalidHandle) {
 			glDeleteTextures(1, &m_handleDepthAttachment);
@@ -61,7 +101,7 @@ namespace LIW {
 		if (m_handleStencilAttachment != sc_invalidHandle) {
 			glDeleteTextures(1, &m_handleStencilAttachment);
 		}
-		m_formatColorAttachment = m_formatDepthAttachment = m_formatStencilAttachment = LIWRenderAttachmentFormat_Max;
+		m_formatDepthAttachment = m_formatStencilAttachment = LIWRenderAttachmentFormat_Max;
 	}
 	void LIWFrameBuffer::CreateAttachment_Texture2D(int width, int height, LIWRenderAttachmentFormat format, uint32_t& handleOut)
 	{

@@ -33,6 +33,6 @@ void main() {
 	OUT.posWorld = posWorld.xyz;
 	OUT.normalWorld = normalize(LIW_SHADER_NORMAL_MATRIX * normalize(normal));
 	OUT.tangentWorld = normalize(LIW_SHADER_NORMAL_MATRIX * normalize(tangent.xyz));
-	OUT.binormalWorld = cross(OUT.normalWorld, OUT.tangentWorld) * tangent.w;
+	OUT.binormalWorld = cross(OUT.tangentWorld, OUT.normalWorld) * tangent.w;
 	gl_Position = (cameraBlk.projMatrix * cameraBlk.viewMatrix) * posWorld;
 }

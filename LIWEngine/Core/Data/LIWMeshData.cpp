@@ -383,11 +383,11 @@ namespace LIW {
 		meshData.m_positions[3] = glm::vec3(1.0f, 0.0f, -1.0f);
 
 		meshData.m_indices[0] = 0;
-		meshData.m_indices[1] = 1;
-		meshData.m_indices[2] = 3;
+		meshData.m_indices[1] = 3;
+		meshData.m_indices[2] = 1;
 		meshData.m_indices[3] = 2;
-		meshData.m_indices[4] = 0;
-		meshData.m_indices[5] = 3;
+		meshData.m_indices[4] = 3;
+		meshData.m_indices[5] = 0;
 
 		meshData.m_texcoords[0] = glm::vec2(0.0f, 0.0f);
 		meshData.m_texcoords[1] = glm::vec2(0.0f, 1.0f);
@@ -428,7 +428,7 @@ namespace LIW {
 		binormal = ba * texMatrix[1][0] + ca * texMatrix[1][1];
 
 		glm::vec3 normal = glm::cross(ca, ba);
-		glm::vec3 biCross = glm::cross(normal, tangent);
+		glm::vec3 biCross = glm::cross(tangent, normal);
 		float handedness = 1.0f;
 		if (glm::dot(biCross, binormal) < 0.0f) {
 			handedness = -1.0f;
