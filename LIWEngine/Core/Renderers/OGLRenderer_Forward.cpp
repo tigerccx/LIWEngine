@@ -219,7 +219,8 @@ namespace LIW {
 				glm::vec3 forward = transLight.GetForward();
 				forward = glm::normalize(forward);
 				float cosHalfAngle = glm::cos(glm::radians(light.m_param.m_spotLight.m_angle * 0.5f));
-				lightParams_Spot[lightCount_Spot] = glm::vec4(forward.x, forward.y, light.m_param.m_spotLight.m_radius, cosHalfAngle);
+				lightParams_Spot[lightCount_Spot] = glm::vec4(forward.x, forward.y, 
+					light.m_param.m_spotLight.m_radius * Maths::SignNoZero(forward.z), cosHalfAngle);
 
 				lightCount_Spot++;
 			}

@@ -197,9 +197,9 @@ void main() {
 		vec3 diffuseOut = vec3(0,0,0);
 		vec3 specularOut = vec3(0,0,0);
 		CalculateSpotLight( toEye, posWorld, normalWorld, diffuseColour, specGloss,
-							forwardLightBlk.lightColours_Point[i], 
-							forwardLightBlk.lightPositions_Point[i].xyz, 
-							forwardLightBlk.lightParams_Point[i], 
+							forwardLightBlk.lightColours_Spot[i], 
+							forwardLightBlk.lightPositions_Spot[i].xyz, 
+							forwardLightBlk.lightParams_Spot[i], 
 							diffuseOut, specularOut);
 		diffuse+=diffuseOut;
 		specular+=specularOut;
