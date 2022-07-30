@@ -127,9 +127,15 @@ namespace LIW {
 			// Bind material data
 			material.BindData();
 
-			// Upload transform
+			// Upload matrices
 			glm::mat4 matModel = transform.GetMatrix();
 			glUniformMatrix4fv(glGetUniformLocation(rawHandleshaderProgram, LIW_SHADER_MODEL_MATRIX_NAME), 1, false, glm::value_ptr(matModel));
+			uint32_t locMatNormal = glGetUniformLocation(rawHandleshaderProgram, LIW_SHADER_NORMAL_MATRIX_NAME);
+			if (locMatNormal != GL_INVALID_VALUE) {
+				glm::mat3 matNormal = glm::transpose(glm::inverse(glm::mat3(matModel)));
+				glUniformMatrix3fv(locMatNormal, 1, false, glm::value_ptr(matNormal));
+			}
+			
 
 			// Draw
 			auto& submeshes = mesh.GetSubmeshes();

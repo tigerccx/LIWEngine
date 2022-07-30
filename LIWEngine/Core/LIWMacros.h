@@ -18,6 +18,7 @@
 ////
 //Common Matrix
 #define LIW_SHADER_MODEL_MATRIX_NAME	"modelMatrix"
+#define LIW_SHADER_NORMAL_MATRIX_NAME	"normalMatrix"
 #define LIW_SHADER_TEXTURE_MATRIX_NAME	"textureMatrix"
 #define LIW_SHADER_SHADOW_MATRIX_NAME	"shadowMatrix"
 

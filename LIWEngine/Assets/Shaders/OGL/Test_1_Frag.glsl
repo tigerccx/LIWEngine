@@ -142,10 +142,13 @@ layout(std140, binding=LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA) uniform For
 
 //Material
 uniform sampler2D mainTex;
+uniform sampler2D normalTex;
 
 in Vertex{
 	vec3 posWorld;
 	vec3 normalWorld;
+	vec3 tangentWorld;
+	vec3 binormalWorld;
 	vec2 texCoord;
 	vec4 colour;
 } IN;
@@ -157,11 +160,17 @@ void main() {
 	const float diffuseComponent = 0.6f;
 	const float specularComponent = 0.38f;
 
-	const vec3 normalWorld = IN.normalWorld;
+	const vec3 normalWorld = normalize(IN.normalWorld);
+	const vec3 tangentWorld = normalize(IN.tangentWorld);
+	const vec3 binormalWorld = normalize(IN.binormalWorld);
 	const vec3 posWorld = IN.posWorld;
 
 	vec3 toEye = cameraBlk.posCamera - posWorld;
 	vec3 diffuseColour = texture(mainTex, IN.texCoord).rgb;
+	
+	mat3 TBN = mat3(normalize(tangentWorld), normalize(binormalWorld), normalize(normalWorld));
+	vec3 normal = texture(normalTex, IN.texCoord).rgb;
+	normal = normalize(TBN*normalize(normal*2.0f-1.0f));
 	
 	vec3 diffuse = vec3(0,0,0);
 	vec3 specular = vec3(0,0,0);
@@ -170,7 +179,7 @@ void main() {
 	for(int i=0;i<forwardLightBlk.lightCount_Directional;i++){
 		vec3 diffuseOut = vec3(0,0,0);
 		vec3 specularOut = vec3(0,0,0);
-		CalculateDirectionalLight( toEye, normalWorld, diffuseColour, specGloss,
+		CalculateDirectionalLight( toEye, normal, diffuseColour, specGloss,
 								forwardLightBlk.lightColours_Directional[i], 
 								forwardLightBlk.lightPositions_Directional[i].xyz, 
 								forwardLightBlk.lightParams_Directional[i], 
@@ -183,7 +192,7 @@ void main() {
 	for(int i=0;i<forwardLightBlk.lightCount_Point;i++){
 		vec3 diffuseOut = vec3(0,0,0);
 		vec3 specularOut = vec3(0,0,0);
-		CalculatePointLight( toEye, posWorld, normalWorld, diffuseColour, specGloss,
+		CalculatePointLight( toEye, posWorld, normal, diffuseColour, specGloss,
 							forwardLightBlk.lightColours_Point[i], 
 							forwardLightBlk.lightPositions_Point[i].xyz, 
 							forwardLightBlk.lightParams_Point[i], 
@@ -196,7 +205,7 @@ void main() {
 	for(int i=0;i<forwardLightBlk.lightCount_Spot;i++){
 		vec3 diffuseOut = vec3(0,0,0);
 		vec3 specularOut = vec3(0,0,0);
-		CalculateSpotLight( toEye, posWorld, normalWorld, diffuseColour, specGloss,
+		CalculateSpotLight( toEye, posWorld, normal, diffuseColour, specGloss,
 							forwardLightBlk.lightColours_Spot[i], 
 							forwardLightBlk.lightPositions_Spot[i].xyz, 
 							forwardLightBlk.lightParams_Spot[i], 
@@ -210,5 +219,5 @@ void main() {
 	fragColour += ambientLightingClr;
 	fragColour.a = 1.0f;
 	
-	//fragColour = vec4(normalWorld*0.5f+0.5f, 1.0f);
+	//fragColour = vec4(normal*0.5f+0.5f, 1.0f);
 }

@@ -28,16 +28,19 @@ namespace LIW {
 		//
 		auto& positions = meshData.GetPositionArray();
 		auto& normals = meshData.GetNormalArray();
+		auto& tangents = meshData.GetTangentArray();
 		auto& texcoords = meshData.GetTexcoordArray();
 		auto& colours = meshData.GetColourArray();
 		auto& indices = meshData.GetIndexArray();
 		m_submeshes = meshData.GetSubMeshArray();
 		
 		bool useNormal = false;
+		bool useTangent = false;
 		bool useTexcoord = false;
 		bool useColour = false;
 		const size_t sizePositions = positions.get_size() * sizeof(glm::vec3);
 		const size_t sizeNormals = normals.get_size() * sizeof(glm::vec3);
+		const size_t sizeTangents = tangents.get_size() * sizeof(glm::vec4);
 		const size_t sizeTexcoords = texcoords.get_size() * sizeof(glm::vec2);
 		const size_t sizeColours = colours.get_size() * sizeof(glm::vec3);
 		const size_t sizeIndices = indices.get_size() * sizeof(uint32_t);
@@ -45,6 +48,10 @@ namespace LIW {
 		if (normals.get_size() > 0) { 
 			useNormal = true; 
 			sizeBuffer += sizeNormals;
+		}
+		if (tangents.get_size() > 0) {
+			useTangent = true;
+			sizeBuffer += sizeTangents;
 		}
 		if (texcoords.get_size() > 0) {
 			useTexcoord = true;
@@ -70,6 +77,13 @@ namespace LIW {
 			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
 			glEnableVertexAttribArray(LIW_SHADER_VA_LOCATION_NORMAL);
 			sizeBuffer += sizeNormals;
+		}
+		// Tangent
+		if (useTangent) {
+			glBufferSubData(GL_ARRAY_BUFFER, sizeBuffer, sizeTangents, tangents.get_data());
+			glVertexAttribPointer(LIW_SHADER_VA_LOCATION_TANGENT, 4, GL_FLOAT, GL_FALSE, 0, (void*)sizeBuffer);
+			glEnableVertexAttribArray(LIW_SHADER_VA_LOCATION_TANGENT);
+			sizeBuffer += sizeTangents;
 		}
 		// Texcoord
 		if (useTexcoord) {

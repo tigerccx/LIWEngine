@@ -48,6 +48,7 @@ public:
 
     liw_objhdl_type m_tex2D;
     liw_objhdl_type m_tex2D1;
+    liw_objhdl_type m_tex2D2;
 
     liw_objhdl_type m_shader_vert;
     liw_objhdl_type m_shader_frag;

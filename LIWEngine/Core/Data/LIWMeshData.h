@@ -38,6 +38,7 @@ namespace LIW {
 		inline bool IsValid() const { return m_primitiveType != LIWPreimitiveType_Max; }
 		const LIWDArray<glm::vec3>& GetPositionArray() const { return m_positions; }
 		const LIWDArray<glm::vec3>& GetNormalArray() const { return m_normals; }
+		const LIWDArray<glm::vec4>& GetTangentArray() const { return m_tangents; }
 		const LIWDArray<glm::vec2>& GetTexcoordArray() const { return m_texcoords; }
 		const LIWDArray<glm::vec3>& GetColourArray() const { return m_colours; }
 		const LIWDArray<uint32_t>& GetIndexArray() const { return m_indices; }
@@ -56,7 +57,7 @@ namespace LIW {
 			vertIdxOutB = m_indices[((size_t)triIdx * 3) + 1];
 			vertIdxOutC = m_indices[((size_t)triIdx * 3) + 2];
 		}
-		glm::vec4 GernerateTangent(uint32_t vertIdxA, uint32_t vertIdxB, uint32_t vertIdxC);
+		glm::vec4 GenerateTangent(uint32_t vertIdxA, uint32_t vertIdxB, uint32_t vertIdxC);
 
 	private:
 		LIWDArray<glm::vec3>	m_positions{ 0 };

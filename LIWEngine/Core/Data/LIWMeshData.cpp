@@ -266,7 +266,7 @@ namespace LIW {
 		for (uint32_t triIdx = 0; triIdx < triCount; triIdx++) {
 			uint32_t vertIdxA, vertIdxB, vertIdxC;
 			GetVertexIndicesFromTriangle(triIdx, vertIdxA, vertIdxB, vertIdxC);
-			glm::vec4 tangent = GernerateTangent(vertIdxA, vertIdxB, vertIdxC);
+			glm::vec4 tangent = GenerateTangent(vertIdxA, vertIdxB, vertIdxC);
 			m_tangents[vertIdxA] += tangent;
 			m_tangents[vertIdxB] += tangent;
 			m_tangents[vertIdxC] += tangent;
@@ -412,7 +412,7 @@ namespace LIW {
 		meshData.m_submeshes.push_back(LIWSubMesh{ 0, 6 });
 		meshData.m_primitiveType = LIWPreimitiveType_Triangles;
 	}
-	glm::vec4 LIWMeshData::GernerateTangent(uint32_t vertIdxA, uint32_t vertIdxB, uint32_t vertIdxC)
+	glm::vec4 LIWMeshData::GenerateTangent(uint32_t vertIdxA, uint32_t vertIdxB, uint32_t vertIdxC)
 	{
 		glm::vec3 ba = m_positions[vertIdxB] - m_positions[vertIdxA];
 		glm::vec3 ca = m_positions[vertIdxC] - m_positions[vertIdxA];
@@ -427,7 +427,7 @@ namespace LIW {
 		tangent = ba * texMatrix[0][0] + ca * texMatrix[0][1];
 		binormal = ba * texMatrix[1][0] + ca * texMatrix[1][1];
 
-		glm::vec3 normal = glm::cross(ba, ca);
+		glm::vec3 normal = glm::cross(ca, ba);
 		glm::vec3 biCross = glm::cross(normal, tangent);
 		float handedness = 1.0f;
 		if (glm::dot(biCross, binormal) < 0.0f) {

@@ -35,6 +35,12 @@ int TestGame::Initialise()
 	tex2D1.CreateTexture(image);
 	image.UnloadImg();
 
+	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"test_normal.jpg", LIWImageFormat_RGB);
+	m_tex2D2 = assetManager.CreateTexture2D("tex2");
+	auto& tex2D2 = assetManager.GetTexture2D(m_tex2D2);
+	tex2D2.CreateTexture(image);
+	image.UnloadImg();
+
 	assetManager.DestroyImage("image0");
 
 	// Mesh
@@ -81,6 +87,7 @@ int TestGame::Initialise()
 	m_material1 = assetManager.CreateMaterial("material1");
 	auto& material1 = assetManager.GetMaterial(m_material1);
 	material1.AddParam_Tex2D("mainTex", m_tex2D1);
+	material1.AddParam_Tex2D("normalTex", m_tex2D2);
 	material1.m_handleShaderProgram = m_shaderProgramLight;
 
 	//
