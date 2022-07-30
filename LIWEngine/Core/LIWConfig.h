@@ -23,7 +23,7 @@
 //
 // Editor
 //
-//#define LIW_ENABLE_EDITOR
+#define LIW_ENABLE_EDITOR
 
 
 /*

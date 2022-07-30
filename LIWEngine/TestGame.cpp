@@ -238,7 +238,6 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 	ptrFT_EdtrUIDrawBeg->ptrFrameData = m_ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_EdtrUIDrawBeg);
 #else
-
 	// Straight to end of frame
 	auto ptrFT_FrameEnd = liw_new_def<LIW_FT_FrameEnd>();
 	ptrFT_FrameEnd->ptrFrameData = m_ptrFrameData;

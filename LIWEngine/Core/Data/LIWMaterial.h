@@ -81,5 +81,26 @@ namespace LIW {
 		LIWDArray<LIWMaterialParam_IVec4>	m_paramsIVec4{ 0 };
 		LIWDArray<LIWMaterialParam_FVec4>	m_paramsFVec4{ 0 };
 		LIWDArray<LIWMaterialParam_Tex2D>	m_paramsTex2D{ 0 };
+
+#ifdef LIW_ENABLE_EDITOR
+	public:
+		inline void EditorDrawUI() override {
+			for (int i = 0; i < m_paramsInt.get_size(); i++) {
+				ImGui::DragInt(m_paramsInt[i].m_name, &m_paramsInt[i].m_val);
+			}
+			for (int i = 0; i < m_paramsFloat.get_size(); i++) {
+				ImGui::DragFloat(m_paramsFloat[i].m_name, &m_paramsFloat[i].m_val);
+			}
+			for (int i = 0; i < m_paramsIVec4.get_size(); i++) {
+				ImGui::DragInt4(m_paramsIVec4[i].m_name, glm::value_ptr(m_paramsIVec4[i].m_val));
+			}
+			for (int i = 0; i < m_paramsFVec4.get_size(); i++) {
+				ImGui::DragFloat4(m_paramsFVec4[i].m_name, glm::value_ptr(m_paramsFVec4[i].m_val));
+			}
+			for (int i = 0; i < m_paramsTex2D.get_size(); i++) {
+				ImGui::Text("Texture: %s", m_paramsTex2D[i].m_name);
+			}
+		}
+#endif
 	};
 }

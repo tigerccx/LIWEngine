@@ -92,6 +92,7 @@ void LIW::Editor::LIWTEST_TT_TestDrawUI::Execute()
 	ImGui::End();
 
 	DrawSceneGraphUI();
+	DrawMaterialManagerUI();
 
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_EDTR_UIDRAW, 1);
 }
@@ -151,9 +152,10 @@ void LIW::Editor::DrawMaterialManagerUI()
 	LIWDArray<const char*, LIWMem_Default> items;
 
 	int countMaterial = 0;
-	for (auto itr = assets.begin(); itr != assets.end(); itr++, countMaterial++) {
+	for (auto itr = assets.begin(); itr != assets.end(); itr++) {
 		if (itr->second.m_assetType == LIWAssetType_Material) {
-			items[countMaterial] = itr->first.c_str();
+			items.push_back(itr->first.c_str());
+			countMaterial++;
 		}
 	}
 
@@ -161,15 +163,18 @@ void LIW::Editor::DrawMaterialManagerUI()
 	if (ImGui::BeginListBox("Materials"))
 	{
 		int n = 0;
-		for (auto itr = assets.begin(); itr != assets.end(); itr++, n++)
+		for (auto itr = assets.begin(); itr != assets.end(); itr++)
 		{
-			const liw_objhdl_type hdlMaterial = itr->second.m_handle;
-			const bool is_selected = (hdlMaterial == selectedMaterial);
-			if (ImGui::Selectable(items[n], is_selected))
-				selectedMaterial = hdlMaterial;
+			if (itr->second.m_assetType == LIWAssetType_Material) {
+				const liw_objhdl_type hdlMaterial = itr->second.m_handle;
+				const bool is_selected = (hdlMaterial == selectedMaterial);
+				if (ImGui::Selectable(items[n], is_selected))
+					selectedMaterial = hdlMaterial;
 
-			if (is_selected) {
-				ImGui::SetItemDefaultFocus();
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+				n++;
 			}
 		}
 		ImGui::EndListBox();
@@ -178,6 +183,7 @@ void LIW::Editor::DrawMaterialManagerUI()
 	if (selectedMaterial != liw_c_nullobjhdl) {
 		ImGui::Separator();
 		auto& material = assetManager.GetMaterial(selectedMaterial);
+		material.EditorDrawUI();
 	}
 
 	ImGui::End();
