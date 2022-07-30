@@ -1,4 +1,6 @@
 #pragma once
+#include "LIWConfig.h"
+
 #include <string>
 #include <unordered_map>
 
@@ -51,6 +53,9 @@ namespace LIW {
 		};
 	public:
 		void Init();
+
+		inline auto& GetAssets() { return m_assetMap; }
+
 		void Cleanup();
 
 	public:

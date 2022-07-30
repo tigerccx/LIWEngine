@@ -1,5 +1,8 @@
 #include "TestGame.h"
+
+#ifdef LIW_ENABLE_EDITOR
 #include "Editor/LIWEditorTasks.h"
+#endif //LIW_ENABLE_EDITOR
 
 #include "Framework/LIWECSFunctional.h"
 
@@ -229,15 +232,16 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 	LIW_ECS_ApplyChangeOnComponentManager(TestComponent0);
 
 	
-	//
+#ifdef LIW_ENABLE_EDITOR
 	// Kick off editor
-	//
-
 	auto ptrFT_EdtrUIDrawBeg = liw_new_def<Editor::LIW_FT_EDTR_UIDrawBeg>();
 	ptrFT_EdtrUIDrawBeg->ptrFrameData = m_ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_EdtrUIDrawBeg);
+#else
 
-	//auto ptrFT_FrameEnd = liw_new_def<LIW_FT_FrameEnd>();
-	//ptrFT_FrameEnd->ptrFrameData = m_ptrFrameData;
-	//LIWFiberExecutor::m_executor.Submit(ptrFT_FrameEnd);
+	// Straight to end of frame
+	auto ptrFT_FrameEnd = liw_new_def<LIW_FT_FrameEnd>();
+	ptrFT_FrameEnd->ptrFrameData = m_ptrFrameData;
+	LIWFiberExecutor::m_executor.Submit(ptrFT_FrameEnd);
+#endif //LIW_ENABLE_EDITOR
 }

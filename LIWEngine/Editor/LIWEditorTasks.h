@@ -1,4 +1,7 @@
 #pragma once
+#include "LIWConfig.h"
+
+#ifdef LIW_ENABLE_EDITOR
 
 #include "Memory/LIWMemory.h"
 #include "LIWFrame.h"
@@ -8,6 +11,8 @@
 #include "Threading/LIWMainThreadExecutor.h"
 
 #include "Framework/LIWECSFunctional.h"
+
+#include "Data/LIWMaterial.h"
 
 namespace LIW {
 	namespace Editor {
@@ -70,6 +75,7 @@ namespace LIW {
 
 
 		void DrawSceneGraphUI();
+		void DrawMaterialManagerUI();
 
 		class LIWTEST_TT_TestDrawUI final :
 			public LIWThreadWorkerTask
@@ -81,3 +87,4 @@ namespace LIW {
 	}
 }
 
+#endif//LIW_ENABLE_EDITOR

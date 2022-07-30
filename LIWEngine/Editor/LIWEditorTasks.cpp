@@ -4,6 +4,8 @@
 
 #include "LIWEditorTasks.h"
 
+#ifdef LIW_ENABLE_EDITOR
+
 #include "TestGlobal.h"
 
 void LIW::Editor::LIW_FT_EDTR_UIDrawBeg::Execute(LIWFiberWorkerPointer thisFiber)
@@ -138,3 +140,47 @@ void LIW::Editor::DrawSceneGraphUI()
 
 	ImGui::End();
 }
+
+void LIW::Editor::DrawMaterialManagerUI()
+{
+	ImGui::Begin("Materials");
+
+	auto& assetManager = *LIWGlobal::GetAssetManager();
+	auto& assets = assetManager.GetAssets();
+
+	LIWDArray<const char*, LIWMem_Default> items;
+
+	int countMaterial = 0;
+	for (auto itr = assets.begin(); itr != assets.end(); itr++, countMaterial++) {
+		if (itr->second.m_assetType == LIWAssetType_Material) {
+			items[countMaterial] = itr->first.c_str();
+		}
+	}
+
+	static liw_objhdl_type selectedMaterial = liw_c_nullobjhdl;
+	if (ImGui::BeginListBox("Materials"))
+	{
+		int n = 0;
+		for (auto itr = assets.begin(); itr != assets.end(); itr++, n++)
+		{
+			const liw_objhdl_type hdlMaterial = itr->second.m_handle;
+			const bool is_selected = (hdlMaterial == selectedMaterial);
+			if (ImGui::Selectable(items[n], is_selected))
+				selectedMaterial = hdlMaterial;
+
+			if (is_selected) {
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndListBox();
+	}
+
+	if (selectedMaterial != liw_c_nullobjhdl) {
+		ImGui::Separator();
+		auto& material = assetManager.GetMaterial(selectedMaterial);
+	}
+
+	ImGui::End();
+}
+
+#endif //LIW_ENABLE_EDITOR

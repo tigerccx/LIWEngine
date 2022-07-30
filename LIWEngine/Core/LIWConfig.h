@@ -20,6 +20,10 @@
 // Enable memset for debugging
 //#define LIW_DEBUG_DEFAULT_ALLOCATOR_MEMSET
 
+//
+// Editor
+//
+//#define LIW_ENABLE_EDITOR
 
 
 /*
@@ -31,3 +35,4 @@
 #define OPENGL_DEBUGGING
 #endif
 #endif
+

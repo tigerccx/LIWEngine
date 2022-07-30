@@ -1,5 +1,7 @@
 #include "LIWEditor.h"
 
+#ifdef LIW_ENABLE_EDITOR
+
 void LIWEditor::InitEditor(GLFWwindow* window)
 {
 	//
@@ -16,3 +18,5 @@ void LIWEditor::InitEditor(GLFWwindow* window)
 	ImGui_ImplOpenGL3_Init("#version 130");
 
 }
+
+#endif //LIW_ENABLE_EDITOR

@@ -1,4 +1,6 @@
 #pragma once
+#include "LIWConfig.h"
+
 #include <iostream>
 #include <vector>
 
@@ -9,7 +11,7 @@
 #include "LIWEntityManager.h"
 #include "LIWECSConfiguration.h"
 
-#include "TestRenderer.h"
+//#include "TestRenderer.h"
 
 
 namespace LIW {
@@ -73,10 +75,10 @@ namespace LIW {
 }
 
 
-#include "Memory/LIWMemory.h"
-#include "Threading/LIWFiber.h"
-
-struct GameData {
-    LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;
-    LIW::LIWGame* m_game;
-};
+//#include "Memory/LIWMemory.h"
+//#include "Threading/LIWFiber.h"
+//
+//struct GameData {
+//    LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;
+//    LIW::LIWGame* m_game;
+//};

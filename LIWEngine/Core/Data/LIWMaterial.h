@@ -1,10 +1,15 @@
 #pragma once
+#include "LIWConfig.h"
 
 #include "Maths/LIWMaths.h"
 #include "Memory/LIWMemory.h"
 #include "Containers/LIWDArray.h"
 #include "LIWTexture.h"
 #include "LIWShaderProgram.h"
+
+#ifdef LIW_ENABLE_EDITOR
+#include "Editor/LIWIEditorDraw.h"
+#endif //LIW_ENABLE_EDITOR
 
 #define LIW_MATERIAL_PARAM_MAX_NAME_LEN 32
 
@@ -27,7 +32,11 @@ namespace LIW {
 	typedef LIWMaterialParam<glm::vec4> LIWMaterialParam_FVec4;
 	typedef LIWMaterialParam<uint32_t> LIWMaterialParam_Tex2D;
 
-	class LIWMaterial {
+	class LIWMaterial
+#ifdef LIW_ENABLE_EDITOR
+		: public Editor::LIWIEditorDraw
+#endif //LIW_ENABLE_EDITOR
+	{
 	public:
 		//inline void SetShaderProgram(liw_objhdl_type handleProgram) {
 		//	m_handleShaderProgram = handleProgram;

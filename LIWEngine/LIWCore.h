@@ -1,11 +1,14 @@
 #pragma once
+#include "LIWConfig.h"
 
 #include <thread>
 #include <mutex>
 #include <atomic>
 #include <chrono>
 
+#ifdef LIW_ENABLE_EDITOR
 #include "Editor/LIWEditor.h"
+#endif //LIW_ENABLE_EDITOR
 
 #include "Application/Window.h"
 #include "Application/Environment.h"
@@ -128,22 +131,12 @@ namespace LIW {
 			if (codeGameInit)
 				return codeGameInit;
 
+#ifdef LIW_ENABLE_EDITOR
 			//
 			// Setup ImGUI
 			//
-			// Setup ImGUI context
-			//IMGUI_CHECKVERSION();
-			//ImGui::CreateContext();
-			//ImGuiIO& io = ImGui::GetIO();
-			////Setup ImGUI Style
-			//ImGui::StyleColorsDark();
-			//ImGui_ImplGlfw_InitForOpenGL(ptrWindow->GetHandle(), true);
-			//ImGui_ImplOpenGL3_Init("#version 130");
-			////State
-			//bool show_demo_window = true;
-			//bool show_another_window = true;
 			LIWEditor::InitEditor(ptrWindow->GetHandle());
-
+#endif //LIW_ENABLE_EDITOR
 
 			//
 			// Start!!!

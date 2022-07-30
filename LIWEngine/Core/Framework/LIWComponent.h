@@ -1,11 +1,16 @@
 #pragma once
+#include "LIWConfig.h"
+
 #include <atomic>
 
 #include "LIWObject.h"
 #include "LIWTypes.h"
 #include "LIWConstants.h"
 #include "LIWEntity.h"
+
+#ifdef LIW_ENABLE_EDITOR
 #include "Editor/LIWIEditorDraw.h"
+#endif
 
 /*
 * class: LIWComponent
@@ -16,7 +21,10 @@
 */
 namespace LIW {
 	class LIWComponent :
-		public LIW::LIWObject, Editor::LIWIEditorDraw
+		public LIWObject
+#ifdef LIW_ENABLE_EDITOR
+		, public Editor::LIWIEditorDraw
+#endif //LIW_ENABLE_EDITOR
 	{
 		template<class T> friend class LIWComponentManager;
 	public:

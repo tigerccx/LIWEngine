@@ -38,6 +38,7 @@ namespace LIW {
 			return *this;
 		}
 
+#ifdef LIW_ENABLE_EDITOR
 	// Editor
 	public:
 		inline void EditorDrawUI() override {
@@ -48,5 +49,6 @@ namespace LIW {
 			m_rotation = Maths::EulerToQuatXZY(glm::radians(rots));
 			ImGui::DragFloat3("Scales", glm::value_ptr(m_scale), 0.1f);
 		}
+#endif //LIW_ENABLE_EDITOR
 	};
 }
