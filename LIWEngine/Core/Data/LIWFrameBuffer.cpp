@@ -17,42 +17,60 @@ namespace LIW {
 		glGenFramebuffers(1, &m_handleFrameBuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_handleFrameBuffer);
 
+		int countColorAttachments = 0;
+		LIWDArray<GLenum> colorAttachments;
 		// Color
 		//0
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA) {
 			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[0]);
 			m_formatColorAttachments[0] = LIWRenderAttachmentFormat_ColorRGBA;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT0);
+			countColorAttachments++;
 		}
 		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB) {
 			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[0]);
 			m_formatColorAttachments[0] = LIWRenderAttachmentFormat_ColorRGB;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT0);
+			countColorAttachments++;
 		}
 		//1
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_1) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[1]);
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[1], 1);
 			m_formatColorAttachments[1] = LIWRenderAttachmentFormat_ColorRGBA;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT1);
+			countColorAttachments++;
 		}
 		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[1]);
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[1], 1);
 			m_formatColorAttachments[1] = LIWRenderAttachmentFormat_ColorRGB;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT1);
+			countColorAttachments++;
 		}
 		//2
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_2) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[2]);
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[2], 2);
 			m_formatColorAttachments[2] = LIWRenderAttachmentFormat_ColorRGBA;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT2);
+			countColorAttachments++;
 		}
 		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_2) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[2]);
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[2], 2);
 			m_formatColorAttachments[2] = LIWRenderAttachmentFormat_ColorRGB;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT2);
+			countColorAttachments++;
 		}
 		//3
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_3) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[3]);
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[3], 3);
 			m_formatColorAttachments[3] = LIWRenderAttachmentFormat_ColorRGBA;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT3);
+			countColorAttachments++;
 		}
 		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_3) {
-			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[3]);
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[3], 3);
 			m_formatColorAttachments[3] = LIWRenderAttachmentFormat_ColorRGB;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT3);
+			countColorAttachments++;
 		}
 
 
@@ -72,6 +90,8 @@ namespace LIW {
 			}
 		}
 
+
+		glDrawBuffers(countColorAttachments, colorAttachments.get_data());
 
 		GLenum completeness = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -103,8 +123,13 @@ namespace LIW {
 		}
 		m_formatDepthAttachment = m_formatStencilAttachment = LIWRenderAttachmentFormat_Max;
 	}
-	void LIWFrameBuffer::CreateAttachment_Texture2D(int width, int height, LIWRenderAttachmentFormat format, uint32_t& handleOut)
+	void LIWFrameBuffer::CreateAttachment_Texture2D(int width, int height, LIWRenderAttachmentFormat format, uint32_t& handleOut, int idxAttachment)
 	{
+		if (idxAttachment > 0)
+			if (format != LIWRenderAttachmentFormat_ColorRGB &&
+				format != LIWRenderAttachmentFormat_ColorRGBA)
+				throw std::runtime_error("only color attachment type support multiple attachments");
+
 		glGenTextures(1, &handleOut);
 		glBindTexture(GL_TEXTURE_2D, handleOut);
 
@@ -112,6 +137,8 @@ namespace LIW {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 
 		const GLint glInternalFormat = LIWRenderAttachmentFormat_2_GLInternalFormat.at(format);
 		const GLenum glFormat = LIWRenderAttachmentFormat_2_GLFormat.at(format);
@@ -121,7 +148,7 @@ namespace LIW {
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		const GLenum glAttachment = LIWRenderAttachmentFormat_2_GLAttachment.at(format);
+		const GLenum glAttachment = LIWRenderAttachmentFormat_2_GLAttachment.at(format) + idxAttachment;
 		glFramebufferTexture2D(GL_FRAMEBUFFER, glAttachment, GL_TEXTURE_2D, handleOut, 0);
 	}
 }

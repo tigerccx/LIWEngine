@@ -9,6 +9,8 @@
 // Render Pipeline
 #define LIW_RENDER_OPENGL
 //#define LIW_RENDER_VULKAN
+// Shader
+#define LIW_DEBUG_PRINT_SHADER_CONTENT
 
 //
 // Memory

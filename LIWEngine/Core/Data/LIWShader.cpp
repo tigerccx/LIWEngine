@@ -25,6 +25,21 @@ namespace LIW {
 		const char* chars = content.data();
 		int len = content.size();
 
+#ifdef LIW_DEBUG_PRINT_SHADER_CONTENT
+		int line = 1;
+		for (int beg = 0; beg < len;) {
+			int end = beg;
+			for (; end < len - 1; end++) {
+				if (chars[end] == '\n') break;
+			}
+			end += 1;
+			const int lenLine = end - beg;
+			printf("%04d %*.*s", line, lenLine, lenLine, chars + beg);
+			line++;
+			beg = end;
+		}
+#endif
+
 		m_handleShader = glCreateShader(LIWImageFormat_2_GLShaderType.at(shaderType));
 		m_shaderType = shaderType;
 		strcpy_s(m_name, fileName.c_str());

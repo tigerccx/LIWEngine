@@ -1,5 +1,6 @@
 #pragma once
 
+#include "LIWMacros.h"
 #include "OGLRenderer.h"
 #include "Maths/LIWMaths.h"
 #include "Framework/LIWECSFunctional.h"
@@ -12,37 +13,41 @@
 #include "Framework/Components/LIWComponent_Light.h"
 
 namespace LIW{
-	class OGLRenderer_Forward final:
+	class OGLRenderer_Deferred final:
 		public OGLRenderer
 	{
 	public:
-		OGLRenderer_Forward(LIW::App::Window& parent);
-		~OGLRenderer_Forward();
+		OGLRenderer_Deferred(LIW::App::Window& parent);
+		~OGLRenderer_Deferred();
 		void RenderScene() override;
 	private:
 		void RenderCamera(LIWComponent_Camera& camera);
-		void RenderScreenQuad(); //Test
+		void GBufferPass();
+		void LightBufferPass(LIWComponent_Camera& camera);
+		void CombinePass();
 
-		void UploadLightData();
+		void UploadLightPassData(uint32_t rawHandleLightBufferShader, LIWComponent_Camera& camera);
 		void UploadCameraData(LIWComponent_Camera& camera);
 	private:
 		uint32_t m_uboCameraData;
 		uint32_t m_uboLightPerPixelData;
 		uint32_t m_emptyVAO;
 
-		liw_objhdl_type m_frameBuffer0{ liw_c_nullobjhdl };
+		liw_objhdl_type m_meshSphere;
 
-		liw_objhdl_type m_screenQuadShader{ liw_c_nullobjhdl };
-		liw_objhdl_type m_screenQuadTestShader{ liw_c_nullobjhdl };
-		liw_objhdl_type m_screenQuadTestShaderProgram{ liw_c_nullobjhdl };
+		liw_objhdl_type m_frameBufferGBuffer{ liw_c_nullobjhdl };
+		liw_objhdl_type m_frameBufferLightBuffer{ liw_c_nullobjhdl };
+
+		liw_objhdl_type m_lightBufferShaderProgram{ liw_c_nullobjhdl };
+		liw_objhdl_type m_combineShaderProgram{ liw_c_nullobjhdl };
 	};
 
-	class LIW_TT_OGLForwardRender final :
+	class LIW_TT_OGLDeferredRender final :
 		public LIWThreadWorkerTask
 	{
 	public:
 		void Execute() override;
 	public:
-		LIWPointer<OGLRenderer_Forward, LIWMem_Static> m_renderer;
+		LIWPointer<OGLRenderer_Deferred, LIWMem_Static> m_renderer;
 	};
 }

@@ -1,8 +1,10 @@
 #pragma once
 
 #include "LIWglfw.h"
+
 #include "LIWTypes.h"
 #include "LIWConstants.h"
+#include "Containers/LIWDArray.h"
 #include "LIWTexture.h"
 #include "LIWRenderBuffer.h"
 
@@ -55,7 +57,7 @@ namespace LIW {
 
 		inline uint32_t GetColorAttachmentRawHandle(uint32_t idx = 0) const { return m_handleColorAttachments[idx]; }
 		inline LIWRenderAttachmentFormat GetColorAttachmentFormat(uint32_t idx = 0) const { return m_formatColorAttachments[idx]; }
-		
+
 		inline uint32_t GetDepthAttachmentRawHandle() const { 
 			if (m_formatDepthAttachment == LIWRenderAttachmentFormat_Depth)
 				return m_handleDepthAttachment; 
@@ -74,7 +76,7 @@ namespace LIW {
 		inline LIWRenderAttachmentFormat GetDepthStencilAttachmentFormat() const { return m_formatDepthAttachment; }
 
 	private:
-		void CreateAttachment_Texture2D(int width, int height, LIWRenderAttachmentFormat format, uint32_t& handleOut);
+		void CreateAttachment_Texture2D(int width, int height, LIWRenderAttachmentFormat format, uint32_t& handleOut, int idxAttachment = 0);
 	private:
 		uint32_t m_handleFrameBuffer{ sc_invalidHandle };
 		int m_width{ -1 };

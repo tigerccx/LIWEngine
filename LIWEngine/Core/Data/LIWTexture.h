@@ -14,6 +14,13 @@ namespace LIW {
 	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLFormat;
 	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLDataType;
 
+	class LIWTexture {
+	public:
+		static void Bind2DTexture(uint32_t rawHandleTexture,
+			uint32_t rawHandleShader,
+			const char* name, uint32_t imageUnit);
+		static void Unbind2DTexture(uint32_t imageUnit);
+	};
 
 	class LIWTexture2D {
 	public:
@@ -46,6 +53,8 @@ namespace LIW {
 		void CreateTexture(int width, int height, LIWRenderAttachmentFormat format);
 		void DestroyTexture();
 		
+		void Bind(uint32_t rawHandleShader, const char* name, uint32_t imageUnit);
+		void Unbind(uint32_t imageUnit);
 	public:
 		inline bool IsValid() const { return m_handleTexture != sc_invalidHandle; }
 		inline int GetWidth() const { return m_width; }

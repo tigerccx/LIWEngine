@@ -109,9 +109,6 @@
     <Filter Include="Core\Threading\Executors">
       <UniqueIdentifier>{901a21ed-2726-428d-bd5f-e9282928d718}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\ECSFramework\Components">
-      <UniqueIdentifier>{646fe375-d17b-46f0-86d8-3b2978058d88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Utility\Files">
       <UniqueIdentifier>{e208b90e-062a-407d-ad22-ae89d83665e7}</UniqueIdentifier>
     </Filter>
@@ -147,6 +144,9 @@
     </Filter>
     <Filter Include="Test\TestGame\Debug">
       <UniqueIdentifier>{d98bdb2b-85f7-4adb-99a4-ee505112572f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ECSFramework\LIWComponent\Components">
+      <UniqueIdentifier>{646fe375-d17b-46f0-86d8-3b2978058d88}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +329,9 @@
     </ClCompile>
     <ClCompile Include="TestGlobal.cpp">
       <Filter>Test\TestGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Renderers\OGLRenderer_Deferred.cpp">
+      <Filter>Core\Renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -558,7 +561,7 @@
       <Filter>Test\TestGame\Component</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Components\LIWComponent_Transform.h">
-      <Filter>Core\ECSFramework\Components</Filter>
+      <Filter>Core\ECSFramework\LIWComponent\Components</Filter>
     </ClInclude>
     <ClInclude Include="Core\LIWExceptions.h">
       <Filter>Core\Utility</Filter>
@@ -615,13 +618,13 @@
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Components\LIWComponent_Camera.h">
-      <Filter>Core\ECSFramework\Components</Filter>
+      <Filter>Core\ECSFramework\LIWComponent\Components</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Components\LIWComponent_MeshRenderer.h">
-      <Filter>Core\ECSFramework\Components</Filter>
+      <Filter>Core\ECSFramework\LIWComponent\Components</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Components\LIWComponent_CameraController.h">
-      <Filter>Core\ECSFramework\Components</Filter>
+      <Filter>Core\ECSFramework\LIWComponent\Components</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Systems\LIWSystem_CameraControl.h">
       <Filter>Core\ECSFramework\LIWSystem\Systems</Filter>
@@ -636,7 +639,7 @@
       <Filter>Core\Data</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Components\LIWComponent_Light.h">
-      <Filter>Core\ECSFramework\Components</Filter>
+      <Filter>Core\ECSFramework\LIWComponent\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\ThirdParty\include\msh_loader.hpp">
       <Filter>ThirdParty</Filter>
@@ -651,7 +654,7 @@
       <Filter>Core\ECSFramework</Filter>
     </ClInclude>
     <ClInclude Include="Core\Framework\Components\LIWComponent_SceneNode.h">
-      <Filter>Core\ECSFramework\Components</Filter>
+      <Filter>Core\ECSFramework\LIWComponent\Components</Filter>
     </ClInclude>
     <ClInclude Include="test_anything_0.h">
       <Filter>Test\Test</Filter>
@@ -673,6 +676,9 @@
     </ClInclude>
     <ClInclude Include="Editor\LIWIEditorDraw.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Renderers\OGLRenderer_Deferred.h">
+      <Filter>Core\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

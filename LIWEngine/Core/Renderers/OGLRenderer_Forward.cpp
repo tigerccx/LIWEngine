@@ -1,6 +1,6 @@
 #include "OGLRenderer_Forward.h"
 namespace LIW {
-	OGLRendererForward::OGLRendererForward(LIW::App::Window& parent):
+	OGLRenderer_Forward::OGLRenderer_Forward(LIW::App::Window& parent):
 		OGLRenderer(parent)
 	{
 		glGenBuffers(1, &m_uboCameraData);
@@ -11,7 +11,7 @@ namespace LIW {
 		
 		m_screenQuadShader = assetManager.CreateShader("shader_vert_screenQuad");
 		LIWShader& shader = assetManager.GetShader(m_screenQuadShader);
-		shader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/ScreenQuad_Vert.glsl", LIWShaderType_Vertex);
+		shader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_ScreenQuad_Vert.glsl", LIWShaderType_Vertex);
 
 		m_screenQuadTestShader = assetManager.CreateShader("shader_frag_screenQuadTest");
 		LIWShader& shaderFrag = assetManager.GetShader(m_screenQuadTestShader);
@@ -26,7 +26,7 @@ namespace LIW {
 		auto& frameBuffer = assetManager.GetFrameBuffer(m_frameBuffer0);
 		frameBuffer.CreateFrameBuffer(256, 256, LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB);
 	}
-	OGLRendererForward::~OGLRendererForward()
+	OGLRenderer_Forward::~OGLRenderer_Forward()
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 
@@ -50,7 +50,7 @@ namespace LIW {
 		glDeleteBuffers(1, &m_uboLightPerPixelData);
 		glDeleteBuffers(1, &m_uboCameraData);
 	}
-	void OGLRendererForward::RenderScene()
+	void OGLRenderer_Forward::RenderScene()
 	{
 		// Calculate and upload light data
 		UploadLightData();
@@ -63,7 +63,7 @@ namespace LIW {
 			RenderCamera(*itr);
 		}
 	}
-	void OGLRendererForward::RenderCamera(LIWComponent_Camera& camera)
+	void OGLRenderer_Forward::RenderCamera(LIWComponent_Camera& camera)
 	{
 		//
 		// Set render states
@@ -154,7 +154,7 @@ namespace LIW {
 			material.UnbindData();
 		}
 	}
-	void OGLRendererForward::RenderScreenQuad()
+	void OGLRenderer_Forward::RenderScreenQuad()
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 		auto& shaderProgram = assetManager.GetShaderProgram(m_screenQuadTestShaderProgram);
@@ -173,23 +173,23 @@ namespace LIW {
 			glEnable(GL_DEPTH_TEST);
 
 	}
-	void OGLRendererForward::UploadLightData()
+	void OGLRenderer_Forward::UploadLightData()
 	{
 		auto& lightManager = LIW_ECS_GetComponentManager(LIWComponent_Light);
 		auto& lights = lightManager.m_components;
 
-		if (lights.get_size() > 8)
+		if (lights.get_size() > LIW_LIGHT_FORWARD_MAX_PERPIXEL)
 			throw liwexcept_not_implemented("For now can only support 8 perpixel lights. ");
 
-		glm::vec4 lightColours_Directional[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightColours_Point[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightColours_Spot[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightPositions_Directional[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightPositions_Point[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightPositions_Spot[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightParams_Directional[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightParams_Point[LIW_LIGHT_MAX_PERPIXEL];
-		glm::vec4 lightParams_Spot[LIW_LIGHT_MAX_PERPIXEL];
+		glm::vec4 lightColours_Directional[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightColours_Point[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightColours_Spot[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightPositions_Directional[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightPositions_Point[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightPositions_Spot[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightParams_Directional[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightParams_Point[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
+		glm::vec4 lightParams_Spot[LIW_LIGHT_FORWARD_MAX_PERPIXEL];
 		int32_t lightCount_Directional = 0;
 		int32_t lightCount_Point = 0;
 		int32_t lightCount_Spot = 0;
@@ -235,7 +235,7 @@ namespace LIW {
 				break;
 			}
 
-			const size_t sizeArray = sizeof(glm::vec4) * LIW_LIGHT_MAX_PERPIXEL;
+			const size_t sizeArray = sizeof(glm::vec4) * LIW_LIGHT_FORWARD_MAX_PERPIXEL;
 			size_t sizeData = sizeArray * 9 + sizeof(int32_t) * 3;
 			glBindBuffer(GL_UNIFORM_BUFFER, m_uboLightPerPixelData);
 			glBufferData(GL_UNIFORM_BUFFER, sizeData, nullptr, GL_STATIC_DRAW);
@@ -258,7 +258,7 @@ namespace LIW {
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 	}
-	void OGLRendererForward::UploadCameraData(LIWComponent_Camera& camera)
+	void OGLRenderer_Forward::UploadCameraData(LIWComponent_Camera& camera)
 	{
 		auto transCamHdl = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, camera.GetEntity());
 		LIWComponent_Transform& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, transCamHdl);
@@ -271,18 +271,17 @@ namespace LIW {
 			float(width)/float(height),
 			camera.m_near, camera.m_far);
 
-		size_t sizeData = 2 * sizeof(glm::mat4) + sizeof(glm::vec4);
+		size_t sizeData = 2 * sizeof(glm::mat4) + sizeof(glm::vec3);
 		glBindBuffer(GL_UNIFORM_BUFFER, m_uboCameraData);
 		glBufferData(GL_UNIFORM_BUFFER, sizeData, nullptr, GL_STATIC_DRAW);
 
 		sizeData = 0;
-		glm::vec4 pos = glm::vec4(transCam.m_position, 0.0f);
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(glm::mat4), glm::value_ptr(matView)); sizeData += sizeof(glm::mat4);
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(glm::mat4), glm::value_ptr(matProj)); sizeData += sizeof(glm::mat4);
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(glm::vec4), glm::value_ptr(pos)); sizeData += sizeof(glm::vec4);
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(glm::vec3), glm::value_ptr(transCam.m_position)); sizeData += sizeof(glm::vec3);
 		
 		glBindBufferRange(GL_UNIFORM_BUFFER, LIW_SHADER_UBO_BIND_CAMERADATA, m_uboCameraData, 0, sizeData);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 	void LIW_TT_OGLForwardRender::Execute()
 	{

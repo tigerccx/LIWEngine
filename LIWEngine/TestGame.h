@@ -38,7 +38,7 @@ public:
     LIWDArray<LIWEntity> m_entities;
     liw_objhdl_type m_camera;
     liw_objhdl_type m_cameraController;
-    liw_objhdl_type m_light;
+    LIWDArray<liw_objhdl_type> m_lights;
 
     liw_objhdl_type m_meshData;
 
@@ -54,10 +54,12 @@ public:
     liw_objhdl_type m_shader_frag;
 
     liw_objhdl_type m_shaderProgram;
-    liw_objhdl_type m_shaderProgramLight;
+    liw_objhdl_type m_shaderProgramForward;
+    liw_objhdl_type m_shaderProgramDeferred;
 
-    liw_objhdl_type m_material;
-    liw_objhdl_type m_material1;
+    liw_objhdl_type m_materialTest;
+    liw_objhdl_type m_materialForward;
+    liw_objhdl_type m_materialDeferred;
 };
 
 class FT_TestGameUpdate final:

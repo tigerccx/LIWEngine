@@ -2,11 +2,7 @@
 #include "Common/LIWShaderCommon.glsl"
 
 uniform mat4 LIW_SHADER_MODEL_MATRIX;
-layout(std140, binding=LIW_SHADER_UBO_BIND_CAMERADATA) uniform CameraBlock{
-	mat4 viewMatrix;
-	mat4 projMatrix;
-	vec3 posCamera;
-} cameraBlk;
+LIW_DEFINE_UB_CAMERADATA(cameraBlk);
 
 layout(location=LIW_SHADER_VA_LOCATION_POSITION) 	in vec3 position;
 layout(location=LIW_SHADER_VA_LOCATION_NORMAL) 		in vec3 normal;

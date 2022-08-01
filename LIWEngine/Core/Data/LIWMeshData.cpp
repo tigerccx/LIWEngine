@@ -362,7 +362,10 @@ namespace LIW {
 		if (meshData.IsValid())
 			throw std::runtime_error("meshdata already loaded. empty meshdata required. \n");
 		//meshData.LoadMeshData_Obj(LIW_PATH_DIR_DEFAULT_MESHES"sphere.obj");
-		meshData.LoadMeshData_Msh(LIW_PATH_DIR_DEFAULT_MESHES"sphere.msh");
+		meshData.LoadMeshData_Msh(LIW_PATH_DIR_DEFAULT_MESHES"sphere.msh"); //Model radius = 1
+		for (size_t i = 0; i < meshData.m_positions.get_size(); i++) { //normalize to radius = 0.5
+			meshData.m_positions[i] /= 2.0f;
+		}
 		meshData.GenerateTangents();
 	}
 	void LIWMeshData::CreatePlane(LIWMeshData& meshData)
@@ -428,7 +431,7 @@ namespace LIW {
 		binormal = ba * texMatrix[1][0] + ca * texMatrix[1][1];
 
 		glm::vec3 normal = glm::cross(ca, ba);
-		glm::vec3 biCross = glm::cross(tangent, normal);
+		glm::vec3 biCross = glm::cross(normal, tangent);
 		float handedness = 1.0f;
 		if (glm::dot(biCross, binormal) < 0.0f) {
 			handedness = -1.0f;

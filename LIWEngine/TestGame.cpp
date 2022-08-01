@@ -11,7 +11,8 @@ int TestGame::Initialise()
 	//
 	// Renderer creation
 	//
-	TestGlobal::s_renderer = liw_new_static<OGLRendererForward>(*(m_currentEnvironment->m_window));
+	//TestGlobal::s_rendererForward = liw_new_static<OGLRenderer_Forward>(*(m_currentEnvironment->m_window));
+	TestGlobal::s_renderer = liw_new_static<OGLRenderer_Deferred>(*(m_currentEnvironment->m_window));
 
 	
 	//
@@ -69,45 +70,65 @@ int TestGame::Initialise()
 
 	shaderVert.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/Test_1_Vert.glsl", LIWShaderType_Vertex);
 	shaderFrag.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/Test_1_Frag.glsl", LIWShaderType_Fragment);
-	m_shaderProgramLight = assetManager.CreateShaderProgram("shaderProgram1");
-	auto& shaderProgramLight = assetManager.GetShaderProgram(m_shaderProgramLight);
-	shaderProgramLight.CreateShader({ shaderVert ,shaderFrag });
-	shaderVert.UnloadShader();
+	m_shaderProgramForward = assetManager.CreateShaderProgram("shaderProgramForward0");
+	auto& shaderProgramForward = assetManager.GetShaderProgram(m_shaderProgramForward);
+	shaderProgramForward.CreateShader({ shaderVert ,shaderFrag });
 	shaderFrag.UnloadShader();
+
+	shaderVert.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/Test_1_Vert.glsl", LIWShaderType_Vertex);
+	shaderFrag.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_GBuffer_Frag.glsl", LIWShaderType_Fragment);
+	m_shaderProgramDeferred = assetManager.CreateShaderProgram("shaderProgramDeferred0");
+	auto& shaderProgramDeferred = assetManager.GetShaderProgram(m_shaderProgramDeferred);
+	shaderProgramDeferred.CreateShader({ shaderVert ,shaderFrag });
+	shaderFrag.UnloadShader();
+
+	shaderVert.UnloadShader();
 
 	assetManager.DestroyShader("shaderVert0");
 	assetManager.DestroyShader("shaderFrag0");
 
 	// Material
-	m_material = assetManager.CreateMaterial("material0");
-	auto& material = assetManager.GetMaterial(m_material);
-	material.AddParam_Tex2D("mainTex", m_tex2D);
-	material.m_handleShaderProgram = m_shaderProgram;
+	m_materialTest = assetManager.CreateMaterial("materialTest");
+	auto& materialTest = assetManager.GetMaterial(m_materialTest);
+	materialTest.AddParam_Tex2D("mainTex", m_tex2D);
+	materialTest.m_handleShaderProgram = m_shaderProgram;
 
-	m_material1 = assetManager.CreateMaterial("material1");
-	auto& material1 = assetManager.GetMaterial(m_material1);
-	material1.AddParam_Tex2D("mainTex", m_tex2D1);
-	material1.AddParam_Tex2D("normalTex", m_tex2D2);
-	material1.m_handleShaderProgram = m_shaderProgramLight;
+	m_materialForward = assetManager.CreateMaterial("materialForward");
+	auto& materialForward = assetManager.GetMaterial(m_materialForward);
+	materialForward.AddParam_Tex2D("mainTex", m_tex2D1);
+	materialForward.AddParam_Tex2D("normalTex", m_tex2D2);
+	materialForward.m_handleShaderProgram = m_shaderProgramForward;
+
+	m_materialDeferred = assetManager.CreateMaterial("materialDeferred");
+	auto& materialDeferred = assetManager.GetMaterial(m_materialDeferred);
+	materialDeferred.AddParam_Tex2D("mainTex", m_tex2D1);
+	materialDeferred.AddParam_Tex2D("normalTex", m_tex2D2);
+	materialDeferred.m_handleShaderProgram = m_shaderProgramDeferred;
 
 	//
 	// Scene creation
 	//
 
-	int countSpheres = 9;
+	const int countSpheres = 9;
+	const int countLights = 256;
+	//const int countLights = 1;
+	const int countObjs = countSpheres + countLights + 3;
+	const int countRenderObjs = countSpheres + 2;
 
-	LIW_ECS_FetchEntities(m_entities, 4 + countSpheres);
-	LIW_ECS_CreateComponents(LIWComponent_Transform, m_transforms, 4 + countSpheres);
-	LIW_ECS_CreateComponents(LIWComponent_SceneNode, m_sceneNodes, 4 + countSpheres);
-	LIW_ECS_CreateComponents(LIWComponent_MeshRenderer, m_meshRenderers, 2 + countSpheres);
+	LIW_ECS_FetchEntities(m_entities, countObjs);
+	LIW_ECS_CreateComponents(LIWComponent_Transform, m_transforms, countObjs);
+	LIW_ECS_CreateComponents(LIWComponent_SceneNode, m_sceneNodes, countObjs);
+	LIW_ECS_CreateComponents(LIWComponent_MeshRenderer, m_meshRenderers, countRenderObjs);
 	m_camera = LIW_ECS_CreateComponent(LIWComponent_Camera);
 	m_cameraController = LIW_ECS_CreateComponent(LIWComponent_CameraController);
-	m_light = LIW_ECS_CreateComponent(LIWComponent_Light);
+	LIW_ECS_CreateComponents(LIWComponent_Light, m_lights, countLights);
+
 
 	int idxEntity = 0;
 	int idxTransform = 0;
 	int idxSceneNode = 0;
 	int idxMeshRenderer = 0;
+	int idxLight = 0;
 
 	// Camera
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
@@ -115,7 +136,8 @@ int TestGame::Initialise()
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Camera, m_camera, m_entities[idxEntity]);
 	LIW_ECS_AttachComponentToEntity(LIWComponent_CameraController, m_cameraController, m_entities[idxEntity]);
 	auto& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
-	transCam.m_position = glm::vec3(0.0f, 0.0f, 5.0f);
+	transCam.m_position = glm::vec3(-13.9f, 4.6f, 16.6f);
+	transCam.m_rotation = Maths::EulerToQuatXZY(glm::radians(glm::vec3(-13.3f, -36.8f, 0.0f)));
 	auto& cam = LIW_ECS_GetComponent(LIWComponent_Camera, m_camera);
 	float w = (float)TestGlobal::s_renderer->GetWidth();
 	float h = (float)TestGlobal::s_renderer->GetHeight();
@@ -127,25 +149,28 @@ int TestGame::Initialise()
 
 	idxEntity++; idxTransform++; idxSceneNode++;
 
-	// Light
-	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
-	LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
-	LIW_ECS_AttachComponentToEntity(LIWComponent_Light, m_light, m_entities[idxEntity]);
-	auto& transLight = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
-	transLight.m_position = glm::vec3(0.0f, 3.0f, 1.0f);
-	transLight.m_rotation = glm::quat(glm::vec3(glm::radians(-45.0f), glm::radians(0.0f), glm::radians(0.0f)));
-	auto& light0 = LIW_ECS_GetComponent(LIWComponent_Light, m_light);
-	
-	light0.SetDirectional();
-	light0.m_colourAndIntensity = glm::vec4(0.7, 0.7, 0.9, 3.0f);
+	// Lights
+	for (size_t i = 0; i < countLights; i++) {
+		LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
+		LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
+		LIW_ECS_AttachComponentToEntity(LIWComponent_Light, m_lights[idxLight], m_entities[idxEntity]);
+		auto& transLight = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
+		glm::vec3 xyz = glm::linearRand(glm::vec3(-75.0f, 1.0f, -75.0f), glm::vec3(75.0f, 5.0f, 75.0f));
+		transLight.m_position = xyz;
+		transLight.m_rotation = Maths::EulerToQuatXZY(glm::radians(glm::vec3(-45.0f, 0.0f, 0.0f)));
+		auto& light0 = LIW_ECS_GetComponent(LIWComponent_Light, m_lights[idxLight]);
 
-	//light0.SetPoint(LIWPointLightParameters{ 5.0f });
-	//light0.m_colourAndIntensity = glm::vec4(0.7, 0.7, 0.9, 3000.0f);
+		//light0.SetDirectional();
+		//light0.m_colourAndIntensity = glm::vec4(0.7, 0.7, 0.9, 3.0f);
 
-	//light0.SetSpot(LIWSpotLightParameters{ 20.0f, 60.0f });
-	//light0.m_colourAndIntensity = glm::vec4(0.7, 0.7, 0.9, 3000.0f);
+		light0.SetPoint(LIWPointLightParameters{ 10.0f });
+		light0.m_colourAndIntensity = glm::vec4(0.7, 0.7, 0.9, 3000.0f);
 
-	idxEntity++; idxTransform++; idxSceneNode++; 
+		//light0.SetSpot(LIWSpotLightParameters{ 20.0f, 60.0f });
+		//light0.m_colourAndIntensity = glm::vec4(0.7, 0.7, 0.9, 3000.0f);
+
+		idxEntity++; idxTransform++; idxSceneNode++; idxLight++;
+	}
 
 	// Object0: Model
 	LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
@@ -153,9 +178,9 @@ int TestGame::Initialise()
 	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer], m_entities[idxEntity]);
 	auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
 	transObj.m_position = glm::vec3(0.0f, -10.0f, 0.0f);
-	transObj.m_rotation = glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
+	transObj.m_rotation = Maths::EulerToQuatXZY(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
 	auto& meshRenderer = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer]);
-	meshRenderer.m_handleMaterial = m_material;
+	meshRenderer.m_handleMaterial = m_materialTest;
 	meshRenderer.m_handleMesh = m_mesh;
 
 	idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
@@ -166,10 +191,11 @@ int TestGame::Initialise()
 	LIW_ECS_AttachComponentToEntity(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer], m_entities[idxEntity]);
 	auto& transObj1 = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
 	transObj1.m_position = glm::vec3(0.0f, -3.0f, 0.0f);
-	transObj1.m_rotation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
+	transObj1.m_rotation = Maths::EulerToQuatXZY(glm::radians(glm::vec3(0.0f, 0.0f, 0.0f)));
 	transObj1.m_scale = glm::vec3(100.0f, 1.0f, 100.0f);
 	auto& meshRenderer1 = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer]);
-	meshRenderer1.m_handleMaterial = m_material1;
+	//meshRenderer1.m_handleMaterial = m_materialForward;
+	meshRenderer1.m_handleMaterial = m_materialDeferred;
 	meshRenderer1.m_handleMesh = assetManager.GetMeshHandle(LIW_MESH_PLANE_NAME);
 
 	idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
@@ -183,8 +209,10 @@ int TestGame::Initialise()
 		auto& transObj = LIW_ECS_GetComponent(LIWComponent_Transform, m_transforms[idxTransform]);
 		transObj.m_position = glm::vec3(-3.0f + (i/3) % 3 * 3.0f, 0.0f, -3.0f + i % 3 * 3.0f);
 		transObj.m_rotation = glm::identity<glm::quat>();//glm::quat(glm::vec3(glm::radians(-90.0f), glm::radians(180.0f), glm::radians(0.0f)));
+		transObj.m_scale = glm::vec3(2.0f, 2.0f, 2.0f);
 		auto& meshRenderer1 = LIW_ECS_GetComponent(LIWComponent_MeshRenderer, m_meshRenderers[idxMeshRenderer]);
-		meshRenderer1.m_handleMaterial = m_material1;
+		//meshRenderer1.m_handleMaterial = m_materialForward;
+		meshRenderer1.m_handleMaterial = m_materialDeferred;
 		meshRenderer1.m_handleMesh = hdlMeshSphere;
 
 		idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
@@ -206,15 +234,19 @@ int TestGame::CleanUp()
 {
 	auto& assetManager = *LIWGlobal::GetAssetManager();
 	
-	assetManager.DestroyMaterial("material0");
-	assetManager.DestroyMaterial("material1");
+	assetManager.DestroyMaterial("materialTest");
+	assetManager.DestroyMaterial("materialForward");
+	assetManager.DestroyMaterial("materialDeferred");
 
 	auto& shaderProgram = assetManager.GetShaderProgram(m_shaderProgram);
 	shaderProgram.DestroyShader();
 	assetManager.DestroyShaderProgram("shaderProgram0");
-	auto& shaderProgramLight = assetManager.GetShaderProgram(m_shaderProgramLight);
-	shaderProgramLight.DestroyShader();
-	assetManager.DestroyShaderProgram("shaderProgram1");
+	auto& shaderProgramForward = assetManager.GetShaderProgram(m_shaderProgramForward);
+	shaderProgramForward.DestroyShader();
+	assetManager.DestroyShaderProgram("shaderProgramForward0");
+	auto& shaderProgramDeferred = assetManager.GetShaderProgram(m_shaderProgramDeferred);
+	shaderProgramDeferred.DestroyShader();
+	assetManager.DestroyShaderProgram("shaderProgramDeferred0");
 
 	auto& mesh = assetManager.GetMesh(m_mesh);
 	mesh.DestroyMesh();
@@ -226,6 +258,9 @@ int TestGame::CleanUp()
 	auto& tex1 = assetManager.GetTexture2D(m_tex2D1);
 	tex1.DestroyTexture();
 	assetManager.DestroyTexture2D("tex1");
+	auto& tex2 = assetManager.GetTexture2D(m_tex2D2);
+	tex2.DestroyTexture();
+	assetManager.DestroyTexture2D("tex2");
 
 	liw_delete(TestGlobal::s_renderer);
 	return 0;
@@ -261,9 +296,12 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 	// Render
 	//
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
-	auto ptrTT_OGLForwardRender = new LIW_TT_OGLForwardRender();
-	ptrTT_OGLForwardRender->m_renderer = TestGlobal::s_renderer;
-	LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLForwardRender);
+	//auto ptrTT_OGLForwardRender = new LIW_TT_OGLForwardRender();
+	//ptrTT_OGLForwardRender->m_renderer = TestGlobal::s_renderer;
+	//LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLForwardRender);
+	auto ptrTT_OGLDeferredRender = new LIW_TT_OGLDeferredRender();
+	ptrTT_OGLDeferredRender->m_renderer = TestGlobal::s_renderer;
+	LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLDeferredRender);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, thisFiber);
 
 

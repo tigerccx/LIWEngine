@@ -1,9 +1,11 @@
 #ifndef LIW_SHADER_MACROS_H
 #define LIW_SHADER_MACROS_H
 
-////
+//
+//////
 //Shader variables
-////
+//////
+// 
 //Vertex Assembly
 #define LIW_SHADER_VA_LOCATION_POSITION		0
 #define LIW_SHADER_VA_LOCATION_NORMAL		1
@@ -25,11 +27,34 @@
 #define LIW_SHADER_TEXTURE_TOUSE_APPENDIX	_use
 #define LIW_SHADER_TEXTURE_SCALE_APPENDIX	_texScale
 #define LIW_SHADER_TEXTURE_MATRIX_APPENDIX	_texMatrix
-//
+
+////
+//Forward Rendering
+////
 //Light Data
-//Light Global Setting
-#define LIW_LIGHT_MAX_PERPIXEL 8
-#define LIW_LIGHT_MAX_PERVERTEX 16
+#define LIW_LIGHT_FORWARD_MAX_PERPIXEL 256
+#define LIW_LIGHT_FORWARD_MAX_PERVERTEX 16
+
+////
+//Deferred Rendering
+////
+//Light Data
+#define LIW_LIGHT_DEFERRED_MAX_PERPIXEL 256
+#define LIW_LIGHT_DEFERRED_MAX_PERVERTEX 1024
+//FrameBuffer Textures
+#define LIW_SHADER_DEFERRED_DEPTH_TEXURE			deferredDepthTexture
+#define LIW_SHADER_DEFERRED_NORMAL_TEXURE			deferredNormalTexture
+#define LIW_SHADER_DEFERRED_DIFFUSE_TEXURE			deferredDiffuseTexture
+#define LIW_SHADER_DEFERRED_DIFFUSE_LIGHT_TEXURE	deferredDiffuseLightTexture
+#define LIW_SHADER_DEFERRED_SPECULAR_LIGHT_TEXURE	deferredSpecularLightTexture
+//Shader Variables
+#define LIW_SHADER_DEFERRED_PIXEL_SIZE				deferredPixelSize
+#define LIW_SHADER_DEFERRED_INV_PROJVIEW_MATRIX		deferredInvProjView
+#define LIW_SHADER_DEFERRED_LIGHT_POS				deferredLightPos
+#define LIW_SHADER_DEFERRED_LIGHT_COLOUR			deferredLightColour
+#define LIW_SHADER_DEFERRED_LIGHT_PARAM				deferredLightParam
+
+
 ////Common Light Data
 //#define LIW_SHADER_LIGHT_COUNT "lightCount"
 //#define LIW_SHADER_LIGHT_TYPE "lights"

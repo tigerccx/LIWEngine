@@ -8,7 +8,9 @@ namespace LIW {
 		LIWRenderAttachmentFormat_ColorRGB,
 		LIWRenderAttachmentFormat_ColorRGBA,
 		LIWRenderAttachmentFormat_Depth,
+		LIWRenderAttachmentFormat_Depth24,
 		LIWRenderAttachmentFormat_Stencil,
+		LIWRenderAttachmentFormat_Stencil8,
 		LIWRenderAttachmentFormat_DepthStencil,
 		LIWRenderAttachmentFormat_Max
 	};

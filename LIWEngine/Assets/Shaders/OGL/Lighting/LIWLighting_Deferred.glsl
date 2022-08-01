@@ -1,0 +1,6 @@
+#ifndef LIW_LIGHTING_DEFERRED_H
+#define LIW_LIGHTING_DEFERRED_H
+
+#include "LIWLighting.glsl"
+
+#endif //LIW_LIGHTING_DEFERRED_H

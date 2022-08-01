@@ -1,144 +1,11 @@
 #version 420 core
-#include "Common/LIWShaderCommon.glsl"
-
-//Old Lighting
-const float thresAtRadius = 0.0001f;
-const vec4 ambientColour = vec4(1,1,1,0);
-const float ambientComponent = 0.02f;
-const float PI = 3.14159265359f;
-
-float GetAttenuationDirectionalLight(vec4 lightColour){
-	return lightColour.a;
-}
-
-float GetAttenuationPointLight(vec3 worldPos, vec3 lightPos, vec4 lightColour, vec4 lightParam){
-	float distance = length(lightPos - worldPos);
-	float lightRadius = lightParam.x;
-	return (clamp((lightRadius * lightRadius) / (distance * distance) * thresAtRadius - thresAtRadius, 0.0f, 1.0f - thresAtRadius)) * lightColour.a;
-}
-
-float GetAttenuationSpotLight(vec3 worldPos, vec3 lightPos, vec4 lightColour, vec4 lightParam){
-	float dirX = lightParam.x;
-	float dirY = lightParam.y;
-	float dirZ =  sign(lightParam.z)*sqrt(abs(1-dirX*dirX-dirY*dirY));
-	vec3 dirLight = vec3(dirX, dirY, dirZ);
-	
-	float cosHalfAngle = lightParam.w;
-	
-	vec3 toLight = normalize(lightPos - worldPos);
-	float cosFragment = dot(dirLight, -toLight);
-	if(cosFragment>cosHalfAngle) //If in spot light area
-	{
-		float lightRadius = abs(lightParam.z);
-		float distance = length(lightPos - worldPos);
-		float attenuation = (clamp((lightRadius * lightRadius) / (distance * distance) * thresAtRadius - thresAtRadius, 0.0f, 1.0f - thresAtRadius)) * lightColour.a;
-		float sqrSinFragment = abs(1-cosFragment*cosFragment);
-		float sqrSinHalfAngle = abs(1-cosHalfAngle*cosHalfAngle);
-		float scaleAttenu = (sqrSinHalfAngle-sqrSinFragment)/sqrSinHalfAngle;
-		return attenuation *  scaleAttenu * scaleAttenu;
-	}
-	else{
-		return 0.0f;
-	}
-}
-
-void SurfaceCommon(vec3 toLight, vec3 toEye,
-					vec3 normal, 
-					vec3 diffuseColour, vec3 lightColour, 
-					float specGloss, float attenuation, 
-					out vec3 diffuse, out vec3 specular){
-	vec3 halfDir = normalize(toLight + toEye);
-	float lambert = max(dot(toLight, normal), 0.0f);
-	
-	float specFactor = clamp(dot(halfDir, normal), 0.0f, 1.0f);
-	specFactor = pow(specFactor, specGloss);
-	vec3 surface = diffuseColour * lightColour;
-	diffuse = surface * lambert * attenuation;
-	specular = (lightColour * specFactor) * attenuation * 0.33; //0.33 is optional
-}
-
-void CalculateDirectionalLight( vec3 toEye, vec3 normal,
-								vec3 diffuseColour, float specGloss,
-								vec4 lightColour, vec3 lightPos, vec4 lightParam, 
-								out vec3 diffuse, out vec3 specular){
-	vec3 toLight = -vec3(lightParam.x, lightParam.y, lightParam.z);
-	float attenuation = lightColour.a;
-	
-	SurfaceCommon(toLight, toEye, normal, 
-					diffuseColour, lightColour.rgb, 
-					specGloss, attenuation, diffuse, specular);
-}
-
-void CalculatePointLight( vec3 toEye, vec3 worldPos, vec3 normal,
-							vec3 diffuseColour, float specGloss, 
-							vec4 lightColour, vec3 lightPos, vec4 lightParam, 
-							out vec3 diffuse, out vec3 specular){
-	float lightRadius = lightParam.x;
-	vec3 toLight = normalize(lightPos - worldPos);
-	float distance = length(lightPos - worldPos);
-	float attenuation = (clamp((lightRadius * lightRadius) / (distance * distance) * thresAtRadius - thresAtRadius, 0.0f, 1.0f - thresAtRadius)) * lightColour.a;
-
-	SurfaceCommon(toLight, toEye, normal, 
-					diffuseColour, lightColour.rgb, 
-					specGloss, attenuation, diffuse, specular);
-}
-
-void CalculateSpotLight( vec3 toEye, vec3 worldPos, vec3 normal,
-							vec3 diffuseColour, float specGloss,
-							vec4 lightColour, vec3 lightPos, vec4 lightParam, 
-							out vec3 diffuse, out vec3 specular){
-	float dirX = lightParam.x;
-	float dirY = lightParam.y;
-	float dirZ =  sign(lightParam.z)*sqrt(abs(1-dirX*dirX-dirY*dirY));
-	vec3 dirLight = vec3(dirX, dirY, dirZ);
-	
-	float lightRadius = abs(lightParam.z);
-	float cosHalfAngle = lightParam.w;
-	
-	vec3 toLight = normalize(lightPos - worldPos);
-	float cosFragment = dot(dirLight, -toLight);
-	if(cosFragment>cosHalfAngle) //If in spot light area
-	{
-		vec3 halfDir = normalize(toLight + toEye);
-		float distance = length(lightPos - worldPos);
-		float attenuation = (clamp((lightRadius * lightRadius) / (distance * distance) * thresAtRadius - thresAtRadius, 0.0f, 1.0f - thresAtRadius)) * lightColour.a;
-		float sqrSinFragment = abs(1-cosFragment*cosFragment);
-		float sqrSinHalfAngle = abs(1-cosHalfAngle*cosHalfAngle);
-		float scaleAttenu = (sqrSinHalfAngle-sqrSinFragment)/sqrSinHalfAngle;
-		attenuation = attenuation *  scaleAttenu * scaleAttenu;
-
-		SurfaceCommon(toLight, toEye, normal, 
-					diffuseColour, lightColour.rgb, 
-					specGloss, attenuation, diffuse, specular);
-	}
-	else{
-		diffuse = vec3(0,0,0);
-		specular = vec3(0,0,0);
-	}
-}
+#include "Lighting/LIWLighting_Forward.glsl"
 
 //Camera
-layout(std140, binding=LIW_SHADER_UBO_BIND_CAMERADATA) uniform CameraBlock{
-	mat4 viewMatrix;
-	mat4 projMatrix;
-	vec3 posCamera;
-} cameraBlk;
+LIW_DEFINE_UB_CAMERADATA(cameraBlk);
 
 //Light
-layout(std140, binding=LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA) uniform ForwardLightBlockPerPixel{ //Separate Light Types to reduce branching
-	vec4 lightColours_Directional[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightColours_Point[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightColours_Spot[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightPositions_Directional[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightPositions_Point[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightPositions_Spot[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightParams_Directional[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightParams_Point[LIW_LIGHT_MAX_PERPIXEL];
-	vec4 lightParams_Spot[LIW_LIGHT_MAX_PERPIXEL];
-	int lightCount_Directional;
-	int lightCount_Point;
-	int lightCount_Spot;
-} forwardLightBlk;
+LIW_DEFINE_UB_FORWARD_PERPIX_LIGHTDATA(forwardLightBlk);
 
 //Material
 uniform sampler2D mainTex;
@@ -156,9 +23,9 @@ in Vertex{
 out vec4 fragColour;
 
 void main() {
-	const float specGloss = 0.8f;
-	const float diffuseComponent = 0.6f;
-	const float specularComponent = 0.38f;
+	const float specGloss = 100.0f;
+	const float diffuseComponent = 0.4f;
+	const float specularComponent = 0.58f;
 
 	const vec3 normalWorld = normalize(IN.normalWorld);
 	const vec3 tangentWorld = normalize(IN.tangentWorld);
@@ -179,7 +46,7 @@ void main() {
 	for(int i=0;i<forwardLightBlk.lightCount_Directional;i++){
 		vec3 diffuseOut = vec3(0,0,0);
 		vec3 specularOut = vec3(0,0,0);
-		CalculateDirectionalLight( toEye, normal, diffuseColour, specGloss,
+		CalculateDirectionalLight( toEye, normal, specGloss,
 								forwardLightBlk.lightColours_Directional[i], 
 								forwardLightBlk.lightPositions_Directional[i].xyz, 
 								forwardLightBlk.lightParams_Directional[i], 
@@ -192,7 +59,7 @@ void main() {
 	for(int i=0;i<forwardLightBlk.lightCount_Point;i++){
 		vec3 diffuseOut = vec3(0,0,0);
 		vec3 specularOut = vec3(0,0,0);
-		CalculatePointLight( toEye, posWorld, normal, diffuseColour, specGloss,
+		CalculatePointLight( toEye, posWorld, normal, specGloss,
 							forwardLightBlk.lightColours_Point[i], 
 							forwardLightBlk.lightPositions_Point[i].xyz, 
 							forwardLightBlk.lightParams_Point[i], 
@@ -205,7 +72,7 @@ void main() {
 	for(int i=0;i<forwardLightBlk.lightCount_Spot;i++){
 		vec3 diffuseOut = vec3(0,0,0);
 		vec3 specularOut = vec3(0,0,0);
-		CalculateSpotLight( toEye, posWorld, normal, diffuseColour, specGloss,
+		CalculateSpotLight( toEye, posWorld, normal, specGloss,
 							forwardLightBlk.lightColours_Spot[i], 
 							forwardLightBlk.lightPositions_Spot[i].xyz, 
 							forwardLightBlk.lightParams_Spot[i], 
@@ -214,10 +81,13 @@ void main() {
 		specular+=specularOut;
 	}
 	
-	fragColour = vec4(diffuse*diffuseComponent + specular*specularComponent, 0);
-	vec4 ambientLightingClr = vec4(ambientColour.xyz*diffuseColour.rgb*ambientComponent, 0);
+	fragColour = vec4(diffuse*diffuseColour*diffuseComponent + specular*specularComponent, 0);
+	vec4 ambientLightingClr = vec4(liw_c_ambientColour*diffuseColour.rgb*liw_c_ambientComponent, 0);
 	fragColour += ambientLightingClr;
 	fragColour.a = 1.0f;
 	
 	//fragColour = vec4(normal*0.5f+0.5f, 1.0f);
+	//fragColour = vec4(gl_FragCoord.x/1280.0f, gl_FragCoord.y/720.0f, 0.0f, 1.0f);
+	//fragColour = vec4(gl_FragCoord.z*2.0f-1.0f, 0.0f, 0.0f, 1.0f);
+	//fragColour = vec4(specular, 1.0f);
 }

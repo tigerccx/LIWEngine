@@ -26,8 +26,8 @@
 //Texture slots
 ////
 #define LIW_TEXTURESLOT_SHADOWMAP 30
-#define LIW_TEXTURESLOT_SHADOWMAPS_START (30 - LIW_LIGHT_MAX_PERPIXEL)
-#define LIW_TEXTURESLOT_SHADOWCUBEMAPS_START (30 - 2 * LIW_LIGHT_MAX_PERPIXEL)
+#define LIW_TEXTURESLOT_SHADOWMAPS_START (30 - LIW_LIGHT_FORWARD_MAX_PERPIXEL)
+#define LIW_TEXTURESLOT_SHADOWCUBEMAPS_START (30 - 2 * LIW_LIGHT_FORWARD_MAX_PERPIXEL)
 
 ////
 //Const value
@@ -54,3 +54,21 @@
 #define LIW_MESH_SPHERE_NAME		"liw_mesh_sphere"
 #define LIW_MESH_CUBE_NAME			"liw_meshd_cube"
 #define LIW_MESH_PLANE_NAME			"liw_mesh_plane"
+
+////
+//Forward
+////
+
+////
+//Deferred
+////
+#define LIW_SHADER_DEFERRED_DEPTH_TEXURE_NAME			"deferredDepthTexture"
+#define LIW_SHADER_DEFERRED_NORMAL_TEXURE_NAME			"deferredNormalTexture"
+#define LIW_SHADER_DEFERRED_DIFFUSE_TEXURE_NAME			"deferredDiffuseTexture"
+#define LIW_SHADER_DEFERRED_DIFFUSE_LIGHT_TEXURE_NAME	"deferredDiffuseLightTexture"
+#define LIW_SHADER_DEFERRED_SPECULAR_LIGHT_TEXURE_NAME	"deferredSpecularLightTexture"
+#define LIW_SHADER_DEFERRED_PIXEL_SIZE_NAME				"deferredPixelSize"
+#define LIW_SHADER_DEFERRED_INV_PROJVIEW_MATRIX_NAME	"deferredInvProjView"
+#define LIW_SHADER_DEFERRED_LIGHT_POS_NAME				"deferredLightPos"
+#define LIW_SHADER_DEFERRED_LIGHT_COLOUR_NAME			"deferredLightColour"
+#define LIW_SHADER_DEFERRED_LIGHT_PARAM_NAME			"deferredLightParam"
