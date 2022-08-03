@@ -13,16 +13,14 @@
 #define LIW_SHADER_VA_LOCATION_TEXCOORD		3
 #define LIW_SHADER_VA_LOCATION_COLOUR		4
 //Uniform Buffers
-#define LIW_SHADER_UB_CAMERADATA				CameraBlock
-#define LIW_SHADER_UB_FORWARD_PERPIX_LIGHTDATA	ForwardLightBlockPerPixel
+#define LIW_SHADER_UB_CAMERADATA			CameraBlock
 //UBO Bind Point
-#define LIW_SHADER_UBO_BIND_CAMERADATA					0
-#define LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA	1
+#define LIW_SHADER_UBO_BIND_CAMERADATA		0
 //Common Matrix
-#define LIW_SHADER_MODEL_MATRIX			modelMatrix
-#define LIW_SHADER_NORMAL_MATRIX		normalMatrix
-#define LIW_SHADER_TEXTURE_MATRIX		textureMatrix
-#define LIW_SHADER_SHADOW_MATRIX		shadowMatrix
+#define LIW_SHADER_MODEL_MATRIX				modelMatrix
+#define LIW_SHADER_NORMAL_MATRIX			normalMatrix
+#define LIW_SHADER_TEXTURE_MATRIX			textureMatrix
+#define LIW_SHADER_SHADOW_MATRIX			shadowMatrix
 //Texture
 #define LIW_SHADER_TEXTURE_TOUSE_APPENDIX	_use
 #define LIW_SHADER_TEXTURE_SCALE_APPENDIX	_texScale
@@ -32,28 +30,36 @@
 //Forward Rendering
 ////
 //Light Data
-#define LIW_LIGHT_FORWARD_MAX_PERPIXEL 256
-#define LIW_LIGHT_FORWARD_MAX_PERVERTEX 16
+#define LIW_LIGHT_FORWARD_MAX_PERPIXEL					256
+#define LIW_LIGHT_FORWARD_MAX_PERVERTEX					16
+//Uniform Buffers
+#define LIW_SHADER_UB_FORWARD_PERPIX_LIGHTDATA			ForwardLightBlockPerPixel
+//UBO Bind Point
+#define LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA	1
 
 ////
 //Deferred Rendering
 ////
 //Light Data
-#define LIW_LIGHT_DEFERRED_MAX_PERPIXEL 256
-#define LIW_LIGHT_DEFERRED_MAX_PERVERTEX 1024
+#define LIW_LIGHT_DEFERRED_MAX_PERPIXEL					256
+#define LIW_LIGHT_DEFERRED_MAX_PERVERTEX				1024
+#define LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE			256
 //FrameBuffer Textures
-#define LIW_SHADER_DEFERRED_DEPTH_TEXURE			deferredDepthTexture
-#define LIW_SHADER_DEFERRED_NORMAL_TEXURE			deferredNormalTexture
-#define LIW_SHADER_DEFERRED_DIFFUSE_TEXURE			deferredDiffuseTexture
-#define LIW_SHADER_DEFERRED_DIFFUSE_LIGHT_TEXURE	deferredDiffuseLightTexture
-#define LIW_SHADER_DEFERRED_SPECULAR_LIGHT_TEXURE	deferredSpecularLightTexture
+#define LIW_SHADER_DEFERRED_DEPTH_TEXURE				deferredDepthTexture
+#define LIW_SHADER_DEFERRED_NORMAL_TEXURE				deferredNormalTexture
+#define LIW_SHADER_DEFERRED_DIFFUSE_TEXURE				deferredDiffuseTexture
+#define LIW_SHADER_DEFERRED_DIFFUSE_LIGHT_TEXURE		deferredDiffuseLightTexture
+#define LIW_SHADER_DEFERRED_SPECULAR_LIGHT_TEXURE		deferredSpecularLightTexture
 //Shader Variables
-#define LIW_SHADER_DEFERRED_PIXEL_SIZE				deferredPixelSize
-#define LIW_SHADER_DEFERRED_INV_PROJVIEW_MATRIX		deferredInvProjView
-#define LIW_SHADER_DEFERRED_LIGHT_POS				deferredLightPos
-#define LIW_SHADER_DEFERRED_LIGHT_COLOUR			deferredLightColour
-#define LIW_SHADER_DEFERRED_LIGHT_PARAM				deferredLightParam
-
+#define LIW_SHADER_DEFERRED_PIXEL_SIZE					deferredPixelSize
+#define LIW_SHADER_DEFERRED_INV_PROJVIEW_MATRIX			deferredInvProjView
+#define LIW_SHADER_DEFERRED_LIGHT_POS					deferredLightPos
+#define LIW_SHADER_DEFERRED_LIGHT_COLOUR				deferredLightColour
+#define LIW_SHADER_DEFERRED_LIGHT_PARAM					deferredLightParam
+//Uniform Buffers
+#define LIW_SHADER_UB_DEFERRED_PERPIX_LIGHTDATA			DeferredLightBlockPerPixel
+//UBO Bind Point
+#define LIW_SHADER_UBO_BIND_DEFERRED_PERPIX_LIGHTDATA	1
 
 ////Common Light Data
 //#define LIW_SHADER_LIGHT_COUNT "lightCount"

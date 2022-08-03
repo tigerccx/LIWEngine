@@ -1,25 +1,86 @@
 #include "LIWTexture.h"
 
 namespace LIW {
+	const std::unordered_map<LIWTextureWrapType, GLint>	LIWTextureWrapType_2_GLWrap =
+	{
+		{LIWTextureWrapType_Repeat, 		GL_REPEAT	},
+		{LIWTextureWrapType_Clamp, 			GL_CLAMP	}
+	};
+	const std::unordered_map<LIWTextureFilterType, GLint>	LIWTextureFilterType_2_GLFilter =
+	{
+		{LIWTextureFilterType_Nearest, 					GL_NEAREST					},
+		{LIWTextureFilterType_Linear,					GL_LINEAR					},
+		{LIWTextureFilterType_Nearest_MipmapNearest,	GL_NEAREST_MIPMAP_NEAREST	},
+		{LIWTextureFilterType_Linear_MipmapNearest,		GL_LINEAR_MIPMAP_NEAREST	},
+		{LIWTextureFilterType_Nearest_MipmapLinear,		GL_NEAREST_MIPMAP_LINEAR	},
+		{LIWTextureFilterType_Linear_MipmapLinear,		GL_LINEAR_MIPMAP_LINEAR		}
+	};
+
+
 	const std::unordered_map<LIWImageFormat, GLint> LIWImageFormat_2_GLInternalFormat =
 	{
-		{LIWImageFormat_R,		GL_R	},
-		{LIWImageFormat_RG,		GL_RG	},
-		{LIWImageFormat_RGB,	GL_RGB	},
-		{LIWImageFormat_RGBA,	GL_RGBA	}
+		{LIWImageFormat_R8, 		GL_R8		},
+		{LIWImageFormat_RG8,		GL_RG8		},
+		{LIWImageFormat_RGB8,		GL_RGB8		},
+		{LIWImageFormat_RGBA8,		GL_RGBA8	},
+		{LIWImageFormat_R32F,		GL_R32F		},
+		{LIWImageFormat_RG32F,		GL_RG32F	},
+		{LIWImageFormat_RGB32F,		GL_RGB32F	},
+		{LIWImageFormat_RGBA32F,	GL_RGBA32F	},
+		{LIWImageFormat_R32I,		GL_R32I		},
+		{LIWImageFormat_RG32I,		GL_RG32I	},
+		{LIWImageFormat_RGB32I,		GL_RGB32I	},
+		{LIWImageFormat_RGBA32I,	GL_RGBA32I	},
+		{LIWImageFormat_R32U,		GL_R32UI	},
+		{LIWImageFormat_RG32U,		GL_RG32UI	},
+		{LIWImageFormat_RGB32U,		GL_RGB32UI	},
+		{LIWImageFormat_RGBA32U,	GL_RGBA32UI	}
 	};
 	const std::unordered_map<LIWImageFormat, GLenum> LIWImageFormat_2_GLFormat = 
 	{
-		{LIWImageFormat_R,		GL_R	},
-		{LIWImageFormat_RG,		GL_RG	},
-		{LIWImageFormat_RGB,	GL_RGB	},
-		{LIWImageFormat_RGBA,	GL_RGBA	}
+		{LIWImageFormat_R8,			GL_RED	},
+		{LIWImageFormat_RG8,		GL_RG	},
+		{LIWImageFormat_RGB8,		GL_RGB	},
+		{LIWImageFormat_RGBA8,		GL_RGBA	},
+		{LIWImageFormat_R32F,		GL_RED	},
+		{LIWImageFormat_RG32F,		GL_RG	},
+		{LIWImageFormat_RGB32F,		GL_RGB	},
+		{LIWImageFormat_RGBA32F,	GL_RGBA	},
+		{LIWImageFormat_R32I,		GL_RED	},
+		{LIWImageFormat_RG32I,		GL_RG	},
+		{LIWImageFormat_RGB32I,		GL_RGB	},
+		{LIWImageFormat_RGBA32I,	GL_RGBA	},
+		{LIWImageFormat_R32U,		GL_RED	},
+		{LIWImageFormat_RG32U,		GL_RG	},
+		{LIWImageFormat_RGB32U,		GL_RGB	},
+		{LIWImageFormat_RGBA32U,	GL_RGBA	}
 	};
+	const std::unordered_map<LIWImageFormat, GLenum> LIWImageFormat_2_GLDataType =
+	{
+		{LIWImageFormat_R8,			GL_UNSIGNED_BYTE	},
+		{LIWImageFormat_RG8,		GL_UNSIGNED_BYTE	},
+		{LIWImageFormat_RGB8,		GL_UNSIGNED_BYTE	},
+		{LIWImageFormat_RGBA8,		GL_UNSIGNED_BYTE	},
+		{LIWImageFormat_R32F,		GL_FLOAT			},
+		{LIWImageFormat_RG32F,		GL_FLOAT			},
+		{LIWImageFormat_RGB32F,		GL_FLOAT			},
+		{LIWImageFormat_RGBA32F,	GL_FLOAT			},
+		{LIWImageFormat_R32I,		GL_INT				},
+		{LIWImageFormat_RG32I,		GL_INT				},
+		{LIWImageFormat_RGB32I,		GL_INT				},
+		{LIWImageFormat_RGBA32I,	GL_INT				},
+		{LIWImageFormat_R32U,		GL_UNSIGNED_INT		},
+		{LIWImageFormat_RG32U,		GL_UNSIGNED_INT		},
+		{LIWImageFormat_RGB32U,		GL_UNSIGNED_INT		},
+		{LIWImageFormat_RGBA32U,	GL_UNSIGNED_INT		}
+	};
+
 
 	const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLFormat =
 	{
 		{LIWRenderAttachmentFormat_ColorRGB,		GL_RGB					},
 		{LIWRenderAttachmentFormat_ColorRGBA,		GL_RGBA					},
+		{LIWRenderAttachmentFormat_Index,			GL_RED_INTEGER			},
 		{LIWRenderAttachmentFormat_Depth,			GL_DEPTH_COMPONENT		},
 		{LIWRenderAttachmentFormat_Depth24,			GL_DEPTH_COMPONENT24	},
 		{LIWRenderAttachmentFormat_Stencil,			GL_STENCIL_INDEX		},
@@ -30,6 +91,7 @@ namespace LIW {
 	{
 		{LIWRenderAttachmentFormat_ColorRGB,		GL_UNSIGNED_BYTE		},
 		{LIWRenderAttachmentFormat_ColorRGBA,		GL_UNSIGNED_BYTE		},
+		{LIWRenderAttachmentFormat_Index,			GL_UNSIGNED_INT			},
 		{LIWRenderAttachmentFormat_Depth,			GL_FLOAT				},
 		{LIWRenderAttachmentFormat_Depth24,			GL_UNSIGNED_BYTE		},
 		{LIWRenderAttachmentFormat_Stencil,			GL_UNSIGNED_INT			},
@@ -37,7 +99,12 @@ namespace LIW {
 		{LIWRenderAttachmentFormat_DepthStencil,	GL_UNSIGNED_INT_24_8	}
 	};
 
-	void LIWTexture2D::CreateTexture(int width, int height, LIWImageFormat format)
+	void LIWTexture2D::CreateTexture(int width, int height, LIWImageFormat format, 
+									LIWTextureWrapType wrapU,
+									LIWTextureWrapType wrapV,
+									LIWTextureFilterType filterMin,
+									LIWTextureFilterType filterMag,
+									bool generateMipMap)
 	{
 		if (IsValid())
 			throw std::runtime_error("texture already created. ");
@@ -48,20 +115,38 @@ namespace LIW {
 		glGenTextures(1, &m_handleTexture);
 		glBindTexture(GL_TEXTURE_2D, m_handleTexture);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		const GLint glWrapU = LIWTextureWrapType_2_GLWrap.at(wrapU);
+		const GLint glWrapV = LIWTextureWrapType_2_GLWrap.at(wrapV);
+		const GLint glMinFilter = LIWTextureFilterType_2_GLFilter.at(filterMin);
+		const GLint glMagFilter = LIWTextureFilterType_2_GLFilter.at(filterMag);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glWrapU);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glWrapV);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter);
+		if (!generateMipMap) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+		}
 
 		const GLint glInternalFormat = LIWImageFormat_2_GLInternalFormat.at(format);
 		const GLenum glFormat = LIWImageFormat_2_GLFormat.at(format);
+		const GLenum glDataType = LIWImageFormat_2_GLDataType.at(format);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, m_width, m_height, 0, glFormat, GL_UNSIGNED_BYTE, nullptr);
-	
+		glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, m_width, m_height, 0, glFormat, glDataType, nullptr);
+		if (generateMipMap) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void LIWTexture2D::CreateTexture(const LIWImage& image)
+	void LIWTexture2D::CreateTexture(const LIWImage& image,
+									LIWTextureWrapType wrapU,
+									LIWTextureWrapType wrapV,
+									LIWTextureFilterType filterMin,
+									LIWTextureFilterType filterMag,
+									bool generateMipMap)
 	{
 		if (IsValid())
 			throw std::runtime_error("texture already created. ");
@@ -75,16 +160,28 @@ namespace LIW {
 		glGenTextures(1, &m_handleTexture);
 		glBindTexture(GL_TEXTURE_2D, m_handleTexture);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		const GLint glWrapU = LIWTextureWrapType_2_GLWrap.at(wrapU);
+		const GLint glWrapV = LIWTextureWrapType_2_GLWrap.at(wrapV);
+		const GLint glMinFilter = LIWTextureFilterType_2_GLFilter.at(filterMin);
+		const GLint glMagFilter = LIWTextureFilterType_2_GLFilter.at(filterMag);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glWrapU);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glWrapV);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter);
+		if (!generateMipMap) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+		}
 
 		const GLint glInternalFormat = LIWImageFormat_2_GLInternalFormat.at(m_format);
 		const GLenum glFormat = LIWImageFormat_2_GLFormat.at(m_format);
+		const GLenum glDataType = LIWImageFormat_2_GLDataType.at(m_format);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, m_width, m_height, 0, glFormat, GL_UNSIGNED_BYTE, image.GetRawData());
-		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, m_width, m_height, 0, glFormat, glDataType, image.GetRawData());
+		if (generateMipMap) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -112,7 +209,12 @@ namespace LIW {
 		glActiveTexture(GL_TEXTURE0 + imageUnit);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	void LIWRenderTexture2D::CreateTexture(int width, int height, LIWRenderAttachmentFormat format)
+	void LIWRenderTexture2D::CreateTexture(int width, int height, LIWRenderAttachmentFormat format,
+										LIWTextureWrapType wrapU,
+										LIWTextureWrapType wrapV,
+										LIWTextureFilterType filterMin,
+										LIWTextureFilterType filterMag,
+										bool generateMipMap)
 	{
 		if (IsValid())
 			throw std::runtime_error("texture already created. ");
@@ -123,16 +225,28 @@ namespace LIW {
 		glGenTextures(1, &m_handleTexture);
 		glBindTexture(GL_TEXTURE_2D, m_handleTexture);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		const GLint glWrapU = LIWTextureWrapType_2_GLWrap.at(wrapU);
+		const GLint glWrapV = LIWTextureWrapType_2_GLWrap.at(wrapV);
+		const GLint glMinFilter = LIWTextureFilterType_2_GLFilter.at(filterMin);
+		const GLint glMagFilter = LIWTextureFilterType_2_GLFilter.at(filterMag);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glWrapU);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glWrapV);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter);
+		if (!generateMipMap) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+		}
 
 		const GLint glInternalFormat = LIWRenderAttachmentFormat_2_GLInternalFormat.at(format);
 		const GLenum glFormat = LIWRenderAttachmentFormat_2_GLFormat.at(format);
 		const GLenum glDataType = LIWRenderAttachmentFormat_2_GLFormat.at(format);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, m_width, m_height, 0, glFormat, glDataType, nullptr);
+		if (generateMipMap) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

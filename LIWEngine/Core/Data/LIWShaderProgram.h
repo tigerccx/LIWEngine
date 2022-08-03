@@ -16,7 +16,7 @@ namespace LIW {
 	private:
 		void PrintLinkLog();
 	private:
-		uint32_t m_handleShaderProgram;
+		uint32_t m_handleShaderProgram{ sc_invalidHandle };
 		//uint32_t m_handleShaders[5]; //5 Max: Vert, Hull, Domain, Geo, Frag (or one Compute)
 	};
 }

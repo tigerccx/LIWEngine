@@ -4,7 +4,7 @@
 #include "../../../../Core/LIWShaderMacros.h"
 
 #define LIW_DEFINE_UB_CAMERADATA(name) \
-layout(std140, binding=LIW_SHADER_UBO_BIND_CAMERADATA) uniform CameraBlock{ \
+layout(std140, binding=LIW_SHADER_UBO_BIND_CAMERADATA) uniform LIW_SHADER_UB_CAMERADATA{ \
 	mat4 viewMatrix; \
 	mat4 projMatrix; \
 	vec3 posCamera; \

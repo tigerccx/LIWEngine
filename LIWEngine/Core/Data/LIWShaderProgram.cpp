@@ -3,6 +3,9 @@
 namespace LIW {
 	void LIWShaderProgram::CreateShader(const std::vector<LIWShader>& shaders)
 	{
+		if (IsValid())
+			throw std::runtime_error("shader program already created. ");
+
 		printf("Creating Program from: \n");
 		for (int i = 0; i < shaders.size(); i++) {
 			if (!shaders[i].IsValid())

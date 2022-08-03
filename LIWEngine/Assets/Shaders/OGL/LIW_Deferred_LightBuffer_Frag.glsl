@@ -8,16 +8,18 @@ uniform sampler2D LIW_SHADER_DEFERRED_NORMAL_TEXURE;
 uniform vec2 LIW_SHADER_DEFERRED_PIXEL_SIZE;
 uniform mat4 LIW_SHADER_DEFERRED_INV_PROJVIEW_MATRIX;
 
-//Per light
-uniform vec3 LIW_SHADER_DEFERRED_LIGHT_POS;
-uniform vec4 LIW_SHADER_DEFERRED_LIGHT_COLOUR;
-uniform vec4 LIW_SHADER_DEFERRED_LIGHT_PARAM;
+//Light
+LIW_DEFINE_UB_DEFERRED_PERPIX_LIGHTDATA(deferredLightBlk);
 
 //Camera
 LIW_DEFINE_UB_CAMERADATA(cameraBlk);
 
 layout(location = 0) out vec3 diffuseOut;
 layout(location = 1) out vec3 specularOut;
+
+in Vertex{
+	flat int indexID;
+} IN;
 
 void main(){
 	const float specGloss = 60.0f;
@@ -34,9 +36,9 @@ void main(){
 	vec3 toEye = cameraBlk.posCamera - posWorld;
 	
 	CalculatePointLight( toEye, posWorld, normal, specGloss,
-							LIW_SHADER_DEFERRED_LIGHT_COLOUR, 
-							LIW_SHADER_DEFERRED_LIGHT_POS, 
-							LIW_SHADER_DEFERRED_LIGHT_PARAM, 
+							deferredLightBlk.lightColours[IN.indexID], 
+							deferredLightBlk.lightPositions[IN.indexID].xyz, 
+							deferredLightBlk.lightParams[IN.indexID], 
 							diffuseOut, specularOut);
 							
 	//diffuseOut = posWorld;

@@ -4,15 +4,28 @@
 
 namespace LIW {
 	enum LIWImageFormat {
-		LIWImageFormat_R,
-		LIWImageFormat_RG,
-		LIWImageFormat_RGB,
-		LIWImageFormat_RGBA,
+		LIWImageFormat_R8,
+		LIWImageFormat_RG8,
+		LIWImageFormat_RGB8,
+		LIWImageFormat_RGBA8,
+		LIWImageFormat_Loadable_Max,		
+		LIWImageFormat_R32F,
+		LIWImageFormat_RG32F,
+		LIWImageFormat_RGB32F,
+		LIWImageFormat_RGBA32F,
+		LIWImageFormat_R32I,
+		LIWImageFormat_RG32I,
+		LIWImageFormat_RGB32I,
+		LIWImageFormat_RGBA32I,
+		LIWImageFormat_R32U,
+		LIWImageFormat_RG32U,
+		LIWImageFormat_RGB32U,
+		LIWImageFormat_RGBA32U,
 		LIWImageFormat_Max
 	};
 
-	extern const std::unordered_map<LIWImageFormat, unsigned int> LIWImageFormat_2_STBImageFormat;
-	extern const std::unordered_map<LIWImageFormat, uint32_t> LIWImageFormat_2_channels;
+	extern const std::unordered_map<LIWImageFormat, unsigned int>	LIWImageFormat_2_STBImageFormat;
+	extern const std::unordered_map<LIWImageFormat, uint32_t>		LIWImageFormat_2_channels;
 
 	class LIWImage {
 	public:

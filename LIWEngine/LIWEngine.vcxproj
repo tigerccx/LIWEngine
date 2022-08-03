@@ -193,6 +193,7 @@
     <ClCompile Include="Core\Renderers\LIWRenderer.cpp" />
     <ClCompile Include="Core\Renderers\OGLRenderer.cpp" />
     <ClCompile Include="Core\Renderers\OGLRenderer_Deferred.cpp" />
+    <ClCompile Include="Core\Renderers\OGLRenderer_DeferredVisibility.cpp" />
     <ClCompile Include="Core\Renderers\OGLRenderer_Forward.cpp" />
     <ClCompile Include="Core\Threading\LIWFiberExecutor.cpp" />
     <ClCompile Include="Core\Threading\LIWFiberMain.cpp" />
@@ -293,6 +294,7 @@
     <ClInclude Include="Core\Renderers\LIWRenderer.h" />
     <ClInclude Include="Core\Renderers\OGLRenderer.h" />
     <ClInclude Include="Core\Renderers\OGLRenderer_Deferred.h" />
+    <ClInclude Include="Core\Renderers\OGLRenderer_DeferredVisibility.h" />
     <ClInclude Include="Core\Renderers\OGLRenderer_Forward.h" />
     <ClInclude Include="Core\Threading\LIWFiber.h" />
     <ClInclude Include="Core\Threading\LIWFiberCommon.h" />

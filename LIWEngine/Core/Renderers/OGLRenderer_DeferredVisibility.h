@@ -13,15 +13,22 @@
 #include "Framework/Components/LIWComponent_Light.h"
 
 namespace LIW{
-	class OGLRenderer_Deferred final:
+	class OGLRenderer_DeferredVisibility final:
 		public OGLRenderer
 	{
 	public:
-		OGLRenderer_Deferred(LIW::App::Window& parent);
-		~OGLRenderer_Deferred();
+		static const uint32_t sc_tileSizeX = 16;
+		static const uint32_t sc_tileSizeY = 8;
+	public:
+		OGLRenderer_DeferredVisibility(LIW::App::Window& parent);
+		~OGLRenderer_DeferredVisibility();
 		void RenderScene() override;
 	private:
 		void RenderCamera(LIWComponent_Camera& camera);
+		void VisibilityPass();
+		void VisibilityDebugShowPass();
+		void WorklistPass();
+		
 		void GBufferPass();
 		void LightBufferPass(LIWComponent_Camera& camera);
 		void CombinePass();
@@ -35,19 +42,23 @@ namespace LIW{
 
 		liw_objhdl_type m_meshSphere;
 
+		liw_objhdl_type m_frameBufferVBuffer{ liw_c_nullobjhdl };
 		liw_objhdl_type m_frameBufferGBuffer{ liw_c_nullobjhdl };
 		liw_objhdl_type m_frameBufferLightBuffer{ liw_c_nullobjhdl };
 
 		liw_objhdl_type m_lightBufferShaderProgram{ liw_c_nullobjhdl };
 		liw_objhdl_type m_combineShaderProgram{ liw_c_nullobjhdl };
+		liw_objhdl_type m_visibilityShaderProgram{ liw_c_nullobjhdl };
+		liw_objhdl_type m_visibilityShowShaderProgram{ liw_c_nullobjhdl };
+		liw_objhdl_type m_worklistGenerateShaderProgram{ liw_c_nullobjhdl };
 	};
 
-	class LIW_TT_OGLDeferredRender final :
+	class LIW_TT_OGLDeferredVisibilityRender final :
 		public LIWThreadWorkerTask
 	{
 	public:
 		void Execute() override;
 	public:
-		LIWPointer<OGLRenderer_Deferred, LIWMem_Static> m_renderer;
+		LIWPointer<OGLRenderer_DeferredVisibility, LIWMem_Static> m_renderer;
 	};
 }

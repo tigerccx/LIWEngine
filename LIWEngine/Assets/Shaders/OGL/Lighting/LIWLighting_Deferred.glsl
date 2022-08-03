@@ -3,4 +3,12 @@
 
 #include "LIWLighting.glsl"
 
+//Separate Light Types to reduce branching
+#define LIW_DEFINE_UB_DEFERRED_PERPIX_LIGHTDATA(name) \
+layout(std140, binding=LIW_SHADER_UBO_BIND_DEFERRED_PERPIX_LIGHTDATA) uniform LIW_SHADER_UB_DEFERRED_PERPIX_LIGHTDATA{ \
+	vec4 lightPositions[LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE]; \
+	vec4 lightColours[LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE]; \
+	vec4 lightParams[LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE]; \
+} name
+
 #endif //LIW_LIGHTING_DEFERRED_H

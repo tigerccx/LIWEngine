@@ -12,7 +12,8 @@ int TestGame::Initialise()
 	// Renderer creation
 	//
 	//TestGlobal::s_rendererForward = liw_new_static<OGLRenderer_Forward>(*(m_currentEnvironment->m_window));
-	TestGlobal::s_renderer = liw_new_static<OGLRenderer_Deferred>(*(m_currentEnvironment->m_window));
+	//TestGlobal::s_renderer = liw_new_static<OGLRenderer_Deferred>(*(m_currentEnvironment->m_window));
+	TestGlobal::s_renderer = liw_new_static<OGLRenderer_DeferredVisibility>(*(m_currentEnvironment->m_window));
 
 	
 	//
@@ -24,19 +25,20 @@ int TestGame::Initialise()
 	m_image = assetManager.CreateImage("image0");
 	auto& image = assetManager.GetImage(m_image);
 
-	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"viking_room.png", LIWImageFormat_RGBA);
+	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"viking_room.png", LIWImageFormat_RGBA8);
 	m_tex2D = assetManager.CreateTexture2D("tex0");
 	auto& tex2D = assetManager.GetTexture2D(m_tex2D);
 	tex2D.CreateTexture(image);
 	image.UnloadImg();
 
-	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"chessboard512.jpg", LIWImageFormat_RGB);
+	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"chessboard512.jpg", LIWImageFormat_RGB8);
+	//image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"test_img0.png", LIWImageFormat_RGB8);
 	m_tex2D1 = assetManager.CreateTexture2D("tex1");
 	auto& tex2D1 = assetManager.GetTexture2D(m_tex2D1);
 	tex2D1.CreateTexture(image);
 	image.UnloadImg();
 
-	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"test_normal.jpg", LIWImageFormat_RGB);
+	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"test_normal.jpg", LIWImageFormat_RGB8);
 	m_tex2D2 = assetManager.CreateTexture2D("tex2");
 	auto& tex2D2 = assetManager.GetTexture2D(m_tex2D2);
 	tex2D2.CreateTexture(image);
@@ -299,9 +301,12 @@ void FT_TestGameUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 	//auto ptrTT_OGLForwardRender = new LIW_TT_OGLForwardRender();
 	//ptrTT_OGLForwardRender->m_renderer = TestGlobal::s_renderer;
 	//LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLForwardRender);
-	auto ptrTT_OGLDeferredRender = new LIW_TT_OGLDeferredRender();
-	ptrTT_OGLDeferredRender->m_renderer = TestGlobal::s_renderer;
-	LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLDeferredRender);
+	//auto ptrTT_OGLDeferredRender = new LIW_TT_OGLDeferredRender();
+	//ptrTT_OGLDeferredRender->m_renderer = TestGlobal::s_renderer;
+	//LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLDeferredRender);
+	auto ptrTT_OGLDeferredVisibilityRender = new LIW_TT_OGLDeferredVisibilityRender();
+	ptrTT_OGLDeferredVisibilityRender->m_renderer = TestGlobal::s_renderer;
+	LIWMainThreadExecutor::m_executor.Submit(ptrTT_OGLDeferredVisibilityRender);
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, thisFiber);
 
 

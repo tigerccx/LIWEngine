@@ -7,6 +7,7 @@ namespace LIW {
 	enum LIWRenderAttachmentFormat {
 		LIWRenderAttachmentFormat_ColorRGB,
 		LIWRenderAttachmentFormat_ColorRGBA,
+		LIWRenderAttachmentFormat_Index,
 		LIWRenderAttachmentFormat_Depth,
 		LIWRenderAttachmentFormat_Depth24,
 		LIWRenderAttachmentFormat_Stencil,

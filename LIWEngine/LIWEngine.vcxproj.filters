@@ -333,6 +333,9 @@
     <ClCompile Include="Core\Renderers\OGLRenderer_Deferred.cpp">
       <Filter>Core\Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Renderers\OGLRenderer_DeferredVisibility.cpp">
+      <Filter>Core\Renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ThirdParty\imgui\backends\imgui_impl_glfw.h">
@@ -678,6 +681,9 @@
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Core\Renderers\OGLRenderer_Deferred.h">
+      <Filter>Core\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Renderers\OGLRenderer_DeferredVisibility.h">
       <Filter>Core\Renderers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -33,6 +33,12 @@ namespace LIW {
 			colorAttachments.push_back(GL_COLOR_ATTACHMENT0);
 			countColorAttachments++;
 		}
+		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_INDEX) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_Index, m_handleColorAttachments[0]);
+			m_formatColorAttachments[0] = LIWRenderAttachmentFormat_Index;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT0);
+			countColorAttachments++;
+		}
 		//1
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_1) {
 			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[1], 1);
@@ -43,6 +49,12 @@ namespace LIW {
 		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1) {
 			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[1], 1);
 			m_formatColorAttachments[1] = LIWRenderAttachmentFormat_ColorRGB;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT1);
+			countColorAttachments++;
+		}
+		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_INDEX_1) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_Index, m_handleColorAttachments[1]);
+			m_formatColorAttachments[1] = LIWRenderAttachmentFormat_Index;
 			colorAttachments.push_back(GL_COLOR_ATTACHMENT1);
 			countColorAttachments++;
 		}
@@ -59,6 +71,12 @@ namespace LIW {
 			colorAttachments.push_back(GL_COLOR_ATTACHMENT2);
 			countColorAttachments++;
 		}
+		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_INDEX_2) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_Index, m_handleColorAttachments[2]);
+			m_formatColorAttachments[2] = LIWRenderAttachmentFormat_Index;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT2);
+			countColorAttachments++;
+		}
 		//3
 		if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA_3) {
 			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGBA, m_handleColorAttachments[3], 3);
@@ -69,6 +87,12 @@ namespace LIW {
 		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_3) {
 			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_ColorRGB, m_handleColorAttachments[3], 3);
 			m_formatColorAttachments[3] = LIWRenderAttachmentFormat_ColorRGB;
+			colorAttachments.push_back(GL_COLOR_ATTACHMENT3);
+			countColorAttachments++;
+		}
+		else if (attachmentFlag & LIW_FRAMEBUFFER_ATTACHMENT_FLAG_INDEX_3) {
+			CreateAttachment_Texture2D(m_width, m_height, LIWRenderAttachmentFormat_Index, m_handleColorAttachments[3]);
+			m_formatColorAttachments[3] = LIWRenderAttachmentFormat_Index;
 			colorAttachments.push_back(GL_COLOR_ATTACHMENT3);
 			countColorAttachments++;
 		}
@@ -135,8 +159,10 @@ namespace LIW {
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 

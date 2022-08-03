@@ -92,7 +92,7 @@ void test() {
 		LIWImage image;
 		LIWTexture2D tex2D;
 
-		image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"LIS.jpg", LIWImageFormat_RGB);
+		image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"LIS.jpg", LIWImageFormat_RGB8);
 		tex2D.CreateTexture(image);
 
 		image.UnloadImg();

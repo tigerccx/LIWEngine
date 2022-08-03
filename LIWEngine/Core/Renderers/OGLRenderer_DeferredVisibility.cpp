@@ -1,6 +1,6 @@
-#include "OGLRenderer_Deferred.h"
+#include "OGLRenderer_DeferredVisibility.h"
 namespace LIW {
-	OGLRenderer_Deferred::OGLRenderer_Deferred(LIW::App::Window& parent):
+	OGLRenderer_DeferredVisibility::OGLRenderer_DeferredVisibility(LIW::App::Window& parent):
 		OGLRenderer(parent)
 	{
 		glGenBuffers(1, &m_uboCameraData);
@@ -25,6 +25,22 @@ namespace LIW {
 		LIWShader& combineShader = assetManager.GetShader(hdlCombineShader);
 		combineShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_Combine_Frag.glsl", LIWShaderType_Fragment);
 
+		liw_objhdl_type hdlVisibilityVertShader = assetManager.CreateShader("shader_vert_visibility");
+		LIWShader& visibilityVertShader = assetManager.GetShader(hdlVisibilityVertShader);
+		visibilityVertShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Visibility_Vert.glsl", LIWShaderType_Vertex);
+
+		liw_objhdl_type hdlVisibilityFragShader = assetManager.CreateShader("shader_frag_visibility");
+		LIWShader& visibilityFragShader = assetManager.GetShader(hdlVisibilityFragShader);
+		visibilityFragShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Visibility_Frag.glsl", LIWShaderType_Fragment);
+
+		liw_objhdl_type hdlVisibilityShowFragShader = assetManager.CreateShader("shader_frag_visibilityShow");
+		LIWShader& visibilityShowFragShader = assetManager.GetShader(hdlVisibilityShowFragShader);
+		visibilityShowFragShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_VisibilityShow_Frag.glsl", LIWShaderType_Fragment);
+
+		liw_objhdl_type hdlWorklistGenerateComputeShader = assetManager.CreateShader("shader_comp_worklistGenerate");
+		LIWShader& worklistGenerateComputeShader = assetManager.GetShader(hdlWorklistGenerateComputeShader);
+		worklistGenerateComputeShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Worklist_Comp.glsl", LIWShaderType_Compute);
+
 
 		m_lightBufferShaderProgram = assetManager.CreateShaderProgram("shaderProgram_lightBuffer");
 		LIWShaderProgram& lightBufferShaderProgram = assetManager.GetShaderProgram(m_lightBufferShaderProgram);
@@ -33,15 +49,36 @@ namespace LIW {
 		m_combineShaderProgram = assetManager.CreateShaderProgram("shaderProgram_combine");
 		LIWShaderProgram& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
 		combineShaderProgram.CreateShader({ screenQuadShader , combineShader });
+		
+		m_visibilityShaderProgram = assetManager.CreateShaderProgram("shaderProgram_visibility");
+		LIWShaderProgram& visibilityShaderProgram = assetManager.GetShaderProgram(m_visibilityShaderProgram);
+		visibilityShaderProgram.CreateShader({ visibilityVertShader , visibilityFragShader });
+
+		m_visibilityShowShaderProgram = assetManager.CreateShaderProgram("shaderProgram_visibilityShow");
+		LIWShaderProgram& visibilityShowShaderProgram = assetManager.GetShaderProgram(m_visibilityShowShaderProgram);
+		visibilityShowShaderProgram.CreateShader({ screenQuadShader , visibilityShowFragShader });
+
+		m_worklistGenerateShaderProgram = assetManager.CreateShaderProgram("shaderProgram_worklistGenerate");
+		LIWShaderProgram& worklistGenerateShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateShaderProgram);
+		worklistGenerateShaderProgram.CreateShader({ worklistGenerateComputeShader });
+
 
 		lightBufferVertShader.UnloadShader();
 		lightBufferFragShader.UnloadShader();
 		screenQuadShader.UnloadShader();
 		combineShader.UnloadShader();
+		visibilityVertShader.UnloadShader();
+		visibilityFragShader.UnloadShader();
+		visibilityShowFragShader.UnloadShader();
+		worklistGenerateComputeShader.UnloadShader();
 		assetManager.DestroyShader("shader_vert_lightBuffer");
 		assetManager.DestroyShader("shader_frag_lightBuffer");
 		assetManager.DestroyShader("shader_vert_screenQuad");
 		assetManager.DestroyShader("shader_frag_combine");
+		assetManager.DestroyShader("shader_vert_visibility");
+		assetManager.DestroyShader("shader_frag_visibility");
+		assetManager.DestroyShader("shader_frag_visibilityShow");
+		assetManager.DestroyShader("shader_comp_worklistGenerate");
 
 
 		m_meshSphere = assetManager.GetMeshHandle(LIW_MESH_SPHERE_NAME);
@@ -61,8 +98,15 @@ namespace LIW {
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB |
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1;
 		lightBuffer.CreateFrameBuffer(width, height, lightBufferFlag);
+
+		m_frameBufferVBuffer = assetManager.CreateFrameBuffer("framebuffer_vbuffer");
+		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+		const liw_flag_type vBufferFlag =
+			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_INDEX |
+			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_DEPTH;
+		vBuffer.CreateFrameBuffer(width, height, vBufferFlag);
 	}
-	OGLRenderer_Deferred::~OGLRenderer_Deferred()
+	OGLRenderer_DeferredVisibility::~OGLRenderer_DeferredVisibility()
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 
@@ -74,6 +118,10 @@ namespace LIW {
 		gBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_gbuffer");
 
+		LIWFrameBuffer& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+		vBuffer.DestroyFrameBuffer();
+		assetManager.DestroyFrameBuffer("framebuffer_vbuffer");
+
 
 		LIWShaderProgram& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
 		combineShaderProgram.DestroyShader();
@@ -83,12 +131,24 @@ namespace LIW {
 		lightBufferShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_lightBuffer");
 
+		LIWShaderProgram& visibilityShaderProgram = assetManager.GetShaderProgram(m_visibilityShaderProgram);
+		visibilityShaderProgram.DestroyShader();
+		assetManager.DestroyShaderProgram("shaderProgram_visibility");
+
+		LIWShaderProgram& visibilityShowShaderProgram = assetManager.GetShaderProgram(m_visibilityShowShaderProgram);
+		visibilityShowShaderProgram.DestroyShader();
+		assetManager.DestroyShaderProgram("shaderProgram_visibilityShow");
+
+		LIWShaderProgram& worklistGenerateShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateShaderProgram);
+		worklistGenerateShaderProgram.DestroyShader();
+		assetManager.DestroyShaderProgram("shaderProgram_worklistGenerate");
+
 
 		glDeleteVertexArrays(1, &m_emptyVAO);
 		glDeleteBuffers(1, &m_uboPointLightPerPixelData);
 		glDeleteBuffers(1, &m_uboCameraData);
 	}
-	void OGLRenderer_Deferred::RenderScene()
+	void OGLRenderer_DeferredVisibility::RenderScene()
 	{
 		// Render each camera
 		auto& cameraManager = LIW_ECS_GetComponentManager(LIWComponent_Camera);
@@ -98,7 +158,7 @@ namespace LIW {
 			RenderCamera(*itr);
 		}
 	}
-	void OGLRenderer_Deferred::RenderCamera(LIWComponent_Camera& camera)
+	void OGLRenderer_DeferredVisibility::RenderCamera(LIWComponent_Camera& camera)
 	{
 		//
 		// Set render states
@@ -129,19 +189,175 @@ namespace LIW {
 		UploadCameraData(camera); 
 
 		//
-		// GBuffer pass
+		// Visibility pass
 		//
-		GBufferPass();
+		VisibilityPass();
 
 		//
-		// LightBuffer pass
+		// Visibility show pass
 		//
-		LightBufferPass(camera);
+		VisibilityDebugShowPass();
 
-		// Combine pass
-		CombinePass();
+		//
+		// Debug: Visibility show pass
+		//
+
+		////
+		//// GBuffer pass
+		////
+		//GBufferPass();
+
+		////
+		//// LightBuffer pass
+		////
+		//LightBufferPass(camera);
+
+		//// Combine pass
+		//CombinePass();
 	}
-	void OGLRenderer_Deferred::GBufferPass()
+	void OGLRenderer_DeferredVisibility::VisibilityPass()
+	{
+		//
+		// Setup
+		//
+		auto& assetManager = *LIWGlobal::GetAssetManager();
+		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+
+		BindFrameBuffer(vBuffer);
+
+		// Clear
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearDepth(1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//Enable z-test
+		glEnable(GL_DEPTH_TEST);
+
+		//Enable back culling
+		glFrontFace(GL_CCW);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+
+		//Disable blending (transparency not gonna be rendered in deferred mode anyway)
+		glDisable(GL_BLEND);
+
+
+		//
+		// Render MeshRenderers to GBuffer
+		//
+		auto& shaderProgram = assetManager.GetShaderProgram(m_visibilityShaderProgram);
+		uint32_t rawHandleshaderProgram = shaderProgram.GetRawHandle();
+
+		// Use program
+		glUseProgram(rawHandleshaderProgram);
+
+		auto& meshRendererManager = LIW_ECS_GetComponentManager(LIWComponent_MeshRenderer);
+		auto& meshRenderers = meshRendererManager.m_components;
+		uint32_t idxObject = 0;
+		for (auto itr = meshRenderers.get_beg(); itr != meshRenderers.get_end(); itr++) {
+			auto& meshRenderer = *itr;
+			auto entity = meshRenderer.GetEntity();
+			liw_objhdl_type transformHandle = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, entity);
+			auto& transform = LIW_ECS_GetComponent(LIWComponent_Transform, transformHandle);
+
+			//auto& material = assetManager.GetMaterial(meshRenderer.m_handleMaterial);
+			auto& mesh = assetManager.GetMesh(meshRenderer.m_handleMesh);
+
+			//// Bind material data
+			//material.BindData();
+
+			// Upload uniforms
+			glm::mat4 matModel = transform.GetMatrix();
+			glUniformMatrix4fv(glGetUniformLocation(rawHandleshaderProgram, LIW_SHADER_MODEL_MATRIX_NAME), 1, false, glm::value_ptr(matModel));
+			uint32_t idxObjectAligned = idxObject << 18;
+			glUniform1ui(glGetUniformLocation(rawHandleshaderProgram, "idxObject"), idxObjectAligned);
+
+			// Draw
+			auto& submeshes = mesh.GetSubmeshes();
+			auto mode = LIWImageFormat_2_GLPrimitive.at(mesh.GetPrimitiveType());
+			glBindVertexArray(mesh.GetHandleVAO());
+			for (int i = 0; i < submeshes.get_size(); ++i) {
+				size_t size = submeshes[i].m_idxEnd - submeshes[i].m_idxBeg;
+				const GLvoid* offset = (const GLvoid*)(submeshes[i].m_idxBeg * sizeof(unsigned int));
+				glDrawElements(mode,
+					(int)size,
+					GL_UNSIGNED_INT,
+					offset);
+			}
+
+			idxObject++;
+
+			//// Unbind material data
+			//material.UnbindData();
+		}
+	}
+	void OGLRenderer_DeferredVisibility::VisibilityDebugShowPass()
+	{
+		//
+		// Setup
+		//
+		auto& assetManager = *LIWGlobal::GetAssetManager();
+		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+		LIWShaderProgram& visibilityShowShaderProgram = assetManager.GetShaderProgram(m_visibilityShowShaderProgram);
+
+		BindDefaultFrameBuffer();
+
+		// Clear
+		glClearColor(0.5f, 0.1f, 0.2f, 1.0f);
+		glClearDepth(1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Disable z-test
+		glDisable(GL_DEPTH_TEST);
+		// Enable front culling
+		glFrontFace(GL_CCW);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+
+		//Disable blending (transparency not gonna be rendered in deferred mode anyway)
+		glDisable(GL_BLEND);
+
+		//
+		// Render
+		//
+
+		// Use Shader
+		const uint32_t rawHdlVisibilityShowShaderProgram = visibilityShowShaderProgram.GetRawHandle();
+		glUseProgram(rawHdlVisibilityShowShaderProgram);
+
+		// Bind buffer textures
+		// Idx texture
+		auto rawHdl = vBuffer.GetColorAttachmentRawHandle(0);
+		LIWTexture::Bind2DTexture(rawHdl,
+			rawHdlVisibilityShowShaderProgram, "indexTexture", 5);
+
+		glBindVertexArray(m_emptyVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3); //NOTE: only works with compatibility OpenGL profile
+	
+		LIWTexture::Unbind2DTexture(5);
+	}
+	void OGLRenderer_DeferredVisibility::WorklistPass()
+	{
+		//
+		// Setup
+		//
+		auto& assetManager = *LIWGlobal::GetAssetManager();
+		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+		LIWShaderProgram& worklistGenerateProgram = assetManager.GetShaderProgram(m_worklistGenerateShaderProgram);
+		const uint32_t rawHdlShaderProgram = worklistGenerateProgram.GetRawHandle();
+
+		//
+		// Dispatch
+		//
+		glUseProgram(rawHdlShaderProgram);
+
+		const uint32_t countGroupX = width / sc_tileSizeX;
+		const uint32_t countGroupY = height / sc_tileSizeY;
+
+		glBindImageTexture(glGetUniformLocation(rawHdlShaderProgram, "indexImg"),
+			vBuffer.GetColorAttachmentRawHandle(0), 0, false, 0, GL_READ_ONLY,
+			LIWRenderAttachmentFormat_2_GLInternalFormat.at(vBuffer.GetColorAttachmentFormat(0)));
+
+	}
+	void OGLRenderer_DeferredVisibility::GBufferPass()
 	{
 		//
 		// Setup
@@ -218,7 +434,7 @@ namespace LIW {
 			material.UnbindData();
 		}
 	}
-	void OGLRenderer_Deferred::LightBufferPass(LIWComponent_Camera& camera)
+	void OGLRenderer_DeferredVisibility::LightBufferPass(LIWComponent_Camera& camera)
 	{
 		//
 		// Setup
@@ -276,12 +492,6 @@ namespace LIW {
 
 		auto& lightManager = LIW_ECS_GetComponentManager(LIWComponent_Light);
 		auto& lights = lightManager.m_components;
-
-		glm::vec4 lightPositions[LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE];
-		glm::vec4 lightColours[LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE];
-		glm::vec4 lightParams[LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE];
-		uint32_t countLights = 0;
-
 		for (auto itr = lights.get_beg(); itr != lights.get_end(); itr++) {
 			auto& light = *itr;
 			auto entity = light.GetEntity();
@@ -292,12 +502,6 @@ namespace LIW {
 			glm::vec3 lightPos = transform.m_position;
 			glm::vec4 lightColour = light.m_colourAndIntensity;
 			glm::vec4 lightParam = glm::vec4(light.m_param.m_pointLight.m_radius, 0.0f, 0.0f, 0.0f);
-
-			lightPositions[countLights] = glm::vec4(lightPos, 0.0f);
-			lightColours[countLights] = lightColour;
-			lightParams[countLights] = lightParam;
-
-			countLights++;
 
 			//switch (light.m_lightType)
 			//{
@@ -322,37 +526,28 @@ namespace LIW {
 			//default:
 			//	break;
 			//}
-		}
 
-		const size_t sizeArray = sizeof(glm::vec4) * LIW_LIGHT_DEFERRED_MAX_LIGHT_PERTYPE;
-		size_t sizeData = sizeArray * 3;
-		glBindBuffer(GL_UNIFORM_BUFFER, m_uboPointLightPerPixelData);
-		glBufferData(GL_UNIFORM_BUFFER, sizeData, nullptr, GL_STATIC_DRAW);
+			glUniform3f(lightPosLocation, lightPos.x, lightPos.y, lightPos.z);
+			glUniform4f(lightColourLocation, lightColour.x, lightColour.y, lightColour.z, lightColour.w);
+			glUniform4f(lightParamLocation, lightParam.x, lightParam.y, lightParam.z, lightParam.w);
 
-		sizeData = 0;
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightPositions); sizeData += sizeArray;
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightColours); sizeData += sizeArray;
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightParams); sizeData += sizeArray;
+			glBindVertexArray(meshSphere.GetHandleVAO());
 
-		glBindBufferRange(GL_UNIFORM_BUFFER, LIW_SHADER_UBO_BIND_DEFERRED_PERPIX_LIGHTDATA, m_uboPointLightPerPixelData, 0, sizeData);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-		glBindVertexArray(meshSphere.GetHandleVAO());
-
-		// Draw light
-		for (int i = 0; i < submeshSphere.get_size(); ++i) {
-			size_t size = submeshSphere[i].m_idxEnd - submeshSphere[i].m_idxBeg;
-			const GLvoid* offset = (const GLvoid*)(submeshSphere[i].m_idxBeg * sizeof(unsigned int));
-			glDrawElementsInstanced(drawMode,
-				(int)size,
-				GL_UNSIGNED_INT,
-				offset, countLights);
+			// Draw light
+			for (int i = 0; i < submeshSphere.get_size(); ++i) {
+				size_t size = submeshSphere[i].m_idxEnd - submeshSphere[i].m_idxBeg;
+				const GLvoid* offset = (const GLvoid*)(submeshSphere[i].m_idxBeg * sizeof(unsigned int));
+				glDrawElements(drawMode,
+					(int)size,
+					GL_UNSIGNED_INT,
+					offset);
+			}	
 		}
 
 		//TODO: Spot light
 		//TODO: Directional light
 	}
-	void OGLRenderer_Deferred::CombinePass()
+	void OGLRenderer_DeferredVisibility::CombinePass()
 	{
 		//
 		// Setup
@@ -399,7 +594,7 @@ namespace LIW {
 		glDrawArrays(GL_TRIANGLES, 0, 3); //NOTE: only works with compatibility OpenGL profile
 	}
 	
-	void OGLRenderer_Deferred::UploadLightPassData(uint32_t rawHandleLightBufferShader, LIWComponent_Camera& camera)
+	void OGLRenderer_DeferredVisibility::UploadLightPassData(uint32_t rawHandleLightBufferShader, LIWComponent_Camera& camera)
 	{
 		auto transCamHdl = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, camera.GetEntity());
 		LIWComponent_Transform& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, transCamHdl);
@@ -418,7 +613,7 @@ namespace LIW {
 		uint32_t invProjViewLocation = glGetUniformLocation(rawHandleLightBufferShader, LIW_SHADER_DEFERRED_INV_PROJVIEW_MATRIX_NAME);
 		glUniformMatrix4fv(invProjViewLocation, 1, false, glm::value_ptr(inverseProjView));
 	}
-	void OGLRenderer_Deferred::UploadCameraData(LIWComponent_Camera& camera)
+	void OGLRenderer_DeferredVisibility::UploadCameraData(LIWComponent_Camera& camera)
 	{
 		auto transCamHdl = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, camera.GetEntity());
 		LIWComponent_Transform& transCam = LIW_ECS_GetComponent(LIWComponent_Transform, transCamHdl);
@@ -444,7 +639,7 @@ namespace LIW {
 		glBindBufferRange(GL_UNIFORM_BUFFER, LIW_SHADER_UBO_BIND_CAMERADATA, m_uboCameraData, 0, sizeData);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
-	void LIW_TT_OGLDeferredRender::Execute()
+	void LIW_TT_OGLDeferredVisibilityRender::Execute()
 	{
 		m_renderer->RenderScene();
 		LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);

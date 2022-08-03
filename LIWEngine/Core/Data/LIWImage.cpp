@@ -5,17 +5,29 @@
 namespace LIW {
 	const std::unordered_map<LIWImageFormat, unsigned int> LIWImageFormat_2_STBImageFormat =
 	{
-		{LIWImageFormat_R,		STBI_grey		},
-		{LIWImageFormat_RG,		STBI_grey_alpha	},
-		{LIWImageFormat_RGB,	STBI_rgb		},
-		{LIWImageFormat_RGBA,	STBI_rgb_alpha	}
+		{LIWImageFormat_R8,			STBI_grey		},
+		{LIWImageFormat_RG8,		STBI_grey_alpha	},
+		{LIWImageFormat_RGB8,		STBI_rgb		},
+		{LIWImageFormat_RGBA8,		STBI_rgb_alpha	}
 	};
 	const std::unordered_map<LIWImageFormat, uint32_t> LIWImageFormat_2_channels =
 	{
-		{LIWImageFormat_R,		0	},
-		{LIWImageFormat_RG,		1	},
-		{LIWImageFormat_RGB,	2	},
-		{LIWImageFormat_RGBA,	3	}
+		{LIWImageFormat_R8,			1	},
+		{LIWImageFormat_RG8,		2	},
+		{LIWImageFormat_RGB8,		3	},
+		{LIWImageFormat_RGBA8,		4	},
+		{LIWImageFormat_R32F,		1	},
+		{LIWImageFormat_RG32F,		2	},
+		{LIWImageFormat_RGB32F,		3	},
+		{LIWImageFormat_RGBA32F,	4	},
+		{LIWImageFormat_R32I,		1	},
+		{LIWImageFormat_RG32I,		2	},
+		{LIWImageFormat_RGB32I,		3	},
+		{LIWImageFormat_RGBA32I,	4	},
+		{LIWImageFormat_R32U,		1	},
+		{LIWImageFormat_RG32U,		2	},
+		{LIWImageFormat_RGB32U,		3	},
+		{LIWImageFormat_RGBA32U,	4	}
 	};
 
 	void LIWImage::LoadImg(const char* imagePath, LIWImageFormat format)
@@ -23,8 +35,8 @@ namespace LIW {
 		if (IsValid())
 			throw std::runtime_error("image already loaded. ");
 		//TODO: replace stb_image/add new lib. Too few options.
-		if(format>= LIWImageFormat_Max)
-			throw std::runtime_error("image format invalid. ");
+		if(format>= LIWImageFormat_Loadable_Max)
+			throw std::runtime_error("image format not loadable. ");
 
 		unsigned int stbiFormat = LIWImageFormat_2_STBImageFormat.at(format);
 

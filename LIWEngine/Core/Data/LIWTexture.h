@@ -9,10 +9,33 @@
 #include "LIWRenderAttachmentFormat.h"
 
 namespace LIW {
-	extern const std::unordered_map<LIWImageFormat, GLint> LIWImageFormat_2_GLInternalFormat;
-	extern const std::unordered_map<LIWImageFormat, GLenum> LIWImageFormat_2_GLFormat;
+	enum LIWTextureWrapType {
+		LIWTextureWrapType_Repeat,
+		LIWTextureWrapType_Clamp,
+		LIWTextureWrapType_Max
+	};
+
+	enum LIWTextureFilterType {
+		LIWTextureFilterType_Nearest,
+		LIWTextureFilterType_Linear,
+		LIWTextureFilterType_Nearest_MipmapNearest,
+		LIWTextureFilterType_Linear_MipmapNearest,
+		LIWTextureFilterType_Nearest_MipmapLinear,
+		LIWTextureFilterType_Linear_MipmapLinear,
+		LIWTextureFilterType_Max
+	};
+
+	extern const std::unordered_map<LIWTextureWrapType, GLint>		LIWTextureWrapType_2_GLWrap;
+	extern const std::unordered_map<LIWTextureFilterType, GLint>	LIWTextureFilterType_2_GLFilter;
+
+	extern const std::unordered_map<LIWImageFormat, GLint>		LIWImageFormat_2_GLInternalFormat;
+	extern const std::unordered_map<LIWImageFormat, GLenum>		LIWImageFormat_2_GLFormat;
+	extern const std::unordered_map<LIWImageFormat, GLenum>		LIWImageFormat_2_GLDataType;
+
+	
 	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLFormat;
 	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLDataType;
+
 
 	class LIWTexture {
 	public:
@@ -26,8 +49,18 @@ namespace LIW {
 	public:
 		static const uint32_t sc_invalidHandle = UINT32_MAX;
 	public:
-		void CreateTexture(int width, int height, LIWImageFormat format);
-		void CreateTexture(const LIWImage& image);
+		void CreateTexture(int width, int height, LIWImageFormat format, 
+			LIWTextureWrapType wrapU = LIWTextureWrapType_Clamp, 
+			LIWTextureWrapType wrapV = LIWTextureWrapType_Clamp,
+			LIWTextureFilterType filterMin = LIWTextureFilterType_Nearest,
+			LIWTextureFilterType filterMag = LIWTextureFilterType_Nearest,
+			bool generateMipMap = false);
+		void CreateTexture(const LIWImage& image,
+			LIWTextureWrapType wrapU = LIWTextureWrapType_Repeat,
+			LIWTextureWrapType wrapV = LIWTextureWrapType_Repeat,
+			LIWTextureFilterType filterMin = LIWTextureFilterType_Linear_MipmapLinear,
+			LIWTextureFilterType filterMag = LIWTextureFilterType_Linear, 
+			bool generateMipMap = true);
 		void DestroyTexture();
 
 		void Bind(uint32_t rawHandleShader, const char* name, uint32_t imageUnit);
@@ -50,7 +83,12 @@ namespace LIW {
 	public:
 		static const uint32_t sc_invalidHandle = UINT32_MAX;
 	public:
-		void CreateTexture(int width, int height, LIWRenderAttachmentFormat format);
+		void CreateTexture(int width, int height, LIWRenderAttachmentFormat format,
+			LIWTextureWrapType wrapU = LIWTextureWrapType_Clamp,
+			LIWTextureWrapType wrapV = LIWTextureWrapType_Clamp,
+			LIWTextureFilterType filterMin = LIWTextureFilterType_Nearest,
+			LIWTextureFilterType filterMag = LIWTextureFilterType_Nearest,
+			bool generateMipMap = false);
 		void DestroyTexture();
 		
 		void Bind(uint32_t rawHandleShader, const char* name, uint32_t imageUnit);
