@@ -13,6 +13,9 @@ namespace LIW {
 
 	void LIWShader::LoadShader(const char* filePath, LIWShaderType shaderType)
 	{
+		if(IsValid())
+			throw std::runtime_error("shader already loaded. ");
+
 		if (shaderType >= LIWShaderType_Max)
 			throw std::runtime_error("shader type invalid. ");
 		
@@ -66,6 +69,7 @@ namespace LIW {
 		if (!IsValid())
 			throw std::runtime_error("shader not loaded. ");
 		glDeleteShader(m_handleShader);
+		m_handleShader = sc_invalidHandle;
 		m_shaderType = LIWShaderType_Max;
 		m_name[0] = '\0';
 	}

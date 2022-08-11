@@ -7,7 +7,7 @@
 #include "LIWEntity.h"
 #include "Containers/LIWDArray.h"
 
-#define LIW_ENTITY_COUNT uint32_t(1) << 20 // 1M entities
+#define LIW_MAX_ENTITY_COUNT uint32_t(1) << 20 // 1M entities
 
 //TODO: Create container and use inhouse mem management
 
@@ -17,7 +17,7 @@ namespace LIW {
 		typedef std::mutex mtx_type;
 		typedef std::lock_guard<mtx_type> lkgd_type;
 	public:
-		LIWEntityManager(uint32_t countEntity = LIW_ENTITY_COUNT);
+		LIWEntityManager(uint32_t countEntity = LIW_MAX_ENTITY_COUNT);
 		~LIWEntityManager();
 
 		inline LIWEntity FetchEntity() {

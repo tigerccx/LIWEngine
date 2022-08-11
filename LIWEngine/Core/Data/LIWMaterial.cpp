@@ -10,7 +10,7 @@ namespace LIW {
 		m_paramsFVec4.clear();
 		m_paramsTex2D.clear();
 	}
-	void LIWMaterial::BindData()
+	void LIWMaterial::BindData(uint32_t texUnitBegin)
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 		auto& shaderProgram = assetManager.GetShaderProgram(m_handleShaderProgram);
@@ -38,7 +38,7 @@ namespace LIW {
 				m_paramsFVec4[i].m_val.z,
 				m_paramsFVec4[i].m_val.w);
 		}
-		uint32_t texUnit = 0;
+		uint32_t texUnit = texUnitBegin;
 		for (int i = 0; i < m_paramsTex2D.get_size(); i++) {
 			auto& tex2D = assetManager.GetTexture2D(m_paramsTex2D[i].m_val);
 			if (!tex2D.IsValid())

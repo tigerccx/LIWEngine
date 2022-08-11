@@ -1,7 +1,7 @@
 #include "LIWFrame.h"
 #include "LIWCore.h"
 
-#include "TestGame.h"
+//#include "TestGame.h"
 #include "Application/LIWApplicationTasks.h"
 
 size_t LIW::LIWFrame::m_frameCount{ size_t(-1) };
@@ -42,7 +42,7 @@ void LIW::LIW_FT_FrameBeg::Execute(LIWFiberWorkerPointer thisFiber)
 	}
 
 	// Kick off the frame
-	auto ptrFT_GameUpdate = liw_new_def<FT_TestGameUpdate>();
+	auto ptrFT_GameUpdate = liw_new_def<LIW_FT_GameUpdate>();
 	ptrFT_GameUpdate->m_ptrFrameData = ptrFrameData;
 	LIWFiberExecutor::m_executor.Submit(ptrFT_GameUpdate);
 }
@@ -65,6 +65,9 @@ void LIW::LIW_FT_FrameEnd::Execute(LIWFiberWorkerPointer thisFiber)
 	//
 	int threadCount = LIW::LIWThreads::s_ins.GetThreadCount();
 
+	//using namespace std::chrono;
+	//system_clock::time_point beg_free = system_clock::now();
+
 	LIWFiberExecutor::m_executor.IncreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_MEMORY_UPDATE, threadCount);
 	//for (size_t i = 0; i < threadCount; i++) {
 	//	auto ptrFT_FrameThdUpdate = liw_new_def<LIW_FT_FrameMemoryThdUpdate>();
@@ -75,6 +78,14 @@ void LIW::LIW_FT_FrameEnd::Execute(LIWFiberWorkerPointer thisFiber)
 	liw_mgc_notify_execute();
 
 	LIWFiberExecutor::m_executor.WaitOnSyncCounter(LIW_SYNC_COUNTER_RESERVE_MEMORY_UPDATE, thisFiber);
+
+	liw_mupdate_def();
+	liw_mupdate_static();
+	liw_mupdate_frame();
+	liw_mupdate_dframe();
+
+	//system_clock::time_point end_free = system_clock::now();
+	//printf("GC %llu ns\n\n", (std::chrono::duration_cast<std::chrono::nanoseconds>(end_free - beg_free)).count());
 
 	printf("FrameEnd %llu\n", LIWFrame::GetFrameCount());
 

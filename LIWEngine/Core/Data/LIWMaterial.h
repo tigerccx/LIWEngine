@@ -71,7 +71,7 @@ namespace LIW {
 
 		void ClearParams();
 
-		void BindData();
+		void BindData(uint32_t texUnitBegin = 0);
 		void UnbindData();
 
 	public:

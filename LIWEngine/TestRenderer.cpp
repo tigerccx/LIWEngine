@@ -59,7 +59,7 @@ void FT_TestRenderUpdate::Execute(LIWFiberWorkerPointer thisFiber)
 {
 	using namespace LIW;
 
-	TestGlobal::s_renderer->Update(m_ptrFrameData->m_timeDelta);
+	TestGlobal::s_rendererTest->Update(m_ptrFrameData->m_timeDelta);
 
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_SYSTEM_UPDATE, 1);
 }
@@ -78,7 +78,7 @@ void FT_TestRenderRender::Execute(LIWFiberWorkerPointer thisFiber)
 
 void TT_TestRenderRender::Execute()
 {
-	TestGlobal::s_renderer->RenderScene();
+	TestGlobal::s_rendererTest->RenderScene();
 
 	LIWFiberExecutor::m_executor.DecreaseSyncCounter(LIW_SYNC_COUNTER_RESERVE_RENDER, 1);
 }

@@ -12,7 +12,7 @@ namespace LIW {
 		glGenRenderbuffers(1, &m_handleBuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, m_handleBuffer);
 
-		const GLint glInternalFormat = LIWRenderAttachmentFormat_2_GLInternalFormat.at(format);
+		const GLint glInternalFormat = LIWRenderAttachmentFormat_2_GLFormat.at(format);
 
 		glRenderbufferStorage(GL_RENDERBUFFER, glInternalFormat, width, height);
 

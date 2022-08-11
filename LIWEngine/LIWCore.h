@@ -12,7 +12,9 @@
 
 #include "Application/Window.h"
 #include "Application/Environment.h"
-#include "TestGame.h"
+#include "TestGame0.h"
+#include "TestGame1.h"
+#include "TestGame2.h"
 
 #include "LIWConstants.h"
 #include "Time/LIWTime.h"
@@ -98,14 +100,15 @@ namespace LIW {
 			// Init Environment
 			LIWGlobal::s_environment = liw_new_static<App::Environment>();
 			/* Window */
-			auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1280, 720, false);
-			//auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1960, 1080, true);
+			//auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1280, 720, false);
+			auto ptrWindow = liw_new_static<LIW::App::Window>("LIWEngine", 1920, 1080, true);
 			LIWGlobal::s_environment->m_window = ptrWindow;
 			if (!ptrWindow->Initialised()) {
 				return -1;
 			}
 			/* Make the window's context current */
 			ptrWindow->SetCurrent();
+			glfwSwapInterval(0);
 			/* Create environment */
 
 			// Init GLEW
@@ -124,7 +127,9 @@ namespace LIW {
 			LIWGlobal::s_assetManager->Init();
 
 			// Init game
-			auto ptrGame = liw_new_static<TestGame>();
+			//auto ptrGame = liw_new_static<TestGame0>();
+			//auto ptrGame = liw_new_static<TestGame1>();
+			auto ptrGame = liw_new_static<TestGame2>();
 			LIWGlobal::s_game = ptrGame;
 			ptrGame->InitGame(LIWGlobal::s_environment);
 			int codeGameInit = ptrGame->Initialise();

@@ -8,6 +8,7 @@ namespace LIW {
 		LIWRenderAttachmentFormat_ColorRGB,
 		LIWRenderAttachmentFormat_ColorRGBA,
 		LIWRenderAttachmentFormat_Index,
+		LIWRenderAttachmentFormat_Index16,
 		LIWRenderAttachmentFormat_Depth,
 		LIWRenderAttachmentFormat_Depth24,
 		LIWRenderAttachmentFormat_Stencil,
@@ -17,5 +18,5 @@ namespace LIW {
 	};
 	
 	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLAttachment;
-	extern const std::unordered_map<LIWRenderAttachmentFormat, GLint> LIWRenderAttachmentFormat_2_GLInternalFormat;
+	extern const std::unordered_map<LIWRenderAttachmentFormat, GLint> LIWRenderAttachmentFormat_2_GLFormat;
 }

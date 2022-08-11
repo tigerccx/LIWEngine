@@ -52,7 +52,7 @@ namespace LIW {
 			return m_size;
 		}
 		inline bool is_empty() const {
-			return m_size == m_objects.get_capacity();
+			return m_size == 0;// m_objects.get_capacity();
 		}
 
 		//

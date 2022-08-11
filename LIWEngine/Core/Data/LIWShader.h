@@ -36,8 +36,8 @@ namespace LIW {
 	private:
 		void PrintCompileLog();
 	private:
-		uint32_t m_handleShader;
-		LIWShaderType m_shaderType;
+		uint32_t m_handleShader{ sc_invalidHandle };
+		LIWShaderType m_shaderType{ LIWShaderType_Max };
 		char m_name[128]; //allow name to be as long as 127 chars
 	};
 }

@@ -25,24 +25,42 @@ namespace LIW {
 		LIWTextureFilterType_Max
 	};
 
-	extern const std::unordered_map<LIWTextureWrapType, GLint>		LIWTextureWrapType_2_GLWrap;
-	extern const std::unordered_map<LIWTextureFilterType, GLint>	LIWTextureFilterType_2_GLFilter;
+	enum LIWTextureImageAccessType {
+		LIWTextureImageAccessType_ReadWrite,
+		LIWTextureImageAccessType_Read,
+		LIWTextureImageAccessType_Write,
+		LIWTextureImageAccessType_Max
+	};
 
-	extern const std::unordered_map<LIWImageFormat, GLint>		LIWImageFormat_2_GLInternalFormat;
-	extern const std::unordered_map<LIWImageFormat, GLenum>		LIWImageFormat_2_GLFormat;
-	extern const std::unordered_map<LIWImageFormat, GLenum>		LIWImageFormat_2_GLDataType;
+	extern const std::unordered_map<LIWTextureWrapType, GLint>			LIWTextureWrapType_2_GLWrap;
+	extern const std::unordered_map<LIWTextureFilterType, GLint>		LIWTextureFilterType_2_GLFilter;
+	
+	extern const std::unordered_map<LIWTextureImageAccessType, GLenum>	LIWTextureImageAccessType_2_GLAccess;
+
+	extern const std::unordered_map<LIWImageFormat, GLint>				LIWImageFormat_2_GLFormat;
+	extern const std::unordered_map<LIWImageFormat, GLenum>				LIWImageFormat_2_GLDataLayout;
+	extern const std::unordered_map<LIWImageFormat, GLenum>				LIWImageFormat_2_GLDataType;
 
 	
-	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLFormat;
-	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum> LIWRenderAttachmentFormat_2_GLDataType;
+	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum>	LIWRenderAttachmentFormat_2_GLDataLayout;
+	extern const std::unordered_map<LIWRenderAttachmentFormat, GLenum>	LIWRenderAttachmentFormat_2_GLDataType;
 
 
 	class LIWTexture {
 	public:
+		// Texture
 		static void Bind2DTexture(uint32_t rawHandleTexture,
 			uint32_t rawHandleShader,
-			const char* name, uint32_t imageUnit);
-		static void Unbind2DTexture(uint32_t imageUnit);
+			const char* name, uint32_t textureUnit);
+		static void Unbind2DTexture(uint32_t textureUnit);
+		// Image (in Texture)
+		static void Bind2DTextureImage(uint32_t rawHandleTexture,
+			uint32_t rawHandleShader,
+			const char* name, uint32_t imageUnit, 
+			LIWImageFormat format, 
+			LIWTextureImageAccessType accessType = LIWTextureImageAccessType_ReadWrite,
+			int mipmapLevel = 0, int arrayLayer = -1);
+		static void Unbind2DTextureImage(uint32_t imageUnit);
 	};
 
 	class LIWTexture2D {

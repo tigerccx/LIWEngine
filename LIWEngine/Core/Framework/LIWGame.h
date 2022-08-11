@@ -10,6 +10,7 @@
 #include "Debug/LIWDebug.h"
 #include "LIWEntityManager.h"
 #include "LIWECSConfiguration.h"
+#include "LIWFrame.h"
 
 //#include "TestRenderer.h"
 
@@ -52,7 +53,7 @@ namespace LIW {
         * Description:  FrameUpdate the Game part of main loop.
         *               Note: Don't need to override this one usually.
         */
-        virtual int UpdateMainLoop();
+        virtual int Update(LIWPointer<LIWFrameData, LIWMem_Frame> frameData, LIWFiberWorkerPointer thisFiber);
         /*
         * Func: CleanUp
         * Description:  Cleanup Game before exiting program.
@@ -75,10 +76,11 @@ namespace LIW {
 }
 
 
-//#include "Memory/LIWMemory.h"
-//#include "Threading/LIWFiber.h"
-//
-//struct GameData {
-//    LIWPointer<LIWFrameData, LIWMem_Frame> m_hdlFrameData;
-//    LIW::LIWGame* m_game;
-//};
+class LIW_FT_GameUpdate final :
+    public LIWFiberTask
+{
+public:
+    void Execute(LIWFiberWorkerPointer thisFiber) override;
+public:
+    LIWPointer<LIWFrameData, LIWMem_Frame> m_ptrFrameData{};
+};

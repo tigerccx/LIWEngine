@@ -208,7 +208,9 @@
     <ClCompile Include="Editor\LIWEditorTasks.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestAromics.cpp" />
-    <ClCompile Include="TestGame.cpp" />
+    <ClCompile Include="TestGame1.cpp" />
+    <ClCompile Include="TestGame0.cpp" />
+    <ClCompile Include="TestGame2.cpp" />
     <ClCompile Include="TestGlobal.cpp" />
     <ClCompile Include="TestRenderer.cpp" />
     <ClCompile Include="TestSystem0.cpp" />
@@ -261,6 +263,7 @@
     <ClInclude Include="Core\Framework\Components\LIWComponent_CameraController.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_Light.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_MeshRenderer.h" />
+    <ClInclude Include="Core\Framework\Components\LIWComponent_MeshRendererBatched.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_SceneNode.h" />
     <ClInclude Include="Core\Framework\Components\LIWComponent_Transform.h" />
     <ClInclude Include="Core\Framework\LIWComponent.h" />
@@ -321,7 +324,9 @@
     <ClInclude Include="TestComponent0.h" />
     <ClInclude Include="TestComponentCollection.h" />
     <ClInclude Include="TestFiberTaskIds.h" />
-    <ClInclude Include="TestGame.h" />
+    <ClInclude Include="TestGame1.h" />
+    <ClInclude Include="TestGame0.h" />
+    <ClInclude Include="TestGame2.h" />
     <ClInclude Include="TestGlobal.h" />
     <ClInclude Include="TestRenderer.h" />
     <ClInclude Include="TestSystem0.h" />

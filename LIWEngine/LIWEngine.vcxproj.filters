@@ -324,7 +324,7 @@
     <ClCompile Include="Core\Framework\LIWSceneGraph.cpp">
       <Filter>Core\ECSFramework</Filter>
     </ClCompile>
-    <ClCompile Include="TestGame.cpp">
+    <ClCompile Include="TestGame1.cpp">
       <Filter>Test\TestGame</Filter>
     </ClCompile>
     <ClCompile Include="TestGlobal.cpp">
@@ -335,6 +335,12 @@
     </ClCompile>
     <ClCompile Include="Core\Renderers\OGLRenderer_DeferredVisibility.cpp">
       <Filter>Core\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGame2.cpp">
+      <Filter>Test\TestGame</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGame0.cpp">
+      <Filter>Test\TestGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -671,7 +677,7 @@
     <ClInclude Include="TestFiberTaskIds.h">
       <Filter>Test\TestGame</Filter>
     </ClInclude>
-    <ClInclude Include="TestGame.h">
+    <ClInclude Include="TestGame1.h">
       <Filter>Test\TestGame</Filter>
     </ClInclude>
     <ClInclude Include="TestGlobal.h">
@@ -685,6 +691,15 @@
     </ClInclude>
     <ClInclude Include="Core\Renderers\OGLRenderer_DeferredVisibility.h">
       <Filter>Core\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Framework\Components\LIWComponent_MeshRendererBatched.h">
+      <Filter>Core\ECSFramework\LIWComponent\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGame2.h">
+      <Filter>Test\TestGame</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGame0.h">
+      <Filter>Test\TestGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

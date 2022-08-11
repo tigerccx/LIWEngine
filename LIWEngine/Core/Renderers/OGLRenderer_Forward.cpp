@@ -88,11 +88,11 @@ namespace LIW {
 
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 
-		//TestDraw FrameBuffer
-		auto& frameBuffer = assetManager.GetFrameBuffer(m_frameBuffer0);
-		BindFrameBuffer(frameBuffer);
-		RenderScreenQuad();
-		BindDefaultFrameBuffer();
+		////TestDraw FrameBuffer
+		//auto& frameBuffer = assetManager.GetFrameBuffer(m_frameBuffer0);
+		//BindFrameBuffer(frameBuffer);
+		//RenderScreenQuad();
+		//BindDefaultFrameBuffer();
 
 		//
 		// Calculate and upload camera data
@@ -234,29 +234,28 @@ namespace LIW {
 			default:
 				break;
 			}
-
-			const size_t sizeArray = sizeof(glm::vec4) * LIW_LIGHT_FORWARD_MAX_PERPIXEL;
-			size_t sizeData = sizeArray * 9 + sizeof(int32_t) * 3;
-			glBindBuffer(GL_UNIFORM_BUFFER, m_uboLightPerPixelData);
-			glBufferData(GL_UNIFORM_BUFFER, sizeData, nullptr, GL_STATIC_DRAW);
-
-			sizeData = 0;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightColours_Directional); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightColours_Point); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightColours_Spot); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightPositions_Directional); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightPositions_Point); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightPositions_Spot); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightParams_Directional); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightParams_Point); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightParams_Spot); sizeData += sizeArray;
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(int32_t), &lightCount_Directional); sizeData += sizeof(int32_t);
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(int32_t), &lightCount_Point); sizeData += sizeof(int32_t);
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(int32_t), &lightCount_Spot); sizeData += sizeof(int32_t);
-			
-			glBindBufferRange(GL_UNIFORM_BUFFER, LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA, m_uboLightPerPixelData, 0, sizeData);
-			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
+		const size_t sizeArray = sizeof(glm::vec4) * LIW_LIGHT_FORWARD_MAX_PERPIXEL;
+		size_t sizeData = sizeArray * 9 + sizeof(int32_t) * 3;
+		glBindBuffer(GL_UNIFORM_BUFFER, m_uboLightPerPixelData);
+		glBufferData(GL_UNIFORM_BUFFER, sizeData, nullptr, GL_STATIC_DRAW);
+
+		sizeData = 0;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightColours_Directional); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightColours_Point); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightColours_Spot); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightPositions_Directional); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightPositions_Point); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightPositions_Spot); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightParams_Directional); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightParams_Point); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeArray, lightParams_Spot); sizeData += sizeArray;
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(int32_t), &lightCount_Directional); sizeData += sizeof(int32_t);
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(int32_t), &lightCount_Point); sizeData += sizeof(int32_t);
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeData, sizeof(int32_t), &lightCount_Spot); sizeData += sizeof(int32_t);
+
+		glBindBufferRange(GL_UNIFORM_BUFFER, LIW_SHADER_UBO_BIND_FORWARD_PERPIX_LIGHTDATA, m_uboLightPerPixelData, 0, sizeData);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 	void OGLRenderer_Forward::UploadCameraData(LIWComponent_Camera& camera)
 	{

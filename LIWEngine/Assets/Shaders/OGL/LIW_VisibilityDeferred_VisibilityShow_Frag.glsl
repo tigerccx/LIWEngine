@@ -45,17 +45,17 @@ out vec4 fragColour;
 
 void main() {
 	uint idxObjectTriangle = texture(indexTexture, IN.texCoord).r;
-	if(idxObjectTriangle==0)
+	if(idxObjectTriangle==LIW_DEFERRED_VISIBILITY_INVALID_IDX)
 		discard;
-//	uint idxObject = liw_c_maskIdxObject & idxObjectTriangle;
-//	idxObject = idxObject>>18;
-//	fragColour = vec4(colours[idxObject%28], 1.0f);
-	uint idxTriangle = liw_c_maskIdxTriangle & idxObjectTriangle;
-	
-	const float r = 1.0f / colourSteps * ((idxTriangle / (colourSteps*colourSteps))%colourSteps);
-	const float g = 1.0f / colourSteps * ((idxTriangle / (colourSteps))%colourSteps);
-	const float b = 1.0f / colourSteps * (idxTriangle % (colourSteps));
-	
-	//fragColour = vec4(colours[idxTriangle%28], 1.0f);
-	fragColour = vec4(r, g, b, 1.0f);
+	uint idxObject = liw_c_maskIdxObject & idxObjectTriangle;
+	idxObject = idxObject>>18;
+	fragColour = vec4(colours[idxObject%28], 1.0f);
+//	uint idxTriangle = liw_c_maskIdxTriangle & idxObjectTriangle;
+//	
+//	const float r = 1.0f / colourSteps * ((idxTriangle / (colourSteps*colourSteps))%colourSteps);
+//	const float g = 1.0f / colourSteps * ((idxTriangle / (colourSteps))%colourSteps);
+//	const float b = 1.0f / colourSteps * (idxTriangle % (colourSteps));
+//	
+//	//fragColour = vec4(colours[idxTriangle%28], 1.0f);
+//	fragColour = vec4(r, g, b, 1.0f);
 }

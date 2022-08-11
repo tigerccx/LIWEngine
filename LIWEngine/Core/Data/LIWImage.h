@@ -8,7 +8,11 @@ namespace LIW {
 		LIWImageFormat_RG8,
 		LIWImageFormat_RGB8,
 		LIWImageFormat_RGBA8,
-		LIWImageFormat_Loadable_Max,		
+		LIWImageFormat_Loadable_Max,		//All above are unsigned normalized format
+		LIWImageFormat_R16U,
+		LIWImageFormat_RG16U,
+		LIWImageFormat_RGB16U,
+		LIWImageFormat_RGBA16U,
 		LIWImageFormat_R32F,
 		LIWImageFormat_RG32F,
 		LIWImageFormat_RGB32F,

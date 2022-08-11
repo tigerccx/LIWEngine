@@ -33,10 +33,12 @@ void main() {
 	const vec3 posWorld = IN.posWorld;
 
 	vec3 toEye = cameraBlk.posCamera - posWorld;
-	vec3 diffuseColour = texture(mainTex, IN.texCoord).rgb;
+	//vec3 diffuseColour = texture(mainTex, IN.texCoord).rgb;
+	vec3 diffuseColour = textureLod(mainTex, IN.texCoord, 1).rgb;
 	
 	mat3 TBN = mat3(normalize(tangentWorld), normalize(binormalWorld), normalize(normalWorld));
-	vec3 normal = texture(normalTex, IN.texCoord).rgb;
+	//vec3 normal = texture(normalTex, IN.texCoord).rgb;
+	vec3 normal = textureLod(normalTex, IN.texCoord, 1).rgb;
 	normal = normalize(TBN*normalize(normal*2.0f-1.0f));
 	
 	vec3 diffuse = vec3(0,0,0);

@@ -17,56 +17,49 @@
 
 using namespace LIW;
 
-class TestGame :
+#define TEST_TEXTURE_COUNT 256
+
+class TestGame2 final :
     public LIWGame
 {
 public:
-    TestGame()
+    TestGame2()
     {
 
     }
-    ~TestGame() {
+    ~TestGame2() {
 
     }
     int Initialise() override;
     int CleanUp() override;
 
+    int Update(LIWPointer<LIWFrameData, LIWMem_Frame> frameData, LIWFiberWorkerPointer thisFiber) override;
+
+
     LIWDArray<liw_objhdl_type> m_testComponent0s;
     LIWDArray<liw_objhdl_type> m_transforms;
     LIWDArray<liw_objhdl_type> m_sceneNodes;
-    LIWDArray<liw_objhdl_type> m_meshRenderers;
+    LIWDArray<liw_objhdl_type> m_meshRendererBatcheds;
     LIWDArray<LIWEntity> m_entities;
     liw_objhdl_type m_camera;
     liw_objhdl_type m_cameraController;
     LIWDArray<liw_objhdl_type> m_lights;
-
-    liw_objhdl_type m_meshData;
-
-    liw_objhdl_type m_mesh;
 
     liw_objhdl_type m_image;
 
     liw_objhdl_type m_tex2D;
     liw_objhdl_type m_tex2D1;
     liw_objhdl_type m_tex2D2;
+    liw_objhdl_type m_tex2DTests[TEST_TEXTURE_COUNT];
 
     liw_objhdl_type m_shader_vert;
     liw_objhdl_type m_shader_frag;
+    liw_objhdl_type m_shader_standardMaterial;
 
     liw_objhdl_type m_shaderProgram;
-    liw_objhdl_type m_shaderProgramForward;
-    liw_objhdl_type m_shaderProgramDeferred;
+    liw_objhdl_type m_shaderProgramStandard;
 
     liw_objhdl_type m_materialTest;
-    liw_objhdl_type m_materialForward;
-    liw_objhdl_type m_materialDeferred;
-};
-
-class FT_TestGameUpdate final:
-    public LIWFiberTask 
-{
-public:
-    void Execute(LIWFiberWorkerPointer thisFiber) override;
-public:
-    LIWPointer<LIWFrameData, LIWMem_Frame> m_ptrFrameData{};
+    liw_objhdl_type m_materialStandard;
+    liw_objhdl_type m_materialTests[TEST_TEXTURE_COUNT];
 };
