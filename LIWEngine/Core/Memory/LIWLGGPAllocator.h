@@ -22,7 +22,7 @@
 
 namespace LIW {
 	namespace Util {
-		template<size_t SizeTotal, size_t CountHandle, size_t SizeBlock>
+		template<size_t SizeTotal, size_t CountHandleTotal, size_t SizeBlock, size_t CountHandlePerFetch>
 		class LIWLGGPAllocator {
 			static_assert(SizeTotal% SizeBlock == 0, "SizeTotal must be multiples of SizeBlock");
 
@@ -33,8 +33,8 @@ namespace LIW {
 			static const size_t c_memSize = SizeTotal;
 			static const size_t c_blockSize = SizeBlock;
 			static const size_t c_blockCount = SizeTotal / SizeBlock;
-			static const size_t c_handleCount = CountHandle;
-			static const size_t c_handleCountPerFetch = size_t{ 1 } << 12; //4096 per fetch //TODO: change into template param
+			static const size_t c_handleCount = CountHandleTotal;
+			static const size_t c_handleCountPerFetch = CountHandlePerFetch; 
 			static const uint64_t c_maxAlignment = 16;
 		private:
 			static const uintptr_t c_idxMax = size_t(-1);
@@ -360,7 +360,7 @@ namespace LIW {
 
 			class LocalGPAllocator {
 			private:
-				typedef LIWLGGPAllocator<SizeTotal, CountHandle, SizeBlock>::GlobalGPAllocator globalAllocator_type;
+				typedef LIWLGGPAllocator<SizeTotal, CountHandleTotal, SizeBlock, CountHandlePerFetch>::GlobalGPAllocator globalAllocator_type;
 			public:
 				const size_t c_initialSize = 1;
 
@@ -786,10 +786,10 @@ namespace LIW {
 		};
 
 #ifdef DEBUG_PRINT_MEMORY_INFO
-		template<size_t SizeTotal, size_t CountHandle, size_t SizeBlock>
-		std::atomic<size_t> LIWLGGPAllocator<SizeTotal, CountHandle, SizeBlock>::LocalGPAllocator::s_handleCount{ 0 };
-		template<size_t SizeTotal, size_t CountHandle, size_t SizeBlock>
-		std::atomic<size_t> LIWLGGPAllocator<SizeTotal, CountHandle, SizeBlock>::LocalGPAllocator::s_allocCount{ 0 };
+		template<size_t SizeTotal, size_t CountHandleTotal, size_t SizeBlock, size_t CountHandlePerFetch>
+		std::atomic<size_t> LIWLGGPAllocator<SizeTotal, CountHandleTotal, SizeBlock, CountHandlePerFetch>::LocalGPAllocator::s_handleCount{ 0 };
+		template<size_t SizeTotal, size_t CountHandleTotal, size_t SizeBlock, size_t CountHandlePerFetch>
+		std::atomic<size_t> LIWLGGPAllocator<SizeTotal, CountHandleTotal, SizeBlock, CountHandlePerFetch>::LocalGPAllocator::s_allocCount{ 0 };
 #endif
 	}
 }

@@ -114,9 +114,9 @@ inline void liw_free_sys(liw_hdl_type handle) {
 
 const size_t SIZE_MEM_DEFAULT_BUFFER = size_t{ 1 } << 32; // 4GB
 const size_t COUNT_MEM_DEFAULT_HANDLE = size_t{ 1 } << LIW_MEMORY_HANDLE_DIGITS; // around 1M handles each thread
-//const size_t COUNT_MEM_DEFAULT_HANDLE = size_t{ 1 } << 10; 
 const size_t SIZE_MEM_DEFAULT_BUFFER_BLOCK = size_t{ 1 } << 24; // 16MB
-typedef LIW::Util::LIWLGGPAllocator<SIZE_MEM_DEFAULT_BUFFER, COUNT_MEM_DEFAULT_HANDLE, SIZE_MEM_DEFAULT_BUFFER_BLOCK> DefaultBufferAllocator;
+const size_t COUNT_MEM_DEFAULT_HANDLE_PERFETCH = size_t{ 1 } << 12; //4096 per fetch
+typedef LIW::Util::LIWLGGPAllocator<SIZE_MEM_DEFAULT_BUFFER, COUNT_MEM_DEFAULT_HANDLE, SIZE_MEM_DEFAULT_BUFFER_BLOCK, COUNT_MEM_DEFAULT_HANDLE_PERFETCH> DefaultBufferAllocator;
 struct DefaultMemBuffer
 {
 	static DefaultBufferAllocator::GlobalGPAllocator s_defaultBufferGAllocator;
