@@ -113,7 +113,7 @@ inline void liw_free_sys(liw_hdl_type handle) {
 // 
 
 const size_t SIZE_MEM_DEFAULT_BUFFER = size_t{ 1 } << 32; // 4GB
-const size_t COUNT_MEM_DEFAULT_HANDLE = size_t{ 1 } << 20; // around 1M handles each thread
+const size_t COUNT_MEM_DEFAULT_HANDLE = size_t{ 1 } << LIW_MEMORY_HANDLE_DIGITS; // around 1M handles each thread
 //const size_t COUNT_MEM_DEFAULT_HANDLE = size_t{ 1 } << 10; 
 const size_t SIZE_MEM_DEFAULT_BUFFER_BLOCK = size_t{ 1 } << 24; // 16MB
 typedef LIW::Util::LIWLGGPAllocator<SIZE_MEM_DEFAULT_BUFFER, COUNT_MEM_DEFAULT_HANDLE, SIZE_MEM_DEFAULT_BUFFER_BLOCK> DefaultBufferAllocator;
@@ -153,27 +153,27 @@ inline void liw_mclnup_def_thd(int idxThread) {
 
 inline void* liw_maddr_def(liw_hdl_type handle) {
 #ifdef _DEBUG
-	void* mem = DefaultBufferAllocator::GetAddressFromHandle(handle);
+	void* mem = DefaultMemBuffer::s_defaultBufferGAllocator.GetAddressFromHandle(handle);
 	DefaultBufferAllocator::GlobalGPAllocator& alloc = DefaultMemBuffer::s_defaultBufferGAllocator;
 	if ((uintptr_t)mem< (uintptr_t)alloc.GetBegPtr() || (uintptr_t)mem>=(uintptr_t)alloc.GetEndPtr())
 		throw "Access out of range! ";
 	return mem;
 #endif
-	return DefaultBufferAllocator::GetAddressFromHandle(handle);
+	return DefaultMemBuffer::s_defaultBufferGAllocator.GetAddressFromHandle(handle);
 }
 
 template<class T>
 inline void liw_mset_def(liw_hdl_type handle, const T& val) {
-	DefaultBufferAllocator::SetMem<T>(handle, std::forward<T>(val));
+	DefaultMemBuffer::s_defaultBufferGAllocator.SetMem<T>(handle, std::forward<T>(val));
 }
 template<class T>
 inline void liw_mset_def(liw_hdl_type handle, T&& val) {
-	DefaultBufferAllocator::SetMem<T>(handle, std::forward<T>(val));
+	DefaultMemBuffer::s_defaultBufferGAllocator.SetMem<T>(handle, std::forward<T>(val));
 }
 
 template<class T>
 inline T liw_mget_def(liw_hdl_type handle) {
-	return std::move(DefaultBufferAllocator::GetMem<T>(handle));
+	return std::move(DefaultMemBuffer::s_defaultBufferGAllocator.GetMem<T>(handle));
 }
 
 inline liw_hdl_type liw_malloc_def(liw_memsize_type size) {

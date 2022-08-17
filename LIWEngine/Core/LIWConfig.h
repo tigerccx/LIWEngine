@@ -18,6 +18,7 @@
 #ifdef _DEBUG
 //#define DEBUG_PRINT_MEMORY_INFO
 #endif
+#define LIW_MEMORY_HANDLE_DIGITS 20
 
 // Enable memset for debugging
 //#define LIW_DEBUG_DEFAULT_ALLOCATOR_MEMSET
