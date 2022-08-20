@@ -707,6 +707,9 @@
     <ClInclude Include="test_container_0.h">
       <Filter>Test\Test</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Containers\LIWList.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

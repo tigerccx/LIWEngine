@@ -244,6 +244,7 @@
     <ClInclude Include="Core\Containers\LIWDArray.h" />
     <ClInclude Include="Core\Containers\LIWDObjectPool.h" />
     <ClInclude Include="Core\Containers\LIWForwardList.h" />
+    <ClInclude Include="Core\Containers\LIWList.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
     <ClInclude Include="Core\Data\LIWAssetManager.h" />
