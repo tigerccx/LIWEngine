@@ -24,16 +24,10 @@ namespace LIW {
 			/// <param name="val"> Value to enqueue. </param>
 			/// <returns> Is operation successful. </returns>
 			inline bool push_now(const T& val){
-				lock_guard lock(__m_mtx_data);
-				__m_queue.push(val);
-				__m_cv_nonempty.notify_one();
-				return true;
+				return push_now_(std::forward<const T>(val));
 			}
 			inline bool push_now(T&& val) {
-				lock_guard lock(__m_mtx_data);
-				__m_queue.emplace(val);
-				__m_cv_nonempty.notify_one();
-				return true;
+				return push_now_(std::forward<T>(val));
 			}
 
 			/// <summary>
@@ -116,6 +110,14 @@ namespace LIW {
 			inline void notify_stop() {
 				__m_running = false;
 				__m_cv_nonempty.notify_all();
+			}
+		private:
+			template<class TVal>
+			inline bool push_now_(TVal&& val) {
+				lock_guard lock(__m_mtx_data);
+				__m_queue.emplace(std::forward<TVal>(val));
+				__m_cv_nonempty.notify_one();
+				return true;
 			}
 
 		protected:

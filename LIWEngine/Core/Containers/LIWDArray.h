@@ -135,7 +135,7 @@ public:
 	template<class ... Args>
 	LIWDArray(size_t capacity, size_t size, Args&&... args): m_capacity(capacity), m_size(size) {
 		assert(capacity != 0); // Cannot allocate with 0 capacity. 
-		assert(size == 0); // What r u trying to do???
+		assert(size != 0); // What r u trying to do???
 		assert(size <= capacity); // Cannot allocate a bigger size than capacity. 
 		m_dataBuffer = liw_malloc<AllocType>(m_capacity * sizeof(T));
 		T* ptr = get_data();
@@ -316,22 +316,10 @@ public:
 	}
 
 	inline void push_back(const T& val) {
-		const size_t sizeNew = m_size + 1;
-		if (m_capacity < sizeNew) {
-			expand();
-		}
-		T* ptr = get_data();
-		new (&ptr[m_size]) T(std::forward<const T>(val));
-		m_size = sizeNew;
+		push_back_(std::forward<const T>(val));
 	}
 	inline void push_back(T&& val) {
-		const size_t sizeNew = m_size + 1;
-		if (m_capacity < sizeNew) {
-			expand();
-		}
-		T* ptr = get_data();
-		new (&ptr[m_size]) T(std::forward<T>(val));
-		m_size = sizeNew;
+		push_back_(std::forward<T>(val));
 	}
 
 	inline void pop_back() {
@@ -342,39 +330,11 @@ public:
 		m_size = sizeNew;
 	}
 
-	Iterator insert(Iterator pos, const T& val) {
-		assert(pos.m_container == this); // pos must be from this container. 
-		assert(pos.m_idxCur <= m_size); // pos invalid. 
-		const size_t sizeNew = m_size + 1;
-		if (m_capacity < sizeNew) {
-			expand();
-		}
-		T* ptr = get_data();
-		const size_t idx = pos.m_idxCur;
-		T* ptrSrc = &ptr[idx];
-		T* ptrDst = &ptr[idx + 1];
-		size_t size = m_size - idx;
-		memmove_s(ptrDst, (m_capacity - idx - 1) * sizeof(T), ptrSrc, size * sizeof(T));
-		new (ptrSrc) T(std::forward<const T>(val));
-		m_size = sizeNew;
-		return Iterator(*this, idx);
+	inline Iterator insert(Iterator pos, const T& val) {
+		return insert_(pos, std::forward<const T>(val));
 	}
-	Iterator insert(Iterator pos, T&& val) {
-		assert(pos.m_container == this); // pos must be from this container. 
-		assert(pos.m_idxCur <= m_size); // pos invalid. 
-		const size_t sizeNew = m_size + 1;
-		if (m_capacity < sizeNew) {
-			expand();
-		}
-		T* ptr = get_data();
-		const size_t idx = pos.m_idxCur;
-		T* ptrSrc = &ptr[idx];
-		T* ptrDst = &ptr[idx + 1];
-		size_t size = m_size - idx;
-		memmove_s(ptrDst, (m_capacity - idx - 1) * sizeof(T), ptrSrc, size * sizeof(T));
-		new (ptrSrc) T(std::forward<T>(val));
-		m_size = sizeNew;
-		return Iterator(*this, idx);
+	inline Iterator insert(Iterator pos, T&& val) {
+		return insert_(pos, std::forward<T>(val));
 	}
 	template<class Iterator1>
 	Iterator insert(Iterator pos, const Iterator1 beg, const Iterator1 end) {
@@ -451,6 +411,36 @@ public:
 	}
 
 private:
+	template<class TVal>
+	inline void push_back_(TVal&& val) {
+		const size_t sizeNew = m_size + 1;
+		if (m_capacity < sizeNew) {
+			expand();
+		}
+		T* ptr = get_data();
+		new (&ptr[m_size]) T(std::forward<TVal>(val));
+		m_size = sizeNew;
+	}
+
+	template<class TVal>
+	Iterator insert_(Iterator pos, TVal&& val) {
+		assert(pos.m_container == this); // pos must be from this container. 
+		assert(pos.m_idxCur <= m_size); // pos invalid. 
+		const size_t sizeNew = m_size + 1;
+		if (m_capacity < sizeNew) {
+			expand();
+		}
+		T* ptr = get_data();
+		const size_t idx = pos.m_idxCur;
+		T* ptrSrc = &ptr[idx];
+		T* ptrDst = &ptr[idx + 1];
+		size_t size = m_size - idx;
+		memmove_s(ptrDst, (m_capacity - idx - 1) * sizeof(T), ptrSrc, size * sizeof(T));
+		new (ptrSrc) T(std::forward<TVal>(val));
+		m_size = sizeNew;
+		return Iterator(*this, idx);
+	}
+
 	inline void destroy_elements() {
 		T* ptr = get_data();
 		for (size_t i = 0; i < m_size; i++) {

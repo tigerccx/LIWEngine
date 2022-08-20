@@ -27,29 +27,11 @@ namespace LIW {
 			/// </summary>
 			/// <param name="val"> Value to enqueue. </param>
 			/// <returns> Is operation successful. </returns>
-			bool push_now(const T& val) {
-				lock_guard lk(__m_mtx_data);
-				if (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) < Size) {
-					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = val;
-					__m_cv_nonempty.notify_one();
-					if (m_cvCondNonEmptyNotify)m_cvCondNonEmptyNotify->notify_one();
-					return true;
-				}
-				else {
-					return false;
-				}
+			inline bool push_now(const T& val) {
+				return push_now_(std::forward<const T>(val));
 			}
-			bool push_now(T&& val) {
-				lock_guard lk(__m_mtx_data);
-				if (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) < Size) {
-					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = val;
-					__m_cv_nonempty.notify_one();
-					if (m_cvCondNonEmptyNotify)m_cvCondNonEmptyNotify->notify_one();
-					return true;
-				}
-				else {
-					return false;
-				}
+			inline bool push_now(T&& val) {
+				return push_now_(std::forward<T>(val));
 			}
 
 			/// <summary>
@@ -58,33 +40,10 @@ namespace LIW {
 			/// <param name="val"> Value to enqueue. </param>
 			/// <returns> Is operation successful. Unsuccess means operation terminated. </returns>
 			bool push(const T& val) {
-				uniq_lock lk_full(__m_mtx_data);
-				while (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) >= Size && __m_running) {
-					__m_cv_nonfull.wait_for(lk_full, c_max_wait);
-				}
-				if (__m_running) {
-					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = val;
-					__m_cv_nonempty.notify_one();
-					if (m_cvCondNonEmptyNotify)m_cvCondNonEmptyNotify->notify_one();
-					return true;
-				}
-				else {
-					return false;
-				}
+				return push_(std::forward<const T>(val));
 			}
 			bool push(T&& val) {
-				uniq_lock lk(__m_mtx_data);
-				while (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) >= Size && __m_running) {
-					__m_cv_nonfull.wait_for(lk, c_max_wait);
-				}
-				if (__m_running) {
-					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = val;
-					__m_cv_nonempty.notify_one();
-					return true;
-				}
-				else {
-					return false;
-				}
+				return push_(std::forward<T>(val));
 			}
 
 			/// <summary>
@@ -178,6 +137,37 @@ namespace LIW {
 				__m_running = false;
 				__m_cv_nonempty.notify_all();
 				__m_cv_nonfull.notify_all();
+			}
+
+		private:
+			template<class TVal>
+			bool push_now_(TVal&& val) {
+				lock_guard lk(__m_mtx_data);
+				if (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) < Size) {
+					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = std::forward<TVal>(val);
+					__m_cv_nonempty.notify_one();
+					if (m_cvCondNonEmptyNotify)m_cvCondNonEmptyNotify->notify_one();
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+
+			template<class TVal>
+			bool push_(TVal&& val) {
+				uniq_lock lk(__m_mtx_data);
+				while (__m_back.load(std::memory_order_relaxed) - __m_front.load(std::memory_order_relaxed) >= Size && __m_running) {
+					__m_cv_nonfull.wait_for(lk, c_max_wait);
+				}
+				if (__m_running) {
+					__m_queue[__m_back.fetch_add(1, std::memory_order_release) % Size] = std::forward<TVal>(val);
+					__m_cv_nonempty.notify_one();
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 
 		private:

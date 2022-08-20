@@ -119,7 +119,7 @@ public:
 	}
 	template<class ... Args>
 	LIWList(size_t size, Args&&... args) : m_size(size) {
-		assert(size == 0); // What r u trying to do???
+		assert(size != 0); // What r u trying to do???
 		m_prehead = liw_new<AllocType, Element>(
 			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<Args>(args)... }
 		);
@@ -265,30 +265,10 @@ public:
 	// Modifer
 	//
 	void push_front(const T& val) {
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<const T>(val) }
-		);
-		auto ptrNext = m_prehead->m_next;
-
-		ptr->m_next = ptrNext;
-		ptrNext->m_prev = ptr;
-		m_prehead->m_next = ptr;
-		ptr->m_prev = m_prehead;
-
-		m_size++;
+		push_front_(std::forward<const T>(val));
 	}
 	void push_front(T&& val) {
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<T>(val) }
-		);
-		auto ptrNext = m_prehead->m_next;
-
-		ptr->m_next = ptrNext;
-		ptrNext->m_prev = ptr;
-		m_prehead->m_next = ptr;
-		ptr->m_prev = m_prehead;
-
-		m_size++;
+		push_front_(std::forward<T>(val));
 	}
 
 	void pop_front() {
@@ -304,30 +284,10 @@ public:
 	}
 
 	void push_back(const T& val) {
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<const T>(val) }
-		);
-		auto ptrPrev = m_prehead->m_prev;
-
-		ptr->m_next = m_prehead;
-		m_prehead->m_prev = ptr;
-		ptrPrev->m_next = ptr;
-		ptr->m_prev = ptrPrev;
-
-		m_size++;
+		push_back_(std::forward<const T>(val));
 	}
 	void push_back(T&& val) {
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<T>(val) }
-		);
-		auto ptrPrev = m_prehead->m_prev;
-
-		ptr->m_next = m_prehead;
-		m_prehead->m_prev = ptr;
-		ptrPrev->m_next = ptr;
-		ptr->m_prev = ptrPrev;
-
-		m_size++;
+		push_back_(std::forward<T>(val));
 	}
 
 	void pop_back() {
@@ -342,41 +302,11 @@ public:
 		m_size--;
 	}
 
-	Iterator insert(Iterator pos, const T& val) {
-		// Skipping check for if pos is in this container...
-		assert(!pos.m_ptrCur.is_null()); // pos must be valid
-		assert(pos.m_ptrCur != m_prehead); // pos must be valid
-
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<const T>(val) }
-		);
-		auto ptrPrev = pos.m_ptrCur->m_prev;
-
-		ptr->m_next = pos.m_ptrCur;
-		pos.m_ptrCur->m_prev = ptr;
-		ptrPrev->m_next = ptr;
-		ptr->m_prev = ptrPrev;
-
-		m_size++;
-		return Iterator(ptr);
+	inline Iterator insert(Iterator pos, const T& val) {
+		return insert_(pos, std::forward<const T>(val));
 	}
-	Iterator insert(Iterator pos, T&& val) {
-		// Skipping check for if pos is in this container...
-		assert(!pos.m_ptrCur.is_null()); // pos must be valid
-		assert(pos.m_ptrCur != m_prehead); // pos must be valid
-
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<T>(val) }
-		);
-		auto ptrPrev = pos.m_ptrCur->m_prev;
-
-		ptr->m_next = pos.m_ptrCur;
-		pos.m_ptrCur->m_prev = ptr;
-		ptrPrev->m_next = ptr;
-		ptr->m_prev = ptrPrev;
-
-		m_size++;
-		return Iterator(ptr);
+	inline Iterator insert(Iterator pos, T&& val) {
+		return insert_(pos, std::forward<T>(val));
 	}
 	template<class Iterator1>
 	Iterator insert(Iterator pos, Iterator1 beg, Iterator1 end) {
@@ -401,40 +331,11 @@ public:
 		return Iterator(ptrPrevTmp->m_next);
 	}
 
-	Iterator insert_after(Iterator pos, const T& val) {
-		// Skipping check for if pos is in this container...
-		assert(!pos.m_ptrCur.is_null()); // pos must be valid
-		assert(pos.m_ptrCur != m_prehead); // pos must be valid
-
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<const T>(val) }
-		);
-		auto ptrNext = pos.m_ptrCur->m_next;
-
-		ptr->m_next = ptrNext;
-		ptrNext->m_prev = ptr;
-		pos.m_ptrCur->m_next = ptr;
-		ptr->m_prev = pos.m_ptrCur;
-
-		m_size++;
-		return Iterator(ptr);
+	inline Iterator insert_after(Iterator pos, const T& val) {
+		return insert_after_(pos, std::forward<const T>(val));
 	}
-	Iterator insert_after(Iterator pos, T&& val) {
-		// Skipping check for if pos is in this container...
-		assert(!pos.m_ptrCur.is_null()); // pos must be valid
-
-		auto ptr = liw_new<AllocType, Element>(
-			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<T>(val) }
-		);
-		auto ptrNext = pos.m_ptrCur->m_next;
-
-		ptr->m_next = ptrNext;
-		ptrNext->m_prev = ptr;
-		pos.m_ptrCur->m_next = ptr;
-		ptr->m_prev = pos.m_ptrCur;
-
-		m_size++;
-		return Iterator(ptr);
+	inline Iterator insert_after(Iterator pos, T&& val) {
+		return insert_after_(pos, std::forward<T>(val));
 	}
 	template<class Iterator1>
 	Iterator insert_after(Iterator pos, Iterator1 beg, Iterator1 end) {
@@ -524,6 +425,75 @@ public:
 	}
 
 private:
+	template<class TVal>
+	void push_front_(TVal&& val) {
+		auto ptr = liw_new<AllocType, Element>(
+			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<TVal>(val) }
+		);
+		auto ptrNext = m_prehead->m_next;
+
+		ptr->m_next = ptrNext;
+		ptrNext->m_prev = ptr;
+		m_prehead->m_next = ptr;
+		ptr->m_prev = m_prehead;
+
+		m_size++;
+	}
+
+	template<class TVal>
+	void push_back_(TVal&& val) {
+		auto ptr = liw_new<AllocType, Element>(
+			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<TVal>(val) }
+		);
+		auto ptrPrev = m_prehead->m_prev;
+
+		ptr->m_next = m_prehead;
+		m_prehead->m_prev = ptr;
+		ptrPrev->m_next = ptr;
+		ptr->m_prev = ptrPrev;
+
+		m_size++;
+	}
+	
+	template<class TVal>
+	Iterator insert_(Iterator pos, TVal&& val) {
+		// Skipping check for if pos is in this container...
+		assert(!pos.m_ptrCur.is_null()); // pos must be valid
+		assert(pos.m_ptrCur != m_prehead); // pos must be valid
+
+		auto ptr = liw_new<AllocType, Element>(
+			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<TVal>(val) }
+		);
+		auto ptrPrev = pos.m_ptrCur->m_prev;
+
+		ptr->m_next = pos.m_ptrCur;
+		pos.m_ptrCur->m_prev = ptr;
+		ptrPrev->m_next = ptr;
+		ptr->m_prev = ptrPrev;
+
+		m_size++;
+		return Iterator(ptr);
+	}
+
+	template<class TVal>
+	Iterator insert_after_(Iterator pos, TVal&& val) {
+		// Skipping check for if pos is in this container...
+		assert(!pos.m_ptrCur.is_null()); // pos must be valid
+
+		auto ptr = liw_new<AllocType, Element>(
+			Element{ liw_c_nullhdl, liw_c_nullhdl, std::forward<TVal>(val) }
+		);
+		auto ptrNext = pos.m_ptrCur->m_next;
+
+		ptr->m_next = ptrNext;
+		ptrNext->m_prev = ptr;
+		pos.m_ptrCur->m_next = ptr;
+		ptr->m_prev = pos.m_ptrCur;
+
+		m_size++;
+		return Iterator(ptr);
+	}
+
 	inline void destroy_elements() {
 		while (m_prehead->m_next != m_prehead)
 		{
@@ -534,6 +504,7 @@ private:
 		m_prehead->m_prev = m_prehead;
 		m_size = 0;
 	}
+
 private:
 	size_t m_size{ 0 };
 	element_ptr_type m_prehead{ liw_c_nullhdl }; // Preceeding head. For easier operation.  

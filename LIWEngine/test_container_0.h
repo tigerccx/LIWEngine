@@ -236,8 +236,6 @@ void test() {
 			printf("\n");
 			printf("\n");
 		}
-		
-
 	}
 
 	// Cleanup mem for thread
