@@ -243,6 +243,7 @@
     <ClInclude Include="Core\Containers\LIWArray.h" />
     <ClInclude Include="Core\Containers\LIWDArray.h" />
     <ClInclude Include="Core\Containers\LIWDObjectPool.h" />
+    <ClInclude Include="Core\Containers\LIWForwardList.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
     <ClInclude Include="Core\Data\LIWAssetManager.h" />
@@ -331,6 +332,7 @@
     <ClInclude Include="TestRenderer.h" />
     <ClInclude Include="TestSystem0.h" />
     <ClInclude Include="test_anything_0.h" />
+    <ClInclude Include="test_container_0.h" />
     <ClInclude Include="test_ecs_0.h" />
     <ClInclude Include="test_maths.h" />
     <ClInclude Include="test_mem_0.h" />

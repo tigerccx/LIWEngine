@@ -701,6 +701,12 @@
     <ClInclude Include="TestGame0.h">
       <Filter>Test\TestGame</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Containers\LIWForwardList.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="test_container_0.h">
+      <Filter>Test\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

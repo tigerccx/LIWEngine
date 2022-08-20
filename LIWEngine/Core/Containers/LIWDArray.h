@@ -1,5 +1,4 @@
 #pragma once
-#include <mutex>
 #include <cassert>
 #include <minmax.h>
 
@@ -20,8 +19,7 @@ template<class T, LIWMemAllocation AllocType = LIWMem_Default,
 class LIWDArray {
 public:
 	typedef LIWDArray<T, AllocType, ExpandType> this_type;
-	typedef std::mutex mtx_type;
-	typedef std::lock_guard<mtx_type> lkgd_type;
+	typedef LIWPointer<T, AllocType> ptr_type;
 public:
 	class CIterator {
 		friend class this_type;
@@ -137,6 +135,7 @@ public:
 	template<class ... Args>
 	LIWDArray(size_t capacity, size_t size, Args&&... args): m_capacity(capacity), m_size(size) {
 		assert(capacity != 0); // Cannot allocate with 0 capacity. 
+		assert(size == 0); // What r u trying to do???
 		assert(size <= capacity); // Cannot allocate a bigger size than capacity. 
 		m_dataBuffer = liw_malloc<AllocType>(m_capacity * sizeof(T));
 		T* ptr = get_data();
@@ -147,9 +146,11 @@ public:
 	LIWDArray(const LIWDArray& other) {
 		*this = other;
 	}
-	LIWDArray(LIWDArray&& other) = default;
+	LIWDArray(LIWDArray&& other) {
+		*this = std::forward<LIWDArray&&>(other);
+	}
 	LIWDArray& operator=(const LIWDArray& other) {
-		if (m_dataBuffer != liw_c_nullhdl) {
+		if (m_dataBuffer != liw_c_nullhdl) { //Clean out old data
 			destroy_elements();
 			liw_free<AllocType>(m_dataBuffer);
 		}
@@ -170,7 +171,17 @@ public:
 		m_sizeExpand = other.m_sizeExpand;
 		return *this;
 	}
-	LIWDArray& operator=(LIWDArray&& other) = default;
+	LIWDArray& operator=(LIWDArray&& other) {
+		if (m_dataBuffer != liw_c_nullhdl) { //Clean out old data
+			destroy_elements();
+			liw_free<AllocType>(m_dataBuffer);
+		}
+		m_dataBuffer = other.m_dataBuffer;
+		m_capacity = other.m_capacity;
+		m_size = other.m_size;
+		m_sizeExpand = other.m_sizeExpand;
+		return *this;
+	}
 
 	void init_expand_size(size_t sizeExpand) {
 		m_sizeExpand = sizeExpand;
@@ -187,7 +198,13 @@ public:
 	// Compare
 	//
 	inline bool operator==(const LIWDArray& other) const {
-		return m_dataBuffer == other.m_dataBuffer;
+		if (m_dataBuffer == other.m_dataBuffer) {
+			return true;
+		}
+		if (m_size != other.m_size) {
+			return false;
+		}
+		return !memcmp(this->get_data(), other.get_data(), sizeof(T) * m_size);
 	}
 	inline bool operator!=(const LIWDArray& other) const {
 		return !(*this == other);
@@ -211,6 +228,9 @@ public:
 	//
 	inline liw_hdl_type get_data_handle() const {
 		return m_dataBuffer;
+	}
+	inline ptr_type get_ptr() const {
+		return ptr_type(m_dataBuffer);
 	}
 	inline T* get_data() const {
 		return (T*)liw_maddr<AllocType>(m_dataBuffer);
@@ -262,10 +282,6 @@ public:
 		m_dataBuffer = handleNew;
 		m_capacity = capacity;
 	}
-	//inline void set_capacity_thds(size_t capacity) {
-	//	lkgd_type lk(m_mtx);
-	//	set_capacity(capacity);
-	//}
 	inline void expand() {
 		static_assert(ExpandType < LIWDynamicExpandType_Max, "Must use a valid LIWDynamicExpandType enum. ");
 		size_t capacityNew = m_capacity;
@@ -317,14 +333,6 @@ public:
 		new (&ptr[m_size]) T(std::forward<T>(val));
 		m_size = sizeNew;
 	}
-	//inline void push_back_thds(const T& val) {
-	//	lkgd_type lk(m_mtx);
-	//	push_back(std::forward<const T>(val));
-	//}
-	//inline void push_back_thds(T&& val) {
-	//	lkgd_type lk(m_mtx);
-	//	push_back(std::forward<T>(val));
-	//}
 
 	inline void pop_back() {
 		assert(m_size != 0); // Cannot pop from an empty DArray. 
@@ -333,12 +341,8 @@ public:
 		ptr[sizeNew].~T();
 		m_size = sizeNew;
 	}
-	//inline void pop_back_thds() {
-	//	lkgd_type lk(m_mtx);
-	//	pop_back();
-	//}
 
-	Iterator insert(const Iterator& pos, const T& val) {
+	Iterator insert(Iterator pos, const T& val) {
 		assert(pos.m_container == this); // pos must be from this container. 
 		assert(pos.m_idxCur <= m_size); // pos invalid. 
 		const size_t sizeNew = m_size + 1;
@@ -355,7 +359,7 @@ public:
 		m_size = sizeNew;
 		return Iterator(*this, idx);
 	}
-	Iterator insert(const Iterator& pos, T&& val) {
+	Iterator insert(Iterator pos, T&& val) {
 		assert(pos.m_container == this); // pos must be from this container. 
 		assert(pos.m_idxCur <= m_size); // pos invalid. 
 		const size_t sizeNew = m_size + 1;
@@ -373,7 +377,7 @@ public:
 		return Iterator(*this, idx);
 	}
 	template<class Iterator1>
-	Iterator insert(const Iterator& pos, const Iterator1& beg, const Iterator1& end) {
+	Iterator insert(Iterator pos, const Iterator1 beg, const Iterator1 end) {
 		assert(pos.m_container == this); // pos must be from this container. 
 		assert(pos.m_idxCur <= m_size); // pos invalid. 
 		assert(beg.m_container == end.m_container); // beg and end must be from the same container. 
@@ -403,21 +407,8 @@ public:
 		m_size = sizeNew;
 		return Iterator(*this, idx);
 	}
-	//inline Iterator insert_thds(const Iterator& pos, const T& val) {
-	//	lkgd_type lk(m_mtx);
-	//	return std::move(insert(std::forward<const Iterator>(pos), std::forward<const T>(val)));
-	//}
-	//inline Iterator insert_thds(const Iterator& pos, T&& val) {
-	//	lkgd_type lk(m_mtx);
-	//	return std::move(insert(std::forward<const Iterator>(pos), std::forward<T>(val)));
-	//}
-	//template<class Iterator1>
-	//inline Iterator insert_thds(const Iterator& pos, const Iterator1& beg, const Iterator1& end) {
-	//	lkgd_type lk(m_mtx);
-	//	return std::move(insert(std::forward<const Iterator>(pos), std::forward<const Iterator1&>(beg), std::forward<const Iterator1&>(end)));
-	//}
 
-	Iterator erase(const Iterator& pos) {
+	Iterator erase(Iterator pos) {
 		assert(pos.m_container == this); // pos must be from this container. 
 		assert(pos.m_idxCur < m_size); // pos invalid. 
 		T* ptr = get_data();
@@ -430,7 +421,7 @@ public:
 		m_size--;
 		return Iterator(*this, idx);
 	}
-	Iterator erase(const Iterator& beg, const Iterator& end) {
+	Iterator erase(Iterator beg, Iterator end) {
 		assert(beg.m_container == this && end.m_container == this); // beg and end must be from this container. 
 		assert(beg.m_idxCur < m_size); // beg invalid. 
 		assert(end.m_idxCur <= m_size); // end invalid. 
@@ -452,25 +443,12 @@ public:
 		m_size -= sizeErase;
 		return Iterator(*this, idxBeg);
 	}
-	//Iterator erase_thds(const Iterator& pos) {
-	//	lkgd_type lk(m_mtx);
-	//	return std::move(erase(std::forward<const Iterator>(pos)));
-	//}
-	//Iterator erase_thds(const Iterator& beg, const Iterator& end) {
-	//	lkgd_type lk(m_mtx);
-	//	return std::move(erase(std::forward<const Iterator>(beg), std::forward<const Iterator>(end)));
-	//}
 
 	inline void clear() {
 		if (m_dataBuffer != liw_c_nullhdl) {
 			destroy_elements();
-			m_size = 0;
 		}
 	}
-	//inline void clear_thds() {
-	//	lkgd_type lk(m_mtx);
-	//	clear();
-	//}
 
 private:
 	inline void destroy_elements() {
@@ -478,6 +456,7 @@ private:
 		for (size_t i = 0; i < m_size; i++) {
 			ptr[i].~T();
 		}
+		m_size = 0;
 	}
 
 private:
@@ -485,5 +464,4 @@ private:
 	size_t m_capacity{ 0 };
 	size_t m_size{ 0 };
 	size_t m_sizeExpand{ 4 };
-	//mutable mtx_type m_mtx;
 };
