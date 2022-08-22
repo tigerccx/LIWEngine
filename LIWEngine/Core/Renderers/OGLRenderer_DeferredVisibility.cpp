@@ -753,11 +753,11 @@ namespace LIW {
 		uint32_t countGroupX = width / 8;
 		uint32_t countGroupY = height / 8;
 
-		LIWTexture::Bind2DTextureImage(vBuffer.GetColorAttachmentRawHandle(1),
-			rawHdlP0ShaderProgram, "indexImg", 0, LIWImageFormat_R32U,
-			LIWTextureImageAccessType_Read);
+		//LIWTexture::Bind2DTextureImage(vBuffer.GetColorAttachmentRawHandle(1),
+		//	rawHdlP0ShaderProgram, "indexImg", 0, LIWImageFormat_R32U,
+		//	LIWTextureImageAccessType_Read);
 		LIWTexture::Bind2DTextureImage(vBuffer.GetColorAttachmentRawHandle(0),
-			rawHdlP0ShaderProgram, "materialImg", 1, LIWImageFormat_R16U,
+			rawHdlP0ShaderProgram, "materialImg", 0, LIWImageFormat_R16U,
 			LIWTextureImageAccessType_Read);
 
 		glDispatchCompute(countGroupX, countGroupY, 1);
