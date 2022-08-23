@@ -232,6 +232,10 @@ int TestGame0::CleanUp()
 	assetManager.DestroyMaterial("materialTest");
 	assetManager.DestroyMaterial("materialForward");
 	assetManager.DestroyMaterial("materialDeferred");
+	for (int i = 0; i < TEST_TEXTURE_COUNT; i++) {
+		std::string name = "materialTest_" + std::to_string(i);
+		assetManager.DestroyMaterial(name.c_str());
+	}
 
 	auto& shaderProgram = assetManager.GetShaderProgram(m_shaderProgram);
 	shaderProgram.DestroyShader();
@@ -256,6 +260,13 @@ int TestGame0::CleanUp()
 	auto& tex2 = assetManager.GetTexture2D(m_tex2D2);
 	tex2.DestroyTexture();
 	assetManager.DestroyTexture2D("tex2");
+
+	for (int i = 0; i < TEST_TEXTURE_COUNT; i++) {
+		std::string name = "texTest_" + std::to_string(i);
+		auto& tex2 = assetManager.GetTexture2D(m_tex2DTests[i]);
+		tex2.DestroyTexture();
+		assetManager.DestroyTexture2D(name.c_str());
+	}
 
 	liw_delete(TestGlobal::s_rendererForward);
 	return 0;

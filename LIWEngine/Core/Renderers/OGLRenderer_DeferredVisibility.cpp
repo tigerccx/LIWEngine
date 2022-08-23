@@ -580,7 +580,7 @@ namespace LIW {
 			
 			void* indexBufferCur = (char*)indexBuffer + sizeIndexBufferCur;
 			memcpy_s(indexBufferCur, sizeIndexBuffer - sizeIndexBufferCur, indices.get_data(), sizeIndex);
-			for (size_t i = 0; i < countIndex; ++i) {
+			for (size_t i = 0; i < countIndex; ++i) { //Offset index
 				((uint32_t*)indexBufferCur)[i] += m_vertexCount;
 			}
 			sizeIndexBufferCur += sizeIndex;
