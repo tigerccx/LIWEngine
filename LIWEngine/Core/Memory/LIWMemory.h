@@ -45,6 +45,7 @@ inline const liw_memsize_type operator""_GB(liw_memsize_type const x) { return 1
 * // Memory access functions
 * liw_maddr_MODE:			get raw address
 * liw_moffset_MODE:			offset handle (in char)
+* liw_mdiff_MODE:			handle address diff (in char)
 * liw_mset_MODE:			set value
 * liw_mget_MODE:			get value
 * liw_malloc_MODE:			malloc
@@ -91,6 +92,10 @@ inline liw_hdl_type liw_moffset_sys(liw_hdl_type handle, ptrdiff_t offset) {
 	return (liw_hdl_type)((char*)handle + offset);
 }
 
+inline ptrdiff_t liw_mdiff_sys(liw_hdl_type handle0, liw_hdl_type handle1) {
+	return (uintptr_t)handle0 - (uintptr_t)(handle1);
+}
+
 template<class T>
 inline void liw_mset_sys(liw_hdl_type handle, const T& val) {
 	*((T*)handle) = val;
@@ -118,7 +123,7 @@ inline void liw_free_sys(liw_hdl_type handle) {
 // 
 
 const size_t SIZE_MEM_DEFAULT_BUFFER = size_t{ 1 } << 32; // 4GB
-const size_t COUNT_MEM_DEFAULT_HANDLE = size_t{ 1 } << LIW_MEMORY_HANDLE_DIGITS; // around 1M handles each thread
+const size_t COUNT_MEM_DEFAULT_HANDLE = size_t{ 1 } << LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS; // around 1M handles each thread
 const size_t SIZE_MEM_DEFAULT_BUFFER_BLOCK = size_t{ 1 } << 24; // 16MB
 const size_t COUNT_MEM_DEFAULT_HANDLE_PERFETCH = size_t{ 1 } << 12; //4096 per fetch
 typedef LIW::Util::LIWLGGPAllocator<SIZE_MEM_DEFAULT_BUFFER, COUNT_MEM_DEFAULT_HANDLE, SIZE_MEM_DEFAULT_BUFFER_BLOCK, COUNT_MEM_DEFAULT_HANDLE_PERFETCH> DefaultBufferAllocator;
@@ -157,25 +162,35 @@ inline void liw_mclnup_def_thd(int idxThread) {
 }
 
 inline void* liw_maddr_def(liw_hdl_type handle) {
-#ifdef _DEBUG
-	const ptrdiff_t offset = (liw_c_offsetmask_def & handle) >> LIW_MEMORY_HANDLE_DIGITS;
+	const ptrdiff_t offset = (liw_c_offsetmask_def & handle) >> LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS;
 	const liw_hdl_type handleRaw = liw_c_hdlmask_def & handle;
 	char* mem = (char*)DefaultMemBuffer::s_defaultBufferGAllocator.GetAddressFromHandle(handleRaw);
 	mem += offset;
 	DefaultBufferAllocator::GlobalGPAllocator& alloc = DefaultMemBuffer::s_defaultBufferGAllocator;
+	
+#ifdef _DEBUG
 	if ((uintptr_t)mem< (uintptr_t)alloc.GetBegPtr() || (uintptr_t)mem>=(uintptr_t)alloc.GetEndPtr())
 		throw "Access out of range! ";
-	return mem;
 #endif
-	return DefaultMemBuffer::s_defaultBufferGAllocator.GetAddressFromHandle(handle);
+
+	return mem;
 }
 
 inline liw_hdl_type liw_moffset_def(liw_hdl_type handle, ptrdiff_t offset) {
 	assert(offset < UINT32_MAX); //For default allocator handle, cannot offset more than 32 digits;
-	ptrdiff_t offsetOrg = (liw_c_offsetmask_def & handle) >> LIW_MEMORY_HANDLE_DIGITS;
+	ptrdiff_t offsetOrg = (liw_c_offsetmask_def & handle) >> LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS;
 	offsetOrg += offset;
 	assert(offsetOrg >= 0); //Cannot access data ahead of the address which a default allocator handle is identifying. 
-	return (liw_c_hdlmask_def & handle) + (offsetOrg << LIW_MEMORY_HANDLE_DIGITS);
+	return (liw_c_hdlmask_def & handle) + (offsetOrg << LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS);
+}
+
+inline ptrdiff_t liw_mdiff_def(liw_hdl_type handle0, liw_hdl_type handle1) {
+	const liw_hdl_type handleRaw0 = liw_c_hdlmask_def & handle0;
+	const liw_hdl_type handleRaw1 = liw_c_hdlmask_def & handle1;
+	assert(handleRaw0 == handleRaw1); //For default allocator handle, cannot compare handles from different raw handles. 
+	const ptrdiff_t offset0 = (liw_c_offsetmask_def & handle0) >> LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS;
+	const ptrdiff_t offset1 = (liw_c_offsetmask_def & handle1) >> LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS;
+	return offset0 - offset1;
 }
 
 template<class T>
@@ -260,6 +275,10 @@ inline liw_hdl_type liw_moffset_static(liw_hdl_type handle, ptrdiff_t offset) {
 	return (liw_hdl_type)((char*)handle + offset);
 }
 
+inline ptrdiff_t liw_mdiff_static(liw_hdl_type handle0, liw_hdl_type handle1) {
+	return (uintptr_t)handle0 - (uintptr_t)(handle1);
+}
+
 template<class T>
 inline void liw_mset_static(liw_hdl_type handle, const T& val) {
 	*((T*)handle) = val;
@@ -328,6 +347,10 @@ inline void* liw_maddr_frame(liw_hdl_type handle) {
 
 inline liw_hdl_type liw_moffset_frame(liw_hdl_type handle, ptrdiff_t offset) {
 	return (liw_hdl_type)((char*)handle + offset);
+}
+
+inline ptrdiff_t liw_mdiff_frame(liw_hdl_type handle0, liw_hdl_type handle1) {
+	return (uintptr_t)handle0 - (uintptr_t)(handle1);
 }
 
 template<class T>
@@ -404,6 +427,10 @@ inline liw_hdl_type liw_moffset_dframe(liw_hdl_type handle, ptrdiff_t offset) {
 	return (liw_hdl_type)((char*)handle + offset);
 }
 
+inline ptrdiff_t liw_mdiff_dframe(liw_hdl_type handle0, liw_hdl_type handle1) {
+	return (uintptr_t)handle0 - (uintptr_t)(handle1);
+}
+
 template<class T>
 inline void liw_mset_dframe(liw_hdl_type handle, const T& val) {
 	*((T*)handle) = val;
@@ -454,6 +481,19 @@ inline liw_hdl_type liw_moffset(liw_hdl_type handle, ptrdiff_t offset) {
 	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
 	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
 	return liw__moffset_foo(tag(), handle, offset);
+}
+
+inline ptrdiff_t liw__mdiff_foo(liw__mem_alloc_tag_sys, liw_hdl_type handle0, liw_hdl_type handle1) { return liw_mdiff_sys(handle0, handle1); }
+inline ptrdiff_t liw__mdiff_foo(liw__mem_alloc_tag_def, liw_hdl_type handle0, liw_hdl_type handle1) { return liw_mdiff_def(handle0, handle1); }
+inline ptrdiff_t liw__mdiff_foo(liw__mem_alloc_tag_static, liw_hdl_type handle0, liw_hdl_type handle1) { return liw_mdiff_static(handle0, handle1); }
+inline ptrdiff_t liw__mdiff_foo(liw__mem_alloc_tag_frame, liw_hdl_type handle0, liw_hdl_type handle1) { return liw_mdiff_frame(handle0, handle1); }
+inline ptrdiff_t liw__mdiff_foo(liw__mem_alloc_tag_dframe, liw_hdl_type handle0, liw_hdl_type handle1) { return liw_mdiff_dframe(handle0, handle1); }
+
+template<LIWMemAllocation MemAlloc>
+inline ptrdiff_t liw_mdiff(liw_hdl_type handle0, liw_hdl_type handle1) {
+	static_assert(MemAlloc < LIWMem_Max, "Must use a valid LIWMemAllocation enum. ");
+	typedef typename liw__mem_alloc_tag<MemAlloc>::type tag;
+	return liw__mdiff_foo(tag(), handle0, handle1);
 }
 
 template<class T>
@@ -583,8 +623,10 @@ public:
 	inline LIWPointer& operator+=(const ptrdiff_t diff) { m_handle = liw_moffset<AllocType>(m_handle, diff * sizeof(T)); return *this; }
 	inline LIWPointer& operator-=(const ptrdiff_t diff) { m_handle = liw_moffset<AllocType>(m_handle, -diff * sizeof(T)); return *this; }
 
-	inline LIWPointer operator+(const ptrdiff_t diff) { m_handle = liw_moffset<AllocType>(m_handle, diff * sizeof(T)); return *this; }
-	inline LIWPointer operator-(const ptrdiff_t diff) { m_handle = liw_moffset<AllocType>(m_handle, -diff * sizeof(T)); return *this; }
+	inline LIWPointer operator+(const ptrdiff_t diff) { liw_hdl_type handle = liw_moffset<AllocType>(m_handle, diff * sizeof(T)); return LIWPointer(handle); }
+	inline LIWPointer operator-(const ptrdiff_t diff) { liw_hdl_type handle = liw_moffset<AllocType>(m_handle, -diff * sizeof(T)); return LIWPointer(handle); }
+
+	inline ptrdiff_t operator-(const LIWPointer other) { return liw_mdiff<AllocType>(m_handle, other.m_handle); }
 
 	template<class TOther>
 	LIWPointer(const LIWPointer<TOther, AllocType>& other) {
@@ -670,6 +712,15 @@ private:
 
 #endif // _DEBUG
 
+};
+
+template<class T, LIWMemAllocation AllocType>
+struct std::hash<LIWPointer<T, AllocType>>
+{
+	std::size_t operator()(const LIWPointer<T, AllocType>& val) const
+	{
+		return val.get_handle();
+	}
 };
 
 //template<class T, LIWMemAllocation AllocType>

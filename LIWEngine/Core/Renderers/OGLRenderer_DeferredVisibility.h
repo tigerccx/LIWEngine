@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LIWMacros.h"
+#include "Memory/LIWMemory.h"
 #include "OGLRenderer.h"
 #include "Maths/LIWMaths.h"
 #include "Framework/LIWECSFunctional.h"
@@ -27,10 +28,11 @@ namespace LIW{
 		~OGLRenderer_DeferredVisibility();
 		void RenderScene() override;
 
-	public:
-		void AddRenderMaterial(liw_objhdl_type hdlMaterial);
-		void RemoveRenderMaterial(liw_objhdl_type hdlMaterial);
 	private:
+		uint32_t AddRenderMaterial(LIWPointer<LIWMaterial, LIWMem_Default> ptrMaterial);
+		uint32_t FindRenderMaterial(LIWPointer<LIWMaterial, LIWMem_Default> ptrMaterial);
+		void ClearRenderMaterial();
+	
 		void RenderCamera(LIWComponent_Camera& camera);
 		void VisibilityPass();
 		void VisibilityDebugShowPass();
@@ -69,23 +71,24 @@ namespace LIW{
 		uint32_t m_vao;
 		uint32_t m_emptyVAO;
 
-		liw_objhdl_type m_meshSphere;
+		LIWPointer<LIWMesh, LIWMem_Default> m_meshSphere;
 
-		liw_objhdl_type m_frameBufferVBuffer{ liw_c_nullobjhdl };
-		liw_objhdl_type m_frameBufferPresentBuffer{ liw_c_nullobjhdl };
-		liw_objhdl_type m_frameBufferGBuffer{ liw_c_nullobjhdl };
-		liw_objhdl_type m_frameBufferLightBuffer{ liw_c_nullobjhdl };
+		LIWPointer<LIWFrameBuffer, LIWMem_Default> m_frameBufferVBuffer{ liw_c_nullobjhdl };
+		LIWPointer<LIWFrameBuffer, LIWMem_Default> m_frameBufferPresentBuffer{ liw_c_nullobjhdl };
+		LIWPointer<LIWFrameBuffer, LIWMem_Default> m_frameBufferGBuffer{ liw_c_nullobjhdl };
+		LIWPointer<LIWFrameBuffer, LIWMem_Default> m_frameBufferLightBuffer{ liw_c_nullobjhdl };
 
-		liw_objhdl_type m_lightBufferShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_combineShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_visibilityShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_visibilityShowShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_worklistGenerateP0ShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_worklistGenerateP1ShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_worklistGenerateP2ShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_presentShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_lightBufferShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_combineShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_visibilityShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_visibilityShowShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_worklistGenerateP0ShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_worklistGenerateP1ShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_worklistGenerateP2ShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_presentShaderProgram{ liw_c_nullobjhdl };
 
-		std::set<liw_objhdl_type> m_materialList{ };
+		std::unordered_map<LIWPointer<LIWMaterial, LIWMem_Default>, uint32_t> m_materialList{ };
+		uint32_t m_materialCounter = 0;
 	};
 
 	class LIW_TT_OGLDeferredVisibilityRender final :

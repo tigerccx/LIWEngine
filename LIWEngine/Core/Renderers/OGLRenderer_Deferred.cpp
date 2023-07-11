@@ -9,29 +9,25 @@ namespace LIW {
 
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 
-		liw_objhdl_type hdlLightBufferVertShader = assetManager.CreateShader("shader_vert_lightBuffer");
-		LIWShader& lightBufferVertShader = assetManager.GetShader(hdlLightBufferVertShader);
+		LIWShader& lightBufferVertShader = *(assetManager.CreateShader("shader_vert_lightBuffer"));
 		lightBufferVertShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_LightBuffer_Vert.glsl", LIWShaderType_Vertex);
 
-		liw_objhdl_type hdlLightBufferFragShader = assetManager.CreateShader("shader_frag_lightBuffer");
-		LIWShader& lightBufferFragShader = assetManager.GetShader(hdlLightBufferFragShader);
+		LIWShader& lightBufferFragShader = *(assetManager.CreateShader("shader_frag_lightBuffer"));
 		lightBufferFragShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_LightBuffer_Frag.glsl", LIWShaderType_Fragment);
 	
-		liw_objhdl_type hdlScreenQuadShader = assetManager.CreateShader("shader_vert_screenQuad");
-		LIWShader& screenQuadShader = assetManager.GetShader(hdlScreenQuadShader);
+		LIWShader& screenQuadShader = *(assetManager.CreateShader("shader_vert_screenQuad"));
 		screenQuadShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_ScreenQuad_Vert.glsl", LIWShaderType_Vertex);
 
-		liw_objhdl_type hdlCombineShader = assetManager.CreateShader("shader_frag_combine");
-		LIWShader& combineShader = assetManager.GetShader(hdlCombineShader);
+		LIWShader& combineShader = *(assetManager.CreateShader("shader_frag_combine"));
 		combineShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_Combine_Frag.glsl", LIWShaderType_Fragment);
 
 
 		m_lightBufferShaderProgram = assetManager.CreateShaderProgram("shaderProgram_lightBuffer");
-		LIWShaderProgram& lightBufferShaderProgram = assetManager.GetShaderProgram(m_lightBufferShaderProgram);
+		LIWShaderProgram& lightBufferShaderProgram = *m_lightBufferShaderProgram;
 		lightBufferShaderProgram.CreateShader({ lightBufferVertShader , lightBufferFragShader });
 
 		m_combineShaderProgram = assetManager.CreateShaderProgram("shaderProgram_combine");
-		LIWShaderProgram& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
+		LIWShaderProgram& combineShaderProgram = *m_combineShaderProgram;
 		combineShaderProgram.CreateShader({ screenQuadShader , combineShader });
 
 		lightBufferVertShader.UnloadShader();
@@ -44,11 +40,11 @@ namespace LIW {
 		assetManager.DestroyShader("shader_frag_combine");
 
 
-		m_meshSphere = assetManager.GetMeshHandle(LIW_MESH_SPHERE_NAME);
+		m_meshSphere = assetManager.GetMesh(LIW_MESH_SPHERE_NAME);
 
 
 		m_frameBufferGBuffer = assetManager.CreateFrameBuffer("framebuffer_gbuffer");
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
+		auto& gBuffer = *m_frameBufferGBuffer;
 		const liw_flag_type gBufferFlag =
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB |
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1 |
@@ -56,7 +52,7 @@ namespace LIW {
 		gBuffer.CreateFrameBuffer(width, height, gBufferFlag);
 
 		m_frameBufferLightBuffer = assetManager.CreateFrameBuffer("framebuffer_lightbuffer");
-		auto& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
+		auto& lightBuffer = *m_frameBufferLightBuffer;
 		const liw_flag_type lightBufferFlag =
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB |
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1;
@@ -66,20 +62,20 @@ namespace LIW {
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 
-		LIWFrameBuffer& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
+		LIWFrameBuffer& lightBuffer = *m_frameBufferLightBuffer;
 		lightBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_lightbuffer");
 
-		LIWFrameBuffer& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
+		LIWFrameBuffer& gBuffer = *m_frameBufferGBuffer;
 		gBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_gbuffer");
 
 
-		LIWShaderProgram& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
+		LIWShaderProgram& combineShaderProgram = *m_combineShaderProgram;
 		combineShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_combine");
 
-		LIWShaderProgram& lightBufferShaderProgram = assetManager.GetShaderProgram(m_lightBufferShaderProgram);
+		LIWShaderProgram& lightBufferShaderProgram = *m_lightBufferShaderProgram;
 		lightBufferShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_lightBuffer");
 
@@ -147,7 +143,7 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
+		auto& gBuffer = *m_frameBufferGBuffer;
 
 		BindFrameBuffer(gBuffer);
 		
@@ -178,10 +174,10 @@ namespace LIW {
 			liw_objhdl_type transformHandle = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, entity);
 			auto& transform = LIW_ECS_GetComponent(LIWComponent_Transform, transformHandle);
 
-			auto& material = assetManager.GetMaterial(meshRenderer.m_handleMaterial);
-			auto& mesh = assetManager.GetMesh(meshRenderer.m_handleMesh);
+			auto& material = *(meshRenderer.m_handleMaterial);
+			auto& mesh = *(meshRenderer.m_handleMesh);
 
-			auto& shaderProgram = assetManager.GetShaderProgram(material.m_handleShaderProgram);
+			auto& shaderProgram = *(material.m_handleShaderProgram);
 			uint32_t rawHandleshaderProgram = shaderProgram.GetRawHandle();
 
 			// Use program
@@ -224,9 +220,9 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
-		auto& lightBufferShaderProgram = assetManager.GetShaderProgram(m_lightBufferShaderProgram);
+		auto& lightBuffer = *(m_frameBufferLightBuffer);
+		auto& gBuffer = *(m_frameBufferGBuffer);
+		auto& lightBufferShaderProgram = *(m_lightBufferShaderProgram);
 		const uint32_t rawHandleLightBufferShaderProgram = lightBufferShaderProgram.GetRawHandle();
 
 		BindFrameBuffer(lightBuffer);
@@ -270,7 +266,7 @@ namespace LIW {
 		//
 
 		// Point light
-		auto& meshSphere = assetManager.GetMesh(LIW_MESH_SPHERE_NAME);
+		auto& meshSphere = *(assetManager.GetMesh(LIW_MESH_SPHERE_NAME));
 		auto& submeshSphere = meshSphere.GetSubmeshes();
 		const int drawMode = LIWImageFormat_2_GLPrimitive.at(meshSphere.GetPrimitiveType());
 
@@ -358,9 +354,9 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
-		auto& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
-		auto& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
+		auto& gBuffer = *m_frameBufferGBuffer;
+		auto& lightBuffer = *m_frameBufferLightBuffer;
+		auto& combineShaderProgram = *m_combineShaderProgram;
 		const uint32_t rawHandleCombineShaderProgram = combineShaderProgram.GetRawHandle();
 
 		BindDefaultFrameBuffer();

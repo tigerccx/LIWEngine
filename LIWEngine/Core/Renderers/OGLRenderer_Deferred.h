@@ -33,13 +33,13 @@ namespace LIW{
 		uint32_t m_uboPointLightPerPixelData;
 		uint32_t m_emptyVAO;
 
-		liw_objhdl_type m_meshSphere;
+		LIWPointer<LIWMesh, LIWMem_Default> m_meshSphere;
 
-		liw_objhdl_type m_frameBufferGBuffer{ liw_c_nullobjhdl };
-		liw_objhdl_type m_frameBufferLightBuffer{ liw_c_nullobjhdl };
+		LIWPointer<LIWFrameBuffer, LIWMem_Default> m_frameBufferGBuffer{ liw_c_nullobjhdl };
+		LIWPointer<LIWFrameBuffer, LIWMem_Default> m_frameBufferLightBuffer{ liw_c_nullobjhdl };
 
-		liw_objhdl_type m_lightBufferShaderProgram{ liw_c_nullobjhdl };
-		liw_objhdl_type m_combineShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_lightBufferShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_combineShaderProgram{ liw_c_nullobjhdl };
 	};
 
 	class LIW_TT_OGLDeferredRender final :

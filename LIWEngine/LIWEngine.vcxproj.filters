@@ -297,9 +297,6 @@
     <ClCompile Include="Core\Data\LIWTexture.cpp">
       <Filter>Core\Data</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Data\LIWAssetManager.cpp">
-      <Filter>Core\Data</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Data\LIWMaterial.cpp">
       <Filter>Core\Data</Filter>
     </ClCompile>
@@ -341,6 +338,15 @@
     </ClCompile>
     <ClCompile Include="TestGame0.cpp">
       <Filter>Test\TestGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Data\LIWAsset.cpp">
+      <Filter>Core\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LIWIDManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LIWObject.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -709,6 +715,18 @@
     </ClInclude>
     <ClInclude Include="Core\Containers\LIWList.h">
       <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Containers\LIWObjectPool.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Data\LIWAsset.h">
+      <Filter>Core\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWIDManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LIWSingleton.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

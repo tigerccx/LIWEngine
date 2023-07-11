@@ -11,7 +11,10 @@
 namespace LIW {
 	enum LIWTextureWrapType {
 		LIWTextureWrapType_Repeat,
-		LIWTextureWrapType_Clamp,
+		LIWTextureWrapType_MirrorRepeat,
+		LIWTextureWrapType_MirrorClampToEdge,
+		LIWTextureWrapType_ClampToEdge,
+		LIWTextureWrapType_ClampToBorder,
 		LIWTextureWrapType_Max
 	};
 
@@ -68,8 +71,8 @@ namespace LIW {
 		static const uint32_t sc_invalidHandle = UINT32_MAX;
 	public:
 		void CreateTexture(int width, int height, LIWImageFormat format, 
-			LIWTextureWrapType wrapU = LIWTextureWrapType_Clamp, 
-			LIWTextureWrapType wrapV = LIWTextureWrapType_Clamp,
+			LIWTextureWrapType wrapU = LIWTextureWrapType_ClampToEdge, 
+			LIWTextureWrapType wrapV = LIWTextureWrapType_ClampToEdge,
 			LIWTextureFilterType filterMin = LIWTextureFilterType_Nearest,
 			LIWTextureFilterType filterMag = LIWTextureFilterType_Nearest,
 			bool generateMipMap = false);
@@ -102,8 +105,8 @@ namespace LIW {
 		static const uint32_t sc_invalidHandle = UINT32_MAX;
 	public:
 		void CreateTexture(int width, int height, LIWRenderAttachmentFormat format,
-			LIWTextureWrapType wrapU = LIWTextureWrapType_Clamp,
-			LIWTextureWrapType wrapV = LIWTextureWrapType_Clamp,
+			LIWTextureWrapType wrapU = LIWTextureWrapType_ClampToEdge,
+			LIWTextureWrapType wrapV = LIWTextureWrapType_ClampToEdge,
 			LIWTextureFilterType filterMin = LIWTextureFilterType_Nearest,
 			LIWTextureFilterType filterMag = LIWTextureFilterType_Nearest,
 			bool generateMipMap = false);

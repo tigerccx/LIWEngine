@@ -123,7 +123,7 @@ namespace LIW {
 			}
 
 			// Init AssetManager
-			LIWGlobal::s_assetManager = liw_new_static<LIWAssetManager>();
+			LIWGlobal::s_assetManager = liw_new_static<LIWAssetManager<LIWMem_Default>>();
 			LIWGlobal::s_assetManager->Init();
 
 			// Init game

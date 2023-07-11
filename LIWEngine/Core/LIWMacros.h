@@ -14,6 +14,32 @@
 #define LIW_PATH_DIR_RESOURCE_TEXTURES		"../../Resources/Textures/"
 
 ////
+//Capacities
+////
+// 
+//Assets
+// Image and Texture
+#define LIW_ASSET_IMAGE_CAPACITY			2048
+#define LIW_ASSET_TEXTURE2D_CAPACITY		2048
+// FrameBuffer
+#define LIW_ASSET_FRAMEBUFFER_CAPACITY		32
+// Mesh
+#define LIW_ASSET_MESHDATA_CAPACITY			2048
+#define LIW_ASSET_MESH_CAPACITY				2048
+// Shader
+#define LIW_ASSET_SHADER_CAPACITY			512
+#define LIW_ASSET_SHDAERPROGRAM_CAPACITY	512
+// Material
+#define LIW_ASSET_MATERIAL_CAPACITY			2048
+
+
+////
+//Memory
+////
+//Default Allocation
+#define LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS 20 //NOTE: Must be <= 32 (should be well enough)
+
+////
 //Shader variable names
 ////
 //Common Matrix

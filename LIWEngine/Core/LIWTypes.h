@@ -2,9 +2,12 @@
 #include <iostream>
 #include <mutex>
 
+
 //
-// Memory
+// Object and Memory
 //
+typedef uintptr_t liw_objectID;
+
 typedef size_t liw_memsize_type;
 typedef uintptr_t liw_hdl_type;
 typedef size_t liw_objcount_type;

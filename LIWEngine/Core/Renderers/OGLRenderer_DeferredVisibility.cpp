@@ -74,80 +74,69 @@ namespace LIW {
 		// Create Shaders
 		//
 		// Shaders
-		liw_objhdl_type hdlLightBufferVertShader = assetManager.CreateShader("shader_vert_lightBuffer");
-		LIWShader& lightBufferVertShader = assetManager.GetShader(hdlLightBufferVertShader);
+		LIWShader& lightBufferVertShader = *(assetManager.CreateShader("shader_vert_lightBuffer"));
 		lightBufferVertShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_LightBuffer_Vert.glsl", LIWShaderType_Vertex);
 
-		liw_objhdl_type hdlLightBufferFragShader = assetManager.CreateShader("shader_frag_lightBuffer");
-		LIWShader& lightBufferFragShader = assetManager.GetShader(hdlLightBufferFragShader);
+		LIWShader& lightBufferFragShader = *(assetManager.CreateShader("shader_frag_lightBuffer"));
 		lightBufferFragShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_LightBuffer_Frag.glsl", LIWShaderType_Fragment);
 	
-		liw_objhdl_type hdlScreenQuadShader = assetManager.CreateShader("shader_vert_screenQuad");
-		LIWShader& screenQuadVertShader = assetManager.GetShader(hdlScreenQuadShader);
+		LIWShader& screenQuadVertShader = *(assetManager.CreateShader("shader_vert_screenQuad"));
 		screenQuadVertShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_ScreenQuad_Vert.glsl", LIWShaderType_Vertex);
 
-		liw_objhdl_type hdlCombineShader = assetManager.CreateShader("shader_frag_combine");
-		LIWShader& combineShader = assetManager.GetShader(hdlCombineShader);
+		LIWShader& combineShader = *(assetManager.CreateShader("shader_frag_combine"));
 		combineShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_Deferred_Combine_Frag.glsl", LIWShaderType_Fragment);
 
-		liw_objhdl_type hdlVisibilityVertShader = assetManager.CreateShader("shader_vert_visibility");
-		LIWShader& visibilityVertShader = assetManager.GetShader(hdlVisibilityVertShader);
+		LIWShader& visibilityVertShader = *(assetManager.CreateShader("shader_vert_visibility"));
 		visibilityVertShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Visibility_Vert.glsl", LIWShaderType_Vertex);
 
-		liw_objhdl_type hdlVisibilityFragShader = assetManager.CreateShader("shader_frag_visibility");
-		LIWShader& visibilityFragShader = assetManager.GetShader(hdlVisibilityFragShader);
+		LIWShader& visibilityFragShader = *(assetManager.CreateShader("shader_frag_visibility"));
 		visibilityFragShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Visibility_Frag.glsl", LIWShaderType_Fragment);
 
-		liw_objhdl_type hdlVisibilityShowFragShader = assetManager.CreateShader("shader_frag_visibilityShow");
-		LIWShader& visibilityShowFragShader = assetManager.GetShader(hdlVisibilityShowFragShader);
+		LIWShader& visibilityShowFragShader = *(assetManager.CreateShader("shader_frag_visibilityShow"));
 		visibilityShowFragShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_VisibilityShow_Frag.glsl", LIWShaderType_Fragment);
 
-		liw_objhdl_type hdlWorklistGenerateP0ComputeShader = assetManager.CreateShader("shader_comp_worklistGenerate_p0");
-		LIWShader& worklistGenerateP0ComputeShader = assetManager.GetShader(hdlWorklistGenerateP0ComputeShader);
+		LIWShader& worklistGenerateP0ComputeShader = *(assetManager.CreateShader("shader_comp_worklistGenerate_p0"));
 		worklistGenerateP0ComputeShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Worklist_P0_MaterialCount_Comp.glsl", LIWShaderType_Compute);
-		liw_objhdl_type hdlWorklistGenerateP1ComputeShader = assetManager.CreateShader("shader_comp_worklistGenerate_p1");
-		LIWShader& worklistGenerateP1ComputeShader = assetManager.GetShader(hdlWorklistGenerateP1ComputeShader);
+		LIWShader& worklistGenerateP1ComputeShader = *(assetManager.CreateShader("shader_comp_worklistGenerate_p1"));
 		worklistGenerateP1ComputeShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Worklist_P1_PrefixSum_Comp.glsl", LIWShaderType_Compute);
-		liw_objhdl_type hdlWorklistGenerateP2ComputeShader = assetManager.CreateShader("shader_comp_worklistGenerate_p2");
-		LIWShader& worklistGenerateP2ComputeShader = assetManager.GetShader(hdlWorklistGenerateP2ComputeShader);
+		LIWShader& worklistGenerateP2ComputeShader = *(assetManager.CreateShader("shader_comp_worklistGenerate_p2"));
 		worklistGenerateP2ComputeShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Worklist_P2_WorklistPopulation_Comp.glsl", LIWShaderType_Compute);
 
-		liw_objhdl_type hdlPresentFragShader = assetManager.CreateShader("shader_frag_present");
-		LIWShader& presentFragShader = assetManager.GetShader(hdlPresentFragShader);
+		LIWShader& presentFragShader = *(assetManager.CreateShader("shader_frag_present"));
 		presentFragShader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Present_Frag.glsl", LIWShaderType_Fragment);
 
 		
 		// Shader programs
 		m_lightBufferShaderProgram = assetManager.CreateShaderProgram("shaderProgram_lightBuffer");
-		LIWShaderProgram& lightBufferShaderProgram = assetManager.GetShaderProgram(m_lightBufferShaderProgram);
+		LIWShaderProgram& lightBufferShaderProgram = *m_lightBufferShaderProgram;
 		lightBufferShaderProgram.CreateShader({ lightBufferVertShader , lightBufferFragShader });
 
 		m_combineShaderProgram = assetManager.CreateShaderProgram("shaderProgram_combine");
-		LIWShaderProgram& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
+		LIWShaderProgram& combineShaderProgram = *m_combineShaderProgram;
 		combineShaderProgram.CreateShader({ screenQuadVertShader , combineShader });
 		
 		m_visibilityShaderProgram = assetManager.CreateShaderProgram("shaderProgram_visibility");
-		LIWShaderProgram& visibilityShaderProgram = assetManager.GetShaderProgram(m_visibilityShaderProgram);
+		LIWShaderProgram& visibilityShaderProgram = *m_visibilityShaderProgram;
 		visibilityShaderProgram.CreateShader({ visibilityVertShader , visibilityFragShader });
 
 		m_visibilityShowShaderProgram = assetManager.CreateShaderProgram("shaderProgram_visibilityShow");
-		LIWShaderProgram& visibilityShowShaderProgram = assetManager.GetShaderProgram(m_visibilityShowShaderProgram);
+		LIWShaderProgram& visibilityShowShaderProgram = *m_visibilityShowShaderProgram;
 		visibilityShowShaderProgram.CreateShader({ screenQuadVertShader , visibilityShowFragShader });
 
 		m_worklistGenerateP0ShaderProgram = assetManager.CreateShaderProgram("shaderProgram_worklistGenerate_p0");
-		LIWShaderProgram& worklistGenerateP0ShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateP0ShaderProgram);
+		LIWShaderProgram& worklistGenerateP0ShaderProgram = *m_worklistGenerateP0ShaderProgram;
 		worklistGenerateP0ShaderProgram.CreateShader({ worklistGenerateP0ComputeShader });
 
 		m_worklistGenerateP1ShaderProgram = assetManager.CreateShaderProgram("shaderProgram_worklistGenerate_p1");
-		LIWShaderProgram& worklistGenerateP1ShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateP1ShaderProgram);
+		LIWShaderProgram& worklistGenerateP1ShaderProgram = *m_worklistGenerateP1ShaderProgram;
 		worklistGenerateP1ShaderProgram.CreateShader({ worklistGenerateP1ComputeShader });
 
 		m_worklistGenerateP2ShaderProgram = assetManager.CreateShaderProgram("shaderProgram_worklistGenerate_p2");
-		LIWShaderProgram& worklistGenerateP2ShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateP2ShaderProgram);
+		LIWShaderProgram& worklistGenerateP2ShaderProgram = *m_worklistGenerateP2ShaderProgram;
 		worklistGenerateP2ShaderProgram.CreateShader({ worklistGenerateP2ComputeShader });
 
 		m_presentShaderProgram = assetManager.CreateShaderProgram("shaderProgram_present");
-		LIWShaderProgram& presentShaderProgram = assetManager.GetShaderProgram(m_presentShaderProgram);
+		LIWShaderProgram& presentShaderProgram = *m_presentShaderProgram;
 		presentShaderProgram.CreateShader({ screenQuadVertShader, presentFragShader });
 
 
@@ -175,7 +164,7 @@ namespace LIW {
 		//
 		// Light volumes
 		//
-		m_meshSphere = assetManager.GetMeshHandle(LIW_MESH_SPHERE_NAME);
+		m_meshSphere = assetManager.GetMesh(LIW_MESH_SPHERE_NAME);
 
 		//
 		// Textures
@@ -186,7 +175,7 @@ namespace LIW {
 		// Frame buffers
 		//
 		m_frameBufferGBuffer = assetManager.CreateFrameBuffer("framebuffer_gbuffer");
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
+		auto& gBuffer = *m_frameBufferGBuffer;
 		const liw_flag_type gBufferFlag =
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB |
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1 |
@@ -194,14 +183,14 @@ namespace LIW {
 		gBuffer.CreateFrameBuffer(width, height, gBufferFlag);
 
 		m_frameBufferLightBuffer = assetManager.CreateFrameBuffer("framebuffer_lightbuffer");
-		auto& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
+		auto& lightBuffer = *m_frameBufferLightBuffer;
 		const liw_flag_type lightBufferFlag =
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB |
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB_1;
 		lightBuffer.CreateFrameBuffer(width, height, lightBufferFlag);
 
 		m_frameBufferVBuffer = assetManager.CreateFrameBuffer("framebuffer_vbuffer");
-		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+		auto& vBuffer = *m_frameBufferVBuffer;
 		const liw_flag_type vBufferFlag =
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_INDEX16 | //Material Buffer
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_INDEX_1 | //Visibility Buffer
@@ -209,7 +198,7 @@ namespace LIW {
 		vBuffer.CreateFrameBuffer(width, height, vBufferFlag);
 
 		m_frameBufferPresentBuffer = assetManager.CreateFrameBuffer("framebuffer_presentBuffer");
-		auto& presentBuffer = assetManager.GetFrameBuffer(m_frameBufferPresentBuffer);
+		auto& presentBuffer = *m_frameBufferPresentBuffer;
 		const liw_flag_type presentBufferFlag =
 			LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGBA; //Present Colour Buffer
 		presentBuffer.CreateFrameBuffer(width, height, presentBufferFlag);
@@ -218,47 +207,47 @@ namespace LIW {
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 
-		LIWFrameBuffer& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
+		LIWFrameBuffer& lightBuffer = *m_frameBufferLightBuffer;
 		lightBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_lightbuffer");
 
-		LIWFrameBuffer& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
+		LIWFrameBuffer& gBuffer = *m_frameBufferGBuffer;
 		gBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_gbuffer");
 
-		LIWFrameBuffer& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+		LIWFrameBuffer& vBuffer = *m_frameBufferVBuffer;
 		vBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_vbuffer");
 
-		LIWFrameBuffer& presentBuffer = assetManager.GetFrameBuffer(m_frameBufferPresentBuffer);
+		LIWFrameBuffer& presentBuffer = *m_frameBufferPresentBuffer;
 		presentBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_presentBuffer");
 
-		LIWShaderProgram& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
+		LIWShaderProgram& combineShaderProgram = *m_combineShaderProgram;
 		combineShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_combine");
 
-		LIWShaderProgram& lightBufferShaderProgram = assetManager.GetShaderProgram(m_lightBufferShaderProgram);
+		LIWShaderProgram& lightBufferShaderProgram = *m_lightBufferShaderProgram;
 		lightBufferShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_lightBuffer");
 
-		LIWShaderProgram& visibilityShaderProgram = assetManager.GetShaderProgram(m_visibilityShaderProgram);
+		LIWShaderProgram& visibilityShaderProgram = *m_visibilityShaderProgram;
 		visibilityShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_visibility");
 
-		LIWShaderProgram& visibilityShowShaderProgram = assetManager.GetShaderProgram(m_visibilityShowShaderProgram);
+		LIWShaderProgram& visibilityShowShaderProgram = *m_visibilityShowShaderProgram;
 		visibilityShowShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_visibilityShow");
 
-		LIWShaderProgram& worklistGenerateP0ShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateP0ShaderProgram);
+		LIWShaderProgram& worklistGenerateP0ShaderProgram = *m_worklistGenerateP0ShaderProgram;
 		worklistGenerateP0ShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_worklistGenerate_p0");
 
-		LIWShaderProgram& worklistGenerateP1ShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateP1ShaderProgram);
+		LIWShaderProgram& worklistGenerateP1ShaderProgram = *m_worklistGenerateP1ShaderProgram;
 		worklistGenerateP1ShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_worklistGenerate_p1");
 
-		LIWShaderProgram& worklistGenerateP2ShaderProgram = assetManager.GetShaderProgram(m_worklistGenerateP2ShaderProgram);
+		LIWShaderProgram& worklistGenerateP2ShaderProgram = *m_worklistGenerateP2ShaderProgram;
 		worklistGenerateP2ShaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_worklistGenerate_p2");
 
@@ -288,15 +277,32 @@ namespace LIW {
 			RenderCamera(*itr);
 		}
 	}
-	void OGLRenderer_DeferredVisibility::AddRenderMaterial(liw_objhdl_type hdlMaterial)
+	uint32_t OGLRenderer_DeferredVisibility::AddRenderMaterial(LIWPointer<LIWMaterial, LIWMem_Default> ptrMaterial)
 	{
-		m_materialList.insert(hdlMaterial);
-	}
-	void OGLRenderer_DeferredVisibility::RemoveRenderMaterial(liw_objhdl_type hdlMaterial)
-	{
-		auto itr = m_materialList.find(hdlMaterial);
+		auto itr = m_materialList.find(ptrMaterial);
 		if (itr != m_materialList.end())
-			m_materialList.erase(itr);
+		{
+			return itr->second;
+		}
+		m_materialList.insert(std::make_pair(ptrMaterial, m_materialCounter));
+		return m_materialCounter++;
+	}
+	uint32_t OGLRenderer_DeferredVisibility::FindRenderMaterial(LIWPointer<LIWMaterial, LIWMem_Default> ptrMaterial)
+	{
+		auto itr = m_materialList.find(ptrMaterial);
+		if (itr != m_materialList.end())
+		{
+			return itr->second;
+		}
+		else
+		{
+			return UINT32_MAX;
+		}
+	}
+	void OGLRenderer_DeferredVisibility::ClearRenderMaterial()
+	{
+		m_materialList.clear();
+		m_materialCounter = 0;
 	}
 	void OGLRenderer_DeferredVisibility::RenderCamera(LIWComponent_Camera& camera)
 	{
@@ -383,6 +389,8 @@ namespace LIW {
 
 		//// Combine pass
 		//CombinePass();
+
+		ClearRenderMaterial();
 	}
 	void OGLRenderer_DeferredVisibility::VisibilityPass()
 	{
@@ -390,7 +398,7 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
+		auto& vBuffer = *m_frameBufferVBuffer;
 
 		BindFrameBuffer(vBuffer);
 
@@ -422,7 +430,7 @@ namespace LIW {
 		//
 		// Build Scene Vertex Buffer
 		//
-		std::unordered_map<liw_objhdl_type, uint32_t> meshDataHandles2IdxMesh;
+		std::unordered_map<LIWPointer<LIWMeshData, LIWMem_Default>, uint32_t> meshDataHandles2IdxMesh;
 
 		auto& meshRendererBatchedManager = LIW_ECS_GetComponentManager(LIWComponent_MeshRendererBatched);
 		auto& meshRendererBatcheds = meshRendererBatchedManager.m_components;
@@ -440,8 +448,7 @@ namespace LIW {
 		// Collect all MeshData to render
 		for (auto itr = meshRendererBatcheds.get_beg(); itr != meshRendererBatcheds.get_end(); itr++) {
 			auto& meshRendererBatched = *itr;
-			const liw_objhdl_type hdlMeshData = meshRendererBatched.m_handleMeshData;
-			meshDataHandles2IdxMesh.insert({ hdlMeshData, 0 });
+			meshDataHandles2IdxMesh.insert({ meshRendererBatched.m_handleMeshData, 0 });
 			idxObject++;
 		}
 
@@ -459,8 +466,8 @@ namespace LIW {
 		
 		// Assign idx for each MeshData
 		for (auto& pair : meshDataHandles2IdxMesh) {
-			const liw_objhdl_type hdlMeshData = pair.first;
-			auto& meshData = assetManager.GetMeshData(hdlMeshData);
+			const LIWPointer<LIWMeshData, LIWMem_Default> ptrMeshData = pair.first;
+			auto& meshData = *ptrMeshData;
 			if (!meshData.IsValid())
 				throw std::runtime_error("invalid meshdata cannot be renderered. ");
 
@@ -556,8 +563,8 @@ namespace LIW {
 		idxMesh = 0;
 		m_vertexCount = 0;
 		for (auto& pair : meshDataHandles2IdxMesh) {
-			const liw_objhdl_type hdlMeshData = pair.first;
-			auto& meshData = assetManager.GetMeshData(hdlMeshData);
+			const LIWPointer<LIWMeshData, LIWMem_Default> ptrMeshData = pair.first;
+			auto& meshData = *ptrMeshData;
 
 			auto& positions = meshData.GetPositionArray();
 			const size_t positionCount = positions.get_size();
@@ -600,7 +607,7 @@ namespace LIW {
 		//
 		// Render MeshRenderers to VBuffer
 		// build ModelMatrices
-		auto& shaderProgram = assetManager.GetShaderProgram(m_visibilityShaderProgram);
+		auto& shaderProgram = *m_visibilityShaderProgram;
 		uint32_t rawHandleshaderProgram = shaderProgram.GetRawHandle();
 
 		glBindVertexArray(m_vao);
@@ -618,18 +625,19 @@ namespace LIW {
 			liw_objhdl_type transformHandle = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, entity);
 			auto& transform = LIW_ECS_GetComponent(LIWComponent_Transform, transformHandle);
 
-			const liw_objhdl_type hdlMeshData = meshRendererBatched.m_handleMeshData;
-			//auto& material = assetManager.GetMaterial(meshRenderer.m_handleMaterial);
-			auto& mesh = assetManager.GetMeshData(hdlMeshData);
-			uint32_t idxMesh = meshDataHandles2IdxMesh.at(hdlMeshData);
+			const LIWPointer<LIWMeshData, LIWMem_Default> ptrMeshData = meshRendererBatched.m_handleMeshData;
+			auto& mesh = *ptrMeshData;
+			uint32_t idxMesh = meshDataHandles2IdxMesh.at(ptrMeshData);
 			size_t indexIdxOffset = meshIndexOffsetLookup[idxMesh];
+
+			uint32_t idxMaterial = AddRenderMaterial(meshRendererBatched.m_handleMaterial);
 
 			// Upload uniforms
 			glm::mat4 matModel = transform.GetMatrix();
 			glUniformMatrix4fv(glGetUniformLocation(rawHandleshaderProgram, LIW_SHADER_MODEL_MATRIX_NAME), 1, false, glm::value_ptr(matModel));
 			uint32_t idxObjectAligned = idxObject << 18;
 			glUniform1ui(idxObjectLocation, idxObjectAligned);
-			glUniform1ui(idxMaterialLocation, meshRendererBatched.m_handleMaterial);
+			glUniform1ui(idxMaterialLocation, idxMaterial);
 
 			glm::mat3 matNormal = glm::transpose(glm::inverse(glm::mat3(matModel)));
 
@@ -717,12 +725,12 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
-		LIWShaderProgram& worklistGenerateP0Program = assetManager.GetShaderProgram(m_worklistGenerateP0ShaderProgram);
+		auto& vBuffer = *m_frameBufferVBuffer;
+		LIWShaderProgram& worklistGenerateP0Program = *m_worklistGenerateP0ShaderProgram;
 		const uint32_t rawHdlP0ShaderProgram = worklistGenerateP0Program.GetRawHandle();
-		LIWShaderProgram& worklistGenerateP1Program = assetManager.GetShaderProgram(m_worklistGenerateP1ShaderProgram);
+		LIWShaderProgram& worklistGenerateP1Program = *m_worklistGenerateP1ShaderProgram;
 		const uint32_t rawHdlP1ShaderProgram = worklistGenerateP1Program.GetRawHandle();
-		LIWShaderProgram& worklistGenerateP2Program = assetManager.GetShaderProgram(m_worklistGenerateP2ShaderProgram);
+		LIWShaderProgram& worklistGenerateP2Program = *m_worklistGenerateP2ShaderProgram;
 		const uint32_t rawHdlP2ShaderProgram = worklistGenerateP2Program.GetRawHandle();
 
 		// Prepare SSBOs
@@ -852,8 +860,8 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& vBuffer = assetManager.GetFrameBuffer(m_frameBufferVBuffer);
-		auto& presentBuffer = assetManager.GetFrameBuffer(m_frameBufferPresentBuffer);
+		auto& vBuffer = *m_frameBufferVBuffer;
+		auto& presentBuffer = *m_frameBufferPresentBuffer;
 
 		BindFrameBuffer(presentBuffer);
 		// Clear
@@ -905,9 +913,10 @@ namespace LIW {
 		//}
 
 		for (auto itrMaterial = m_materialList.begin(); itrMaterial != m_materialList.end(); ++itrMaterial) {
-			const uint32_t idxMaterial = *itrMaterial;
-			LIWMaterial& material = assetManager.GetMaterial(idxMaterial);
-			auto& shaderProgram = assetManager.GetShaderProgram(material.m_handleShaderProgram);
+			LIWPointer<LIWMaterial, LIWMem_Default> ptrMaterial = itrMaterial->first;
+			uint32_t idxMaterial = itrMaterial->second;
+			LIWMaterial& material = *ptrMaterial;
+			auto& shaderProgram = *material.m_handleShaderProgram;
 			uint32_t rawHandleshaderProgram = shaderProgram.GetRawHandle();
 
 			// Use program
@@ -963,7 +972,7 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& presentBuffer = assetManager.GetFrameBuffer(m_frameBufferPresentBuffer);
+		auto& presentBuffer = *m_frameBufferPresentBuffer;
 
 		BindDefaultFrameBuffer();
 
@@ -983,7 +992,7 @@ namespace LIW {
 		// 
 		// Present
 		//
-		auto& shaderProgram = assetManager.GetShaderProgram(m_presentShaderProgram);
+		auto& shaderProgram = *m_presentShaderProgram;
 		uint32_t rawHandleshaderProgram = shaderProgram.GetRawHandle();
 
 		glUseProgram(rawHandleshaderProgram);
@@ -1001,7 +1010,7 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
+		auto& gBuffer = *m_frameBufferGBuffer;
 
 		BindFrameBuffer(gBuffer);
 		
@@ -1032,10 +1041,10 @@ namespace LIW {
 			liw_objhdl_type transformHandle = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, entity);
 			auto& transform = LIW_ECS_GetComponent(LIWComponent_Transform, transformHandle);
 
-			auto& material = assetManager.GetMaterial(meshRenderer.m_handleMaterial);
-			auto& mesh = assetManager.GetMesh(meshRenderer.m_handleMesh);
+			auto& material = *meshRenderer.m_handleMaterial;
+			auto& mesh = *meshRenderer.m_handleMesh;
 
-			auto& shaderProgram = assetManager.GetShaderProgram(material.m_handleShaderProgram);
+			auto& shaderProgram = *material.m_handleShaderProgram;
 			uint32_t rawHandleshaderProgram = shaderProgram.GetRawHandle();
 
 			// Use program
@@ -1078,9 +1087,9 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
-		auto& lightBufferShaderProgram = assetManager.GetShaderProgram(m_lightBufferShaderProgram);
+		auto& lightBuffer = *m_frameBufferLightBuffer;
+		auto& gBuffer = *m_frameBufferGBuffer;
+		auto& lightBufferShaderProgram = *m_lightBufferShaderProgram;
 		const uint32_t rawHandleLightBufferShaderProgram = lightBufferShaderProgram.GetRawHandle();
 
 		BindFrameBuffer(lightBuffer);
@@ -1124,7 +1133,7 @@ namespace LIW {
 		//
 
 		// Point light
-		auto& meshSphere = assetManager.GetMesh(LIW_MESH_SPHERE_NAME);
+		auto& meshSphere = *assetManager.GetMesh(LIW_MESH_SPHERE_NAME);
 		auto& submeshSphere = meshSphere.GetSubmeshes();
 		const int drawMode = LIWImageFormat_2_GLPrimitive.at(meshSphere.GetPrimitiveType());
 
@@ -1191,9 +1200,9 @@ namespace LIW {
 		// Setup
 		//
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& gBuffer = assetManager.GetFrameBuffer(m_frameBufferGBuffer);
-		auto& lightBuffer = assetManager.GetFrameBuffer(m_frameBufferLightBuffer);
-		auto& combineShaderProgram = assetManager.GetShaderProgram(m_combineShaderProgram);
+		auto& gBuffer = *m_frameBufferGBuffer;
+		auto& lightBuffer = *m_frameBufferLightBuffer;
+		auto& combineShaderProgram = *m_combineShaderProgram;
 		const uint32_t rawHandleCombineShaderProgram = combineShaderProgram.GetRawHandle();
 
 		BindDefaultFrameBuffer();

@@ -31,6 +31,10 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+LIWEngine/LIWEngine_x64_Release.*
+LIWEngine/LIWEngine_x64_Debug.*
+LIWEngine/LIWEngine_x32_Release.*
+LIWEngine/LIWEngine_x32_Debug.*
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

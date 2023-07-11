@@ -30,11 +30,11 @@ namespace LIW{
 		uint32_t m_uboLightPerPixelData;
 		uint32_t m_emptyVAO;
 
-		liw_objhdl_type m_frameBuffer0{ liw_c_nullobjhdl };
+		LIWPointer<LIWFrameBuffer, LIWMem_Default> m_frameBuffer0;
 
-		liw_objhdl_type m_screenQuadShader{ liw_c_nullobjhdl };
-		liw_objhdl_type m_screenQuadTestShader{ liw_c_nullobjhdl };
-		liw_objhdl_type m_screenQuadTestShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShader, LIWMem_Default> m_screenQuadShader;
+		LIWPointer<LIWShader, LIWMem_Default> m_screenQuadTestShader;
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_screenQuadTestShaderProgram;
 	};
 
 	class LIW_TT_OGLForwardRender final :

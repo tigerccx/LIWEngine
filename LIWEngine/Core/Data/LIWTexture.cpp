@@ -3,8 +3,11 @@
 namespace LIW {
 	const std::unordered_map<LIWTextureWrapType, GLint>	LIWTextureWrapType_2_GLWrap =
 	{
-		{LIWTextureWrapType_Repeat, 		GL_REPEAT	},
-		{LIWTextureWrapType_Clamp, 			GL_CLAMP	}
+		{LIWTextureWrapType_Repeat, 			GL_REPEAT			},
+		{LIWTextureWrapType_MirrorRepeat, 		GL_MIRRORED_REPEAT	},
+		{LIWTextureWrapType_MirrorClampToEdge, 	GL_MIRROR_CLAMP_TO_EDGE	},
+		{LIWTextureWrapType_ClampToEdge, 		GL_CLAMP_TO_EDGE	},
+		{LIWTextureWrapType_ClampToBorder, 		GL_CLAMP_TO_BORDER	}
 	};
 	const std::unordered_map<LIWTextureFilterType, GLint>	LIWTextureFilterType_2_GLFilter =
 	{

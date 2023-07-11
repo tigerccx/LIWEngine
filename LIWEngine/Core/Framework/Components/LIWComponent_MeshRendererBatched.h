@@ -8,7 +8,7 @@
 namespace LIW {
 	class LIWComponent_MeshRendererBatched final: public LIWComponent {
 	public:
-		liw_objhdl_type m_handleMaterial;
-		liw_objhdl_type m_handleMeshData;
+		LIWPointer<LIWMaterial, LIWMem_Default> m_handleMaterial;
+		LIWPointer<LIWMeshData, LIWMem_Default> m_handleMeshData;
 	};
 }

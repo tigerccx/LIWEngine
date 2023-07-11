@@ -1,16 +1,18 @@
 #pragma once
 #include <string>
 
-//#include "LIWType.h"
+#include "LIWTypes.h"
 
 namespace LIW{
-	typedef uintptr_t LIWID;
-
 	class LIWObject {
 	public:
-		inline LIWID GetID() { return (LIWID)this; }
+		LIWObject();
+
+		constexpr liw_objectID GetID() const { return m_objectID; }
 		//inline virtual const LIWTypeID GetObjectTypeID() const { return GetTypeID<LIWObject>(); }
 		//inline virtual const std::string GetObjectTypeName() const { return GetTypeName<LIWObject>(); }
 		//inline virtual LIWBaseType* GetObjectType() { return GetType<LIWObject>(); }
+	private:
+		liw_objectID m_objectID;
 	};
 }

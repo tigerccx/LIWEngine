@@ -22,24 +22,24 @@ int TestGame2::Initialise()
 
 	// Texture
 	m_image = assetManager.CreateImage("image0");
-	auto& image = assetManager.GetImage(m_image);
+	auto& image = *m_image;
 
 	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"viking_room.png", LIWImageFormat_RGBA8);
 	m_tex2D = assetManager.CreateTexture2D("tex0");
-	auto& tex2D = assetManager.GetTexture2D(m_tex2D);
+	auto& tex2D = *m_tex2D;
 	tex2D.CreateTexture(image);
 	image.UnloadImg();
 
 	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"chessboard512.jpg", LIWImageFormat_RGB8);
 	//image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"test_img0.png", LIWImageFormat_RGB8);
 	m_tex2D1 = assetManager.CreateTexture2D("tex1");
-	auto& tex2D1 = assetManager.GetTexture2D(m_tex2D1);
+	auto& tex2D1 = *m_tex2D1;
 	tex2D1.CreateTexture(image);
 	image.UnloadImg();
 
 	image.LoadImg(LIW_PATH_DIR_RESOURCE_TEXTURES"test_normal.jpg", LIWImageFormat_RGB8);
 	m_tex2D2 = assetManager.CreateTexture2D("tex2");
-	auto& tex2D2 = assetManager.GetTexture2D(m_tex2D2);
+	auto& tex2D2 = *m_tex2D2;
 	tex2D2.CreateTexture(image);
 	image.UnloadImg();
 
@@ -48,7 +48,7 @@ int TestGame2::Initialise()
 		std::string name = "texTest_" + std::to_string(i);
 		image.LoadImg((LIW_PATH_DIR_RESOURCE_TEXTURES+file).c_str(), LIWImageFormat_RGB8);
 		m_tex2DTests[i] = assetManager.CreateTexture2D(name.c_str());
-		auto& tex2D = assetManager.GetTexture2D(m_tex2DTests[i]);
+		auto& tex2D = *m_tex2DTests[i];
 		tex2D.CreateTexture(image);
 		image.UnloadImg();
 	}
@@ -57,14 +57,14 @@ int TestGame2::Initialise()
 
 	// Shader
 	m_shader_vert = assetManager.CreateShader("shaderVert0");
-	auto& shaderVert = assetManager.GetShader(m_shader_vert);
+	auto& shaderVert = *m_shader_vert;
 	m_shader_frag = assetManager.CreateShader("shaderFrag0");
-	auto& shaderFrag = assetManager.GetShader(m_shader_frag);
+	auto& shaderFrag = *m_shader_frag;
 	
 	shaderVert.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/Test_Vert.glsl", LIWShaderType_Vertex);
 	shaderFrag.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/Test_Frag.glsl", LIWShaderType_Fragment);
 	m_shaderProgram = assetManager.CreateShaderProgram("shaderProgram0");
-	auto& shaderProgram = assetManager.GetShaderProgram(m_shaderProgram);
+	auto& shaderProgram = *m_shaderProgram;
 	shaderProgram.CreateShader({ shaderVert ,shaderFrag });
 	shaderVert.UnloadShader();
 	shaderFrag.UnloadShader();
@@ -73,10 +73,10 @@ int TestGame2::Initialise()
 	assetManager.DestroyShader("shaderFrag0");
 
 	m_shader_standardMaterial = assetManager.CreateShader("shaderStandardMaterial");
-	auto& shaderStandard = assetManager.GetShader(m_shader_standardMaterial);
+	auto& shaderStandard = *m_shader_standardMaterial;
 	shaderStandard.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_VisibilityDeferred_Shading_Comp.glsl", LIWShaderType_Compute);
 	m_shaderProgramStandard = assetManager.CreateShaderProgram("shaderProgramStandard");
-	auto& shaderProgramStandard = assetManager.GetShaderProgram(m_shaderProgramStandard);
+	auto& shaderProgramStandard = *m_shaderProgramStandard;
 	shaderProgramStandard.CreateShader({ shaderStandard });
 	shaderStandard.UnloadShader();
 	assetManager.DestroyShader("shaderStandardMaterial");
@@ -85,12 +85,12 @@ int TestGame2::Initialise()
 
 	// Material
 	m_materialTest = assetManager.CreateMaterial("materialTest");
-	auto& materialTest = assetManager.GetMaterial(m_materialTest);
+	auto& materialTest = *m_materialTest;
 	materialTest.AddParam_Tex2D("mainTex", m_tex2D);
 	materialTest.m_handleShaderProgram = m_shaderProgram;
 
 	m_materialStandard = assetManager.CreateMaterial("materialStandard");
-	auto& materialStandard = assetManager.GetMaterial(m_materialStandard);
+	auto& materialStandard = *m_materialStandard;
 	materialStandard.AddParam_Tex2D("mainTex", m_tex2D1);
 	materialStandard.AddParam_Tex2D("normalTex", m_tex2D2);
 	materialStandard.m_handleShaderProgram = m_shaderProgramStandard;
@@ -100,11 +100,10 @@ int TestGame2::Initialise()
 	for (int i = 0; i < TEST_TEXTURE_COUNT; i++) {
 		std::string name = "materialTest_" + std::to_string(i);
 		m_materialTests[i] = assetManager.CreateMaterial(name.c_str());
-		auto& materialTest = assetManager.GetMaterial(m_materialTests[i]);
+		auto& materialTest = *m_materialTests[i];
 		materialTest.AddParam_Tex2D("mainTex", m_tex2DTests[i]);
 		materialTest.AddParam_Tex2D("normalTex", m_tex2D2);
 		materialTest.m_handleShaderProgram = m_shaderProgramStandard;
-		TestGlobal::s_rendererVisibility->AddRenderMaterial(m_materialTests[i]);
 	}
 
 	//
@@ -192,7 +191,7 @@ int TestGame2::Initialise()
 	//idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
 
 	// Objects: Sphere
-	liw_objhdl_type hdlMeshSphere = assetManager.GetMeshDataHandle(LIW_MESHDATA_SPHERE_NAME);
+	LIWPointer<LIWMeshData, LIWMem_Default> ptrMeshSphere = assetManager.GetMeshData(LIW_MESHDATA_SPHERE_NAME);
 	for (size_t i = 0; i < countSpheres; i++) {
 		LIW_ECS_AttachComponentToEntity(LIWComponent_Transform, m_transforms[idxTransform], m_entities[idxEntity]);
 		LIW_ECS_AttachComponentToEntity(LIWComponent_SceneNode, m_sceneNodes[idxSceneNode], m_entities[idxEntity]);
@@ -205,7 +204,7 @@ int TestGame2::Initialise()
 		auto& meshRenderer1 = LIW_ECS_GetComponent(LIWComponent_MeshRendererBatched, m_meshRendererBatcheds[idxMeshRenderer]);
 		//meshRenderer1.m_handleMaterial = m_materialForward;
 		meshRenderer1.m_handleMaterial = m_materialTests[i%TEST_TEXTURE_COUNT];
-		meshRenderer1.m_handleMeshData = hdlMeshSphere;
+		meshRenderer1.m_handleMeshData = ptrMeshSphere;
 
 		idxEntity++; idxTransform++; idxSceneNode++; idxMeshRenderer++;
 	}
@@ -234,10 +233,10 @@ int TestGame2::CleanUp()
 		assetManager.DestroyMaterial(name.c_str());
 	}
 
-	auto& shaderProgram = assetManager.GetShaderProgram(m_shaderProgram);
+	auto& shaderProgram = *m_shaderProgram;
 	shaderProgram.DestroyShader();
 	assetManager.DestroyShaderProgram("shaderProgram0");
-	auto& shaderProgramStandard = assetManager.GetShaderProgram(m_shaderProgramStandard);
+	auto& shaderProgramStandard = *m_shaderProgramStandard;
 	shaderProgramStandard.DestroyShader();
 	assetManager.DestroyShaderProgram("shaderProgramStandard");
 
@@ -245,19 +244,19 @@ int TestGame2::CleanUp()
 	//mesh.DestroyMesh();
 	//assetManager.DestroyMesh("mesh0");
 
-	auto& tex = assetManager.GetTexture2D(m_tex2D);
+	auto& tex = *m_tex2D;
 	tex.DestroyTexture();
 	assetManager.DestroyTexture2D("tex0");
-	auto& tex1 = assetManager.GetTexture2D(m_tex2D1);
+	auto& tex1 = *m_tex2D1;
 	tex1.DestroyTexture();
 	assetManager.DestroyTexture2D("tex1");
-	auto& tex2 = assetManager.GetTexture2D(m_tex2D2);
+	auto& tex2 = *m_tex2D2;
 	tex2.DestroyTexture();
 	assetManager.DestroyTexture2D("tex2");
 
 	for (int i = 0; i < TEST_TEXTURE_COUNT; i++) {
 		std::string name = "texTest_" + std::to_string(i);
-		auto& tex2 = assetManager.GetTexture2D(m_tex2DTests[i]);
+		auto& tex2 = *m_tex2DTests[i];
 		tex2.DestroyTexture();
 		assetManager.DestroyTexture2D(name.c_str());
 	}

@@ -30,7 +30,7 @@ namespace LIW {
 	typedef LIWMaterialParam<float> LIWMaterialParam_Float;
 	typedef LIWMaterialParam<glm::ivec4> LIWMaterialParam_IVec4;
 	typedef LIWMaterialParam<glm::vec4> LIWMaterialParam_FVec4;
-	typedef LIWMaterialParam<uint32_t> LIWMaterialParam_Tex2D;
+	typedef LIWMaterialParam<LIWPointer<LIWTexture2D, LIWMem_Default>> LIWMaterialParam_Tex2D;
 
 	class LIWMaterial
 #ifdef LIW_ENABLE_EDITOR
@@ -62,7 +62,7 @@ namespace LIW {
 			strcpy_s(param.m_name, LIW_MATERIAL_PARAM_MAX_NAME_LEN, name);
 			m_paramsFVec4.push_back(param);
 		}
-		inline void AddParam_Tex2D(const char* name, uint32_t val) 
+		inline void AddParam_Tex2D(const char* name, LIWPointer<LIWTexture2D, LIWMem_Default> val)
 		{
 			LIWMaterialParam_Tex2D param{ "", val };
 			strcpy_s(param.m_name, LIW_MATERIAL_PARAM_MAX_NAME_LEN, name);
@@ -75,7 +75,7 @@ namespace LIW {
 		void UnbindData();
 
 	public:
-		liw_objhdl_type m_handleShaderProgram{ liw_c_nullobjhdl };
+		LIWPointer<LIWShaderProgram, LIWMem_Default> m_handleShaderProgram{ liw_c_nullobjhdl };
 		LIWDArray<LIWMaterialParam_Int>		m_paramsInt{ 0 };
 		LIWDArray<LIWMaterialParam_Float>	m_paramsFloat{ 0 };
 		LIWDArray<LIWMaterialParam_IVec4>	m_paramsIVec4{ 0 };

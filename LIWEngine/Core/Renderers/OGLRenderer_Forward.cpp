@@ -10,39 +10,39 @@ namespace LIW {
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 		
 		m_screenQuadShader = assetManager.CreateShader("shader_vert_screenQuad");
-		LIWShader& shader = assetManager.GetShader(m_screenQuadShader);
+		LIWShader& shader = *m_screenQuadShader;
 		shader.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/LIW_ScreenQuad_Vert.glsl", LIWShaderType_Vertex);
 
 		m_screenQuadTestShader = assetManager.CreateShader("shader_frag_screenQuadTest");
-		LIWShader& shaderFrag = assetManager.GetShader(m_screenQuadTestShader);
+		LIWShader& shaderFrag = *m_screenQuadTestShader;
 		shaderFrag.LoadShader(LIW_PATH_DIR_DEFAULT_SHADERS"OGL/ScreenQuadTest_Frag.glsl", LIWShaderType_Fragment);
 	
 		m_screenQuadTestShaderProgram = assetManager.CreateShaderProgram("shaderProgram_screenQuadTest");
-		LIWShaderProgram& shaderProgram = assetManager.GetShaderProgram(m_screenQuadTestShaderProgram);
+		LIWShaderProgram& shaderProgram = *m_screenQuadTestShaderProgram;
 		shaderProgram.CreateShader({ shader , shaderFrag });
 
 
 		m_frameBuffer0 = assetManager.CreateFrameBuffer("framebuffer_0");
-		auto& frameBuffer = assetManager.GetFrameBuffer(m_frameBuffer0);
+		auto& frameBuffer = *m_frameBuffer0;
 		frameBuffer.CreateFrameBuffer(256, 256, LIW_FRAMEBUFFER_ATTACHMENT_FLAG_COLOR_RGB);
 	}
 	OGLRenderer_Forward::~OGLRenderer_Forward()
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 
-		LIWFrameBuffer& frameBuffer = assetManager.GetFrameBuffer(m_frameBuffer0);
+		LIWFrameBuffer& frameBuffer = *m_frameBuffer0;
 		frameBuffer.DestroyFrameBuffer();
 		assetManager.DestroyFrameBuffer("framebuffer_0");
 
-		LIWShaderProgram& shaderProgram = assetManager.GetShaderProgram(m_screenQuadTestShaderProgram);
+		LIWShaderProgram& shaderProgram = *m_screenQuadTestShaderProgram;
 		shaderProgram.DestroyShader();
 		assetManager.DestroyShaderProgram("shaderProgram_screenQuadTest");
 
-		LIWShader& shaderFrag = assetManager.GetShader(m_screenQuadTestShader);
+		LIWShader& shaderFrag = *m_screenQuadTestShader;
 		shaderFrag.UnloadShader();
 		assetManager.DestroyShader("shader_frag_screenQuadTest");
 		
-		LIWShader& shader = assetManager.GetShader(m_screenQuadShader);
+		LIWShader& shader = *m_screenQuadShader;
 		shader.UnloadShader();
 		assetManager.DestroyShader("shader_vert_screenQuad");
 
@@ -110,10 +110,10 @@ namespace LIW {
 			liw_objhdl_type transformHandle = LIW_ECS_GetComponentFromEntity(LIWComponent_Transform, entity);
 			auto& transform = LIW_ECS_GetComponent(LIWComponent_Transform, transformHandle);
 			
-			auto& material = assetManager.GetMaterial(meshRenderer.m_handleMaterial);
-			auto& mesh = assetManager.GetMesh(meshRenderer.m_handleMesh);
+			auto& material = *meshRenderer.m_handleMaterial;
+			auto& mesh = *meshRenderer.m_handleMesh;
 
-			auto& shaderProgram = assetManager.GetShaderProgram(material.m_handleShaderProgram);
+			auto& shaderProgram = *material.m_handleShaderProgram;
 			uint32_t rawHandleshaderProgram = shaderProgram.GetRawHandle();
 			
 			// Use program
@@ -157,7 +157,7 @@ namespace LIW {
 	void OGLRenderer_Forward::RenderScreenQuad()
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& shaderProgram = assetManager.GetShaderProgram(m_screenQuadTestShaderProgram);
+		auto& shaderProgram = *m_screenQuadTestShaderProgram;
 		
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		GLboolean isDepTestOn = false;

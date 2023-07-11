@@ -45,22 +45,22 @@ public:
     liw_objhdl_type m_cameraController;
     LIWDArray<liw_objhdl_type> m_lights;
 
-    liw_objhdl_type m_image;
+    LIWPointer<LIWImage, LIWMem_Default> m_image;
 
-    liw_objhdl_type m_tex2D;
-    liw_objhdl_type m_tex2D1;
-    liw_objhdl_type m_tex2D2;
-    liw_objhdl_type m_tex2DTests[TEST_TEXTURE_COUNT];
+    LIWPointer<LIWTexture2D, LIWMem_Default> m_tex2D;
+    LIWPointer<LIWTexture2D, LIWMem_Default> m_tex2D1;
+    LIWPointer<LIWTexture2D, LIWMem_Default> m_tex2D2;
+    LIWPointer<LIWTexture2D, LIWMem_Default> m_tex2DTests[TEST_TEXTURE_COUNT];
 
-    liw_objhdl_type m_shader_vert;
-    liw_objhdl_type m_shader_frag;
+    LIWPointer<LIWShader, LIWMem_Default> m_shader_vert;
+    LIWPointer<LIWShader, LIWMem_Default> m_shader_frag;
 
-    liw_objhdl_type m_shaderProgram;
-    liw_objhdl_type m_shaderProgramForward;
-    liw_objhdl_type m_shaderProgramDeferred;
+    LIWPointer<LIWShaderProgram, LIWMem_Default> m_shaderProgram;
+    LIWPointer<LIWShaderProgram, LIWMem_Default> m_shaderProgramForward;
+    LIWPointer<LIWShaderProgram, LIWMem_Default> m_shaderProgramDeferred;
 
-    liw_objhdl_type m_materialTest;
-    liw_objhdl_type m_materialForward;
-    liw_objhdl_type m_materialDeferred;
-    liw_objhdl_type m_materialTests[TEST_TEXTURE_COUNT];
+    LIWPointer<LIWMaterial, LIWMem_Default> m_materialTest;
+    LIWPointer<LIWMaterial, LIWMem_Default> m_materialForward;
+    LIWPointer<LIWMaterial, LIWMem_Default> m_materialDeferred;
+    LIWPointer<LIWMaterial, LIWMem_Default> m_materialTests[TEST_TEXTURE_COUNT];
 };

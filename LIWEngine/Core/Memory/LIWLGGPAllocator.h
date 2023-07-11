@@ -53,7 +53,7 @@ namespace LIW {
 			struct SegInfo {
 				uint64_t m_size{ 0 }; // Available size of seg. (meaning excluding seg info size)
 				liw_hdl_type m_handle{ liw_c_nullhdl }; // Offset to handle to the seg. 
-													 // NOTE!!!: only last LIW_MEMORY_HANDLE_DIGITS digits should be used. 
+													 // NOTE!!!: only last LIW_MEMORY_DEFAULT_HANDLE_HANDLE_DIGITS digits should be used. 
 													 // NOTE: If liw_c_nullhdl, seg is free. 
 				bool m_mark{ false }; // Seg "to free" mark
 			};

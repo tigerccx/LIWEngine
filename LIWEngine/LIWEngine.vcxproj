@@ -73,19 +73,29 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)</OutDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)</OutDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include\Vulkan;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Debug;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)</OutDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include\Vulkan;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Release;$(LibraryPath);$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)</OutDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -164,7 +174,7 @@
     <ClCompile Include="Core\Application\LIWApplicationTasks.cpp" />
     <ClCompile Include="Core\Application\Output\TextConsole.cpp" />
     <ClCompile Include="Core\Application\Window.cpp" />
-    <ClCompile Include="Core\Data\LIWAssetManager.cpp" />
+    <ClCompile Include="Core\Data\LIWAsset.cpp" />
     <ClCompile Include="Core\Data\LIWFrameBuffer.cpp" />
     <ClCompile Include="Core\Data\LIWImage.cpp" />
     <ClCompile Include="Core\Data\LIWMaterial.cpp" />
@@ -188,6 +198,8 @@
     <ClCompile Include="Core\LIWCore.cpp" />
     <ClCompile Include="Core\LIWFrame.cpp" />
     <ClCompile Include="Core\LIWGlobal.cpp" />
+    <ClCompile Include="Core\LIWIDManager.cpp" />
+    <ClCompile Include="Core\LIWObject.cpp" />
     <ClCompile Include="Core\Maths\LIWMaths.cpp" />
     <ClCompile Include="Core\Memory\LIWMemory.cpp" />
     <ClCompile Include="Core\Renderers\LIWRenderer.cpp" />
@@ -245,8 +257,10 @@
     <ClInclude Include="Core\Containers\LIWDObjectPool.h" />
     <ClInclude Include="Core\Containers\LIWForwardList.h" />
     <ClInclude Include="Core\Containers\LIWList.h" />
+    <ClInclude Include="Core\Containers\LIWObjectPool.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueue.h" />
     <ClInclude Include="Core\Containers\LIWThreadSafeQueueSized.h" />
+    <ClInclude Include="Core\Data\LIWAsset.h" />
     <ClInclude Include="Core\Data\LIWAssetManager.h" />
     <ClInclude Include="Core\Data\LIWFrameBuffer.h" />
     <ClInclude Include="Core\Data\LIWImage.h" />
@@ -286,8 +300,10 @@
     <ClInclude Include="Core\LIWFrame.h" />
     <ClInclude Include="Core\LIWglfw.h" />
     <ClInclude Include="Core\LIWGlobal.h" />
+    <ClInclude Include="Core\LIWIDManager.h" />
     <ClInclude Include="Core\LIWObject.h" />
     <ClInclude Include="Core\LIWShaderMacros.h" />
+    <ClInclude Include="Core\LIWSingleton.h" />
     <ClInclude Include="Core\LIWTypes.h" />
     <ClInclude Include="Core\LIWMacros.h" />
     <ClInclude Include="Core\Maths\LIWMaths.h" />

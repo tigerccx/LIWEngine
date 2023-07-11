@@ -3,6 +3,7 @@
 
 #include "Memory/LIWMemory.h"
 #include "Threading/LIWThread.h"
+#include "Containers/LIWObjectPool.h"
 #include "Containers/LIWDObjectPool.h"
 
 struct TestStruct {
@@ -30,35 +31,69 @@ void test() {
 	liw_minit_frame_thd(LIW_THREAD_IDX_MAIN);
 	liw_minit_dframe_thd(LIW_THREAD_IDX_MAIN);
 
-	{
+	/*{
 		auto a = liw_new<LIWMem_Default, int>(10);
 
 		LIW::LIWDObjectPool<TestStruct> objectPool(2, TestStruct{ 1, 1.2f, "Idk" });
-		liw_objhdl_type handle = objectPool.fetch_object();
-		liw_objhdl_type handle1 = objectPool.fetch_object();
+		auto ptr = objectPool.fetch_object();
+		auto ptrRaw = ptr.get_ptr();
+		auto ptr1 = objectPool.fetch_object();
 		objectPool.set_capacity(10, TestStruct{ 1, 1.2f, "Idk" });
 
-		objectPool.get_object(handle).a = 10;
-		objectPool.get_object(handle1).b = 10.02f;
+		ptr->a = 10;
+		ptr->b = 10.02f;
 
 		liw_mupdate_def_thd(LIW_THREAD_IDX_MAIN);
 		liw_mupdate_static_thd(LIW_THREAD_IDX_MAIN);
 		liw_mupdate_frame_thd(LIW_THREAD_IDX_MAIN);
 		liw_mupdate_dframe_thd(LIW_THREAD_IDX_MAIN);
 
-		liw_objhdl_type handle2 = objectPool.fetch_object();
-		TestStruct& obj = objectPool.get_object(handle);
+		auto ptr2 = objectPool.fetch_object();
+		TestStruct& obj = *ptr;
 
 		liw_mupdate_def_thd(LIW_THREAD_IDX_MAIN);
 		liw_mupdate_static_thd(LIW_THREAD_IDX_MAIN);
 		liw_mupdate_frame_thd(LIW_THREAD_IDX_MAIN);
 		liw_mupdate_dframe_thd(LIW_THREAD_IDX_MAIN);
 
-		objectPool.return_object(handle);
-		TestStruct& obj2 = objectPool.get_object(handle2);
+		objectPool.return_object(ptr);
+		TestStruct& obj2 = *ptr2;
 
-		objectPool.return_object(handle1);
-		objectPool.return_object(handle2);
+		objectPool.return_object(ptr1);
+		objectPool.return_object(ptr2);
+
+	}*/
+
+	{
+		LIW::LIWObjectPool_Heap<TestStruct, 10> objectPool(TestStruct{ 1, 1.2f, "Idk" });
+		auto ptr = objectPool.fetch_object();
+		auto ptrRaw = ptr.get_ptr();
+		auto ptr1 = objectPool.fetch_object();
+
+		ptr->a = 10;
+		ptr->b = 10.02f;
+
+		liw_mupdate_def_thd(LIW_THREAD_IDX_MAIN);
+		liw_mupdate_static_thd(LIW_THREAD_IDX_MAIN);
+		liw_mupdate_frame_thd(LIW_THREAD_IDX_MAIN);
+		liw_mupdate_dframe_thd(LIW_THREAD_IDX_MAIN);
+
+		auto ptr2 = objectPool.fetch_object();
+		TestStruct& obj1 = *ptr1;
+		obj1.a = 22;
+		obj1.b = 24.6f;
+		strcpy_s(obj1.c, 32, "Wait what???????");
+
+		liw_mupdate_def_thd(LIW_THREAD_IDX_MAIN);
+		liw_mupdate_static_thd(LIW_THREAD_IDX_MAIN);
+		liw_mupdate_frame_thd(LIW_THREAD_IDX_MAIN);
+		liw_mupdate_dframe_thd(LIW_THREAD_IDX_MAIN);
+
+		objectPool.return_object(ptr);
+		TestStruct& obj2 = *ptr2;
+
+		objectPool.return_object(ptr1);
+		objectPool.return_object(ptr2);
 
 	}
 

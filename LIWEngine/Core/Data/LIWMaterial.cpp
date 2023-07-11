@@ -13,7 +13,7 @@ namespace LIW {
 	void LIWMaterial::BindData(uint32_t texUnitBegin)
 	{
 		auto& assetManager = *LIWGlobal::GetAssetManager();
-		auto& shaderProgram = assetManager.GetShaderProgram(m_handleShaderProgram);
+		auto& shaderProgram = *m_handleShaderProgram;
 		uint32_t rawHandleShaderProgram = shaderProgram.GetRawHandle();
 		
 		for (int i = 0; i < m_paramsInt.get_size(); i++) {
@@ -40,7 +40,7 @@ namespace LIW {
 		}
 		uint32_t texUnit = texUnitBegin;
 		for (int i = 0; i < m_paramsTex2D.get_size(); i++) {
-			auto& tex2D = assetManager.GetTexture2D(m_paramsTex2D[i].m_val);
+			auto& tex2D = *(m_paramsTex2D[i].m_val);
 			if (!tex2D.IsValid())
 				throw std::runtime_error("Texture not valid. \n");
 			LIWTexture::Bind2DTexture(tex2D.GetRawHandle(), rawHandleShaderProgram, m_paramsTex2D[i].m_name, texUnit);
@@ -52,7 +52,7 @@ namespace LIW {
 		auto& assetManager = *LIWGlobal::GetAssetManager();
 		uint32_t texUnit = 0;
 		for (int i = 0; i < m_paramsTex2D.get_size(); i++) {
-			auto& tex2D = assetManager.GetTexture2D(m_paramsTex2D[i].m_val);
+			auto& tex2D = *(m_paramsTex2D[i].m_val);
 			LIWTexture::Unbind2DTexture(texUnit);
 			texUnit++;
 		}
