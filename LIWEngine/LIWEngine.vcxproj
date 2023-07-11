@@ -73,19 +73,29 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include\Vulkan;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Debug;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)</OutDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\ThirdParty\imgui\backends;$(ProjectDir)..\ThirdParty\imgui;$(ProjectDir)..\ThirdParty\include\Vulkan;$(ProjectDir)..\ThirdParty\include;$(ProjectDir);$(ProjectDir)Core;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\ThirdParty\lib\Vulkan;$(ProjectDir)..\ThirdParty\lib\Release;$(LibraryPath);$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)</OutDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
