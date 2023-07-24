@@ -168,7 +168,7 @@ inline void* liw_maddr_def(liw_hdl_type handle) {
 	mem += offset;
 	DefaultBufferAllocator::GlobalGPAllocator& alloc = DefaultMemBuffer::s_defaultBufferGAllocator;
 	
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 	if ((uintptr_t)mem< (uintptr_t)alloc.GetBegPtr() || (uintptr_t)mem>=(uintptr_t)alloc.GetEndPtr())
 		throw "Access out of range! ";
 #endif
@@ -708,7 +708,7 @@ public:
 
 private:
 	liw_hdl_type m_handle;
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 
 #endif // _DEBUG
 

@@ -554,7 +554,7 @@ namespace LIW {
 
 						while (segCur < segBlockEnd) {
 							if (segCur->m_mark) { // If seg is marked to free, free seg and its handle
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 								if (*(char*)(&segCur->m_mark) != 1)
 									throw liwexcept_memory_corruption(segCur);
 #endif

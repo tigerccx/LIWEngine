@@ -3,6 +3,12 @@
 * Configuration
 */
 
+#ifdef _DEBUG
+#define LIW_DEBUG
+#else
+#define LIW_RELEASE
+#endif
+
 //
 // Render
 // 
@@ -15,7 +21,7 @@
 //
 // Memory
 //
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 //#define DEBUG_PRINT_MEMORY_INFO
 #endif
 
@@ -33,7 +39,7 @@
 */
 #ifdef LIW_RENDER_OPENGL
 #define LIW_USE_GLEW
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 #define OPENGL_DEBUGGING
 #endif
 #endif

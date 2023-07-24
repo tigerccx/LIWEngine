@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 
+#include "LIWConfig.h"
 #include "Memory/LIWMemory.h"
 #include "LIWDArray.h"
 
@@ -32,7 +33,7 @@ namespace LIW {
 		LIWDObjectPool& operator=(LIWDObjectPool&& other) = default;
 
 		~LIWDObjectPool() {
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 			if (m_size != (uint32_t)m_objects.get_capacity())
 				printf("WARNING: not all objects has been returned to pool. \n");
 #endif

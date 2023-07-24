@@ -1,3 +1,4 @@
+#include "LIWConfig.h"
 #include "LIWMesh.h"
 
 namespace LIW {
@@ -104,7 +105,7 @@ namespace LIW {
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeIndices, indices.get_data(), GL_STATIC_DRAW);
 
 
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 		glObjectLabel(GL_BUFFER, m_handleBuffer, -1, "MeshVertexBuffer");
 		glObjectLabel(GL_BUFFER, m_handleIndexBuffer, -1, "MeshIndexBuffer");
 #endif

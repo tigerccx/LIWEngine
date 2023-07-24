@@ -1,6 +1,7 @@
 #pragma once
 #include <stdexcept>
 
+#include "LIWConfig.h"
 #include "Memory/LIWMemory.h"
 #include "LIWForwardList.h"
 #include "LIWArray.h"
@@ -35,7 +36,7 @@ namespace LIW {
 		LIWObjectPool& operator=(LIWObjectPool&& other) = default;
 
 		~LIWObjectPool() {
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 			if (m_size != c_size)
 				printf("WARNING: not all objects has been returned to pool. \n");
 #endif
@@ -127,7 +128,7 @@ namespace LIW {
 		LIWObjectPool_Heap& operator=(LIWObjectPool_Heap&& other) = default;
 
 		~LIWObjectPool_Heap() {
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 			if (m_size != c_size)
 				printf("WARNING: not all objects has been returned to pool. \n");
 #endif

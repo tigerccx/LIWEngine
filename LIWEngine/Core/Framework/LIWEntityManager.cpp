@@ -1,3 +1,4 @@
+#include "LIWConfig.h"
 #include "LIWEntityManager.h"
 
 LIW::LIWEntityManager::LIWEntityManager(uint32_t countEntity):
@@ -11,7 +12,7 @@ LIW::LIWEntityManager::LIWEntityManager(uint32_t countEntity):
 }
 
 LIW::LIWEntityManager::~LIWEntityManager() {
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 	if (m_entitiesAvailable.size() != m_entityCapacity)
 		printf("Warning: Not all entities have been returned. \n");
 #endif

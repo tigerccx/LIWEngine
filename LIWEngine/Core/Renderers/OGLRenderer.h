@@ -84,7 +84,7 @@ namespace LIW {
 	protected:
 		shared_ptr<Shader> currentShader;
 		GLFWwindow* currentWindowHandle = nullptr;	//GLFW window handle, which also represent its context?
-#ifdef _DEBUG
+#ifdef LIW_DEBUG
 		static void __stdcall DebugCallback(GLenum source, GLenum renderOrder, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 #endif
 	};
