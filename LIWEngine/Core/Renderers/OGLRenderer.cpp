@@ -93,20 +93,20 @@ LIW::OGLRenderer::OGLRenderer(LIW::App::Window &window):
 	//	return;
 	//}
 
-	//Now we have a temporary context, we can find out if we support OGL 3.x
-	char* ver = (char*)glGetString(GL_VERSION); // ver must equal "3.2.0" (or greater!)
+	//Check GL Version >= 4.5
+	char* ver = (char*)glGetString(GL_VERSION); 
 	int major = ver[0] - '0';		//casts the 'correct' major version integer from our version string
 	int minor = ver[2] - '0';		//casts the 'correct' minor version integer from our version string
 
 	std::cout << "OGLRenderer::OGLRenderer(): Maximum OGL version supported is " << major << "." << minor << "\n";
 
-	if(major < 3) {					//Graphics hardware does not support OGL 3! Erk...
-		std::cout << "OGLRenderer::OGLRenderer(): Device does not support OpenGL 3.x!\n";
+	if(major < 4) {
+		std::cout << "OGLRenderer::OGLRenderer(): Device does not support OpenGL 4.x!\n";
 		return;
 	}
 
-	if(major == 3 && minor < 2) {	//Graphics hardware does not support ENOUGH of OGL 3! Erk...
-		std::cout << "OGLRenderer::OGLRenderer(): Device does not support OpenGL 3.2!\n";
+	if(major == 4 && minor < 5) {
+		std::cout << "OGLRenderer::OGLRenderer(): Device does not support OpenGL 4.5!\n";
 		return;
 	}
 	//We do support OGL 3! Let's set it up...
@@ -153,8 +153,6 @@ LIW::OGLRenderer::OGLRenderer(LIW::App::Window &window):
 	}
 	else
 		puts("Debug for OpenGL not supported by your system!");
-	//glDebugMessageCallbackARB(&OGLRenderer::DebugCallback, NULL);
-	//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 #endif
 
 	glClearColor(0.2f,0.2f,0.2f,1.0f);			//When we clear the screen, we want it to be dark grey
@@ -169,7 +167,6 @@ Destructor. Deletes the default shaderPrePixelBump, and the OpenGL rendering con
 */
 LIW::OGLRenderer::~OGLRenderer(void)	{
 	currentWindowHandle = nullptr;
-	//wglDeleteContext(renderContext);
 }
 
 void LIW::OGLRenderer::BindFrameBuffer(LIWFrameBuffer& frameBuffer)
@@ -295,6 +292,14 @@ void LIW::OGLRenderer::DebugCallback(GLenum source, GLenum renderOrder, GLuint i
 		}
 
 		std::cout << "OpenGL Debug Output: " + sourceName + ", " + typeName + ", " + severityName + ", " + string(message) << "\n";
+#ifdef LIW_DEBUG_THROW_AT_GL_ERROR
+		if (renderOrder == GL_DEBUG_TYPE_ERROR_ARB ||
+			renderOrder == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB ||
+			renderOrder == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB)
+		{
+			throw std::runtime_error("OpenGL Fatal Error! ");
+		}
+#endif //LIW_DEBUG_THROW_AT_GL_ERROR
 }
 #endif
 

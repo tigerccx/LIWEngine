@@ -10,13 +10,19 @@
 #endif
 
 //
+// Hardware
+//
+#define LIW_HARDWARE_USE_HIGH_PERF_GRAPHICS_CARD
+
+//
 // Render
 // 
 // Render Pipeline
 #define LIW_RENDER_OPENGL
 //#define LIW_RENDER_VULKAN
 // Shader
-#define LIW_DEBUG_PRINT_SHADER_CONTENT
+//#define LIW_DEBUG_PRINT_SHADER_CONTENT
+//#define LIW_DEBUG_THROW_AT_GL_ERROR
 
 //
 // Memory

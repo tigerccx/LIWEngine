@@ -1,6 +1,15 @@
 #include "Window.h"
 #include "Renderers/OGLRenderer.h"
 
+#ifdef LIW_HARDWARE_USE_HIGH_PERF_GRAPHICS_CARD
+extern "C"
+{
+	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
+#endif // LIW_HARDWARE_USE_HIGH_PERF_GRAPHICS_CARD
+
+
 std::map<GLFWwindow*, LIW::App::Window*> LIW::App::Window::windows = std::map<GLFWwindow*, LIW::App::Window*>();
 
 LIW::App::Window::Window(const std::string& name, int width, int height, bool fullScreen)
@@ -17,14 +26,31 @@ LIW::App::Window::Window(const std::string& name, int width, int height, bool fu
 //	//TODO: MUST CHANGE LATER! Temp disable resize
 //	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 //#endif
+
+
+	glfwWindowHint(GLFW_STEREO, GLFW_FALSE);
+	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-	GLFWmonitor* screen = fullScreen ? glfwGetPrimaryMonitor() : nullptr;
-	windowHandle = glfwCreateWindow(width, height, name.c_str(), screen, nullptr);
+	GLFWmonitor* monitor = fullScreen ? glfwGetPrimaryMonitor() : nullptr;
+	if (monitor)
+	{
+		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+	}
+
+	windowHandle = glfwCreateWindow(width, height, name.c_str(), monitor, nullptr);
 
 	if (!windowHandle) {
 		std::cout << "GLFW window init failed!" << std::endl;
