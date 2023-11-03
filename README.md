@@ -11,3 +11,6 @@ A game engine under development.
   * Resources: https://drive.google.com/file/d/11moned_vctINnWX1B2wLzzBvd57Cm1cW/view?usp=drive_link
   * ThirdParty: https://drive.google.com/file/d/15TYDtct6IGx9j7tbRBrsPkNoZHL8bmt7/view?usp=drive_link
   * DLLs: https://drive.google.com/file/d/15TDuEYHbBwnVvCoT68KMG31OOIbBC46G/view?usp=drive_link
+
+## Related Files
+* Graduate Degree Dissertation: https://github.com/tigerccx/LIWEngine
